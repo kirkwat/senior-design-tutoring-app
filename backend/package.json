@@ -7,16 +7,20 @@
     "build": "tsc",
     "start": "tsc && node dist/index.js",
     "dev": "nodemon --watch src --ext ts --exec ts-node src/index.ts",
-    "format": "prettier '**/*.{ts,json}' --write"
+    "format": "prettier '**/*.{ts,json}' --write",
+    "db:migrate": "knex migrate:latest --knexfile knexfile.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "knex": "^3.1.0",
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
+    "@types/knex": "^0.16.1",
     "@types/node": "^20.11.17",
     "nodemon": "^3.0.3",
     "prettier": "^3.2.5",
