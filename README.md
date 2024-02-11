@@ -17,13 +17,13 @@
 
 ### Migrations
 
-- Run `db:migrate:make -- MIGRATION_NAME` to create a database migration where `MIGRATION_NAME` is the name of your migration.
+- Run `npm run db:migrate:make -- MIGRATION_NAME` to create a database migration where `MIGRATION_NAME` is the name of your migration.
 
 ### API Routes
 
 | Action         | Method | Endpoint  | Body                                                                         | Description                                          |
 | -------------- | ------ | --------- | ---------------------------------------------------------------------------- | ---------------------------------------------------- |
+| Register       | POST   | /register | `user` (string), `pwd` (string), `name` (string), `role` (`user` or `tutor`) | Creates a new user.                                  |
 | Login          | POST   | /auth     | `user` (string), `pwd` (string)                                              | Authenticates a user and returns JWT token.          |
 | Logout         | GET    | /logout   |                                                                              | Logs out the current user.                           |
 | Handle Refresh | GET    | /refresh  |                                                                              | Handles refresh token and provides new access token. |
-| Register       | POST   | /register | `user` (string), `pwd` (string), `name` (string), `role` (`user` or `tutor`) | Creates a new user.                                  |
