@@ -1,6 +1,3 @@
-import dotenv from "dotenv";
-dotenv.config();
-
-const allowedOrigins: string[] = [process.env.CLIENT_URL || ""].filter(Boolean);
+const allowedOrigins = ["http://localhost:3000"];
 
 export default allowedOrigins;
