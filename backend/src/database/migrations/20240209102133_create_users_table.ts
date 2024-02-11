@@ -1,16 +1,18 @@
 import { Knex } from "knex";
 
-//just an example migration
-export async function up(knex: Knex): Promise<void> {
-  return knex.schema.createTable("users", (table) => {
+export async function up(knex: Knex) {
+  return knex.schema.createTable("user", (table) => {
     table.increments("id").primary();
-    table.string("name").notNullable();
-    table.string("username").notNullable().unique();
+    table.string("first_name").notNullable();
+    table.string("last_name").notNullable();
+    table.string("email").notNullable().unique();
     table.text("password").notNullable();
+    table.string("profile_picture").notNullable();
     table.text("refreshToken");
+    table.integer("role").notNullable();
   });
 }
 
-export async function down(knex: Knex): Promise<void> {
-  return knex.schema.dropTable("users");
+export async function down(knex: Knex) {
+  return knex.schema.dropTable("user");
 }

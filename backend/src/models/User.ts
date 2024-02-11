@@ -2,19 +2,19 @@ import knex from "../config/knex";
 import { IUser } from "../interfaces/IUser";
 
 class User {
-  static USER_TABLE = "users";
+  static USER_TABLE = "user";
 
-  static async findUserByUsername(username: string) {
-    return knex<IUser>(this.USER_TABLE).where({ username }).first();
+  static async findUserByEmail(email: string) {
+    return knex<IUser>(this.USER_TABLE).where({ email }).first();
   }
 
   static async findUserByRefreshToken(refreshToken: string) {
     return knex<IUser>(this.USER_TABLE).where({ refreshToken }).first();
   }
 
-  static async updateUserRefreshToken(username: string, refreshToken: string) {
+  static async updateUserRefreshToken(email: string, refreshToken: string) {
     await knex<IUser>(this.USER_TABLE)
-      .where({ username })
+      .where({ email })
       .update({ refreshToken });
   }
 

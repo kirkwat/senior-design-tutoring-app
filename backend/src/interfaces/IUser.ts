@@ -1,7 +1,10 @@
 export interface IUser {
   id: number;
-  username: string;
+  first_name: string;
+  last_name: string;
+  email: string;
   password: string;
-  name: string;
+  profile_picture: string;
   refreshToken?: string;
+  role: string;
 }
