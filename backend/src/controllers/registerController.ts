@@ -7,7 +7,7 @@ const newUserSchema = z.object({
   user: z.string(),
   pwd: z.string(),
   name: z.string(),
-  role: z.enum(["USER", "TUTOR"]),
+  role: z.enum(["user", "tutor"]),
 });
 
 const handleNewUser = async (req: Request, res: Response) => {
