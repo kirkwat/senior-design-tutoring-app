@@ -9,7 +9,7 @@ export async function up(knex: Knex) {
     table.text("password").notNullable();
     table.string("profile_picture").notNullable();
     table.text("refreshToken");
-    table.integer("role").notNullable();
+    table.string("role").notNullable();
   });
 }
 
