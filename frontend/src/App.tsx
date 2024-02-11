@@ -4,10 +4,9 @@ import Login from "./pages/login";
 import { AuthProvider } from "./context/AuthProvider";
 import RequireAuth from "./routes/RequireAuth";
 import Register from "./pages/register";
-import LinkPage from "./pages/links";
 import Unauthorized from "./pages/unauthorized";
 import PersistLogin from "./routes/PersistLogin";
-import Home from "./pages/home";
+import User from "./pages/user";
 import Tutor from "./pages/tutor";
 import Admin from "./pages/admin";
 import Missing from "./pages/missing";
@@ -22,20 +21,16 @@ const App = () => {
   return (
     <AuthProvider>
       <Router>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route path="linkpage" element={<LinkPage />} />
+        <Layout>
+          <Routes>
+            <Route path="/" element={<Login />} />
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
             <Route path="unauthorized" element={<Unauthorized />} />
 
             <Route element={<PersistLogin />}>
-              <Route
-                element={
-                  <RequireAuth allowedRoles={[ROLES.User, ROLES.Tutor]} />
-                }
-              >
-                <Route path="/" element={<Home />} />
+              <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
+                <Route path="user" element={<User />} />
               </Route>
 
               <Route element={<RequireAuth allowedRoles={[ROLES.Tutor]} />}>
@@ -48,8 +43,8 @@ const App = () => {
             </Route>
 
             <Route path="*" element={<Missing />} />
-          </Route>
-        </Routes>
+          </Routes>
+        </Layout>
       </Router>
     </AuthProvider>
   );
