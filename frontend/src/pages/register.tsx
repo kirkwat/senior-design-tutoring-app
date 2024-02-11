@@ -9,8 +9,10 @@ import { Button } from "src/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "src/components/ui/alert";
 import { useNavigateRole } from "src/hooks/useNavigateRole";
 import useAuth from "src/hooks/useAuth";
+import { RadioGroup, RadioGroupItem } from "src/components/ui/radio-group";
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const REGISTER_URL = "/register";
 const LOGIN_URL = "/auth";
@@ -23,8 +25,12 @@ const Register = () => {
   const errRef = useRef<HTMLParagraphElement>(null);
 
   const [user, setUser] = useState("");
-  const [validName, setValidName] = useState(false);
+  const [validUsername, setValidUserName] = useState(false);
   const [userFocus, setUserFocus] = useState(false);
+
+  const [name, setName] = useState("");
+  const [validName, setValidName] = useState(false);
+  const [nameFocus, setNameFocus] = useState(false);
 
   const [pwd, setPwd] = useState("");
   const [validPwd, setValidPwd] = useState(false);
@@ -33,6 +39,8 @@ const Register = () => {
   const [matchPwd, setMatchPwd] = useState("");
   const [validMatch, setValidMatch] = useState(false);
   const [matchFocus, setMatchFocus] = useState(false);
+
+  const [userRole, setUserRole] = useState<"user" | "tutor">("user");
 
   const [errMsg, setErrMsg] = useState("");
 
@@ -43,8 +51,12 @@ const Register = () => {
   }, []);
 
   useEffect(() => {
-    setValidName(USER_REGEX.test(user));
+    setValidUserName(EMAIL_REGEX.test(user));
   }, [user]);
+
+  useEffect(() => {
+    setValidName(USER_REGEX.test(name));
+  }, [name]);
 
   useEffect(() => {
     setValidPwd(PWD_REGEX.test(pwd));
@@ -57,7 +69,8 @@ const Register = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const v1 = USER_REGEX.test(user);
+    const v0 = USER_REGEX.test(name);
+    const v1 = EMAIL_REGEX.test(user);
     const v2 = PWD_REGEX.test(pwd);
     if (!v1 || !v2) {
       setErrMsg("Invalid Entry");
@@ -66,7 +79,7 @@ const Register = () => {
     try {
       await axios.post(
         REGISTER_URL,
-        JSON.stringify({ user, pwd, name: "test", role: "tutor" }),
+        JSON.stringify({ user, pwd, name, role: userRole }),
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
@@ -128,30 +141,30 @@ const Register = () => {
         </p>
       </div>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <Label htmlFor="username" className="flex items-center">
-          Username:
+        <Label htmlFor="name" className="flex items-center">
+          Name:
           <Check size={18} className={validName ? "block ml-1" : "hidden"} />
           <X
             size={18}
-            className={validName || !user ? "hidden" : "block ml-1"}
+            className={validName || !name ? "hidden" : "block ml-1"}
           />
         </Label>
         <Input
           type="text"
-          id="username"
+          id="name"
           ref={userRef}
           autoComplete="off"
-          onChange={(e) => setUser(e.target.value)}
-          value={user}
+          onChange={(e) => setName(e.target.value)}
+          value={name}
           required
           aria-invalid={validName ? "false" : "true"}
-          aria-describedby="uidnote"
-          onFocus={() => setUserFocus(true)}
-          onBlur={() => setUserFocus(false)}
+          aria-describedby="namenote"
+          onFocus={() => setNameFocus(true)}
+          onBlur={() => setNameFocus(false)}
         />
         <Alert
-          id="uidnote"
-          className={userFocus && user && !validName ? "block" : "hidden"}
+          id="namenote"
+          className={nameFocus && name && !validName ? "block" : "hidden"}
         >
           <Info className="h-4 w-4" />
           <AlertDescription>
@@ -160,6 +173,43 @@ const Register = () => {
             Must begin with a letter.
             <br />
             Letters, numbers, underscores, hyphens allowed.
+          </AlertDescription>
+        </Alert>
+        <Label htmlFor="username" className="flex items-center">
+          Email:
+          <Check
+            size={18}
+            className={validUsername ? "block ml-1" : "hidden"}
+          />
+          <X
+            size={18}
+            className={validUsername || !user ? "hidden" : "block ml-1"}
+          />
+        </Label>
+        <Input
+          type="text"
+          id="username"
+          autoComplete="off"
+          onChange={(e) => setUser(e.target.value)}
+          value={user}
+          required
+          aria-invalid={validUsername ? "false" : "true"}
+          aria-describedby="uidnote"
+          onFocus={() => setUserFocus(true)}
+          onBlur={() => setUserFocus(false)}
+        />
+        <Alert
+          id="uidnote"
+          className={userFocus && user && !validUsername ? "block" : "hidden"}
+        >
+          <Info className="h-4 w-4" />
+          <AlertDescription>
+            Please enter a valid email address.
+            <br />
+            Must include "@" and a domain name (e.g., "example.com").
+            <br />
+            Allowed characters: letters, numbers, underscores, hyphens, periods,
+            and plus signs.
           </AlertDescription>
         </Alert>
         <Label htmlFor="password" className="flex items-center space-x-1">
@@ -228,10 +278,33 @@ const Register = () => {
             Must match the first password input field.
           </AlertDescription>
         </Alert>
+        <Label htmlFor="user_role">
+          <div className="mt-3 mb-2">I am a ...</div>
+          <RadioGroup id="user_role" defaultValue="user">
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem
+                value="user"
+                id="user"
+                checked={userRole === "user"}
+                onClick={() => setUserRole("user")}
+              />
+              <Label htmlFor="user">Student</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem
+                value="tutor"
+                id="tutor"
+                checked={userRole === "tutor"}
+                onClick={() => setUserRole("tutor")}
+              />
+              <Label htmlFor="tutor">Tutor</Label>
+            </div>
+          </RadioGroup>
+        </Label>
         <Button
           className="w-full"
           type="submit"
-          disabled={!validName || !validPwd || !validMatch ? true : false}
+          disabled={!validUsername || !validPwd || !validMatch ? true : false}
         >
           Sign Up
         </Button>

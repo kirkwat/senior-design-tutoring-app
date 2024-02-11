@@ -21,8 +21,7 @@ const handleNewUser = async (req: Request, res: Response) => {
     await User.createUser({
       email: user,
       password: hashedPwd,
-      first_name: name,
-      last_name: "",
+      name,
       profile_picture: "",
       role,
     });
