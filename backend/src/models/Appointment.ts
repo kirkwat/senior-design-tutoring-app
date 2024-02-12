@@ -13,6 +13,10 @@ class Appointment {
         console.log(newAppointment);
         return await knex<IAppointment>(this.APPOINTMENT_TABLE).insert(newAppointment);
     }
+
+    static async findOpenAppointmentsByTutor(tutor_id?: string) {
+        return knex(this.APPOINTMENT_TABLE).select('*').where({tutor_id,student_id:!null});
+    }
 }
 
 export default Appointment

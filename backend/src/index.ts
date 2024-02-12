@@ -13,6 +13,7 @@ import logoutRoute from "./routes/logout";
 import refreshRoute from "./routes/refresh";
 import registerRoute from "./routes/register";
 import newAppointmentRoute from "./routes/createAppointment"
+import findAppointmentRoute from "./routes/findAppointments"
 
 dotenv.config();
 
@@ -32,6 +33,7 @@ app.use("/refresh", refreshRoute);
 app.use("/register", registerRoute);
 
 app.use("/appointment", newAppointmentRoute)
+app.use("/appointments", findAppointmentRoute)
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
