@@ -16,7 +16,6 @@ const handleNewAppointment = async (req: Request, res: Response) => {
 
       const duplicate = await Appointment.findAppoitnmentByTutor(tutor_id,new Date(start))
       if (duplicate) return res.sendStatus(409);
-
       await Appointment.createAppointment({
         tutor_id: tutor_id,
         student_id:undefined,
@@ -38,25 +37,25 @@ const handleNewAppointment = async (req: Request, res: Response) => {
     }
   };
 
-  const handleFindAvailableAppointments = async (req: Request, res: Response) => {
-    try{
-      const tutor_id = req.query.tutor_id
-      const tid = tutor_id?.toString()
-      const appointments = await Appointment.findOpenAppointmentsByTutor(tid)
+const handleFindAvailableAppointments = async (req: Request, res: Response) => {
+  try{
+    const tutor_id = req.query.tutor_id
+    const tid = tutor_id?.toString()
+    const appointments = await Appointment.findOpenAppointmentsByTutor(tid)
 
-      if(!appointments) {
-        res.json(null)
-      } else {
-        res.json(appointments)
-      }
-    } catch(err) {
-      if (err instanceof Error) {
-        res.status(500).json({ message: err.message });
-      } else {
-        res.status(500).json({ message: "An unknown error occurred" });
-      }
+    if(!appointments) {
+      res.json(null)
+    } else {
+      res.json(appointments)
+    }
+  } catch(err) {
+    if (err instanceof Error) {
+      res.status(500).json({ message: err.message });
+    } else {
+      res.status(500).json({ message: "An unknown error occurred" });
     }
   }
-  
-  export { handleNewAppointment, handleFindAvailableAppointments };
+}
+
+export { handleNewAppointment, handleFindAvailableAppointments };
   
