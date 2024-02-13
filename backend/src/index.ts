@@ -36,7 +36,7 @@ app.use("/register", registerRoute);
 app.use("/appointment", newAppointmentRoute)
 app.use("/appointments", findAppointmentRoute)
 
-app.use("/tutors", findTutorsRoute)
+app.use("/available-tutors", findTutorsRoute)
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
