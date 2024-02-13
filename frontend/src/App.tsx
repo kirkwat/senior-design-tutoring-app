@@ -10,6 +10,8 @@ import User from "./pages/user";
 import Tutor from "./pages/tutor";
 import Admin from "./pages/admin";
 import Missing from "./pages/missing";
+import TutorAvailabilities from "./pages/tutorAvailabilities";
+import MakeAppointment from "./pages/makeAppointment";
 
 const ROLES = {
   User: "user",
@@ -27,6 +29,8 @@ const App = () => {
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
             <Route path="unauthorized" element={<Unauthorized />} />
+            <Route path="tutorAvailabilities"  element={<TutorAvailabilities />} />
+            <Route path="makeAppointment/:tutorID"  element={<MakeAppointment />} />
 
             <Route element={<PersistLogin />}>
               <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
