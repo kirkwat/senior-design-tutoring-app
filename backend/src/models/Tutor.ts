@@ -2,11 +2,12 @@ import knex from "../config/knex";
 import { ITutor } from "../interfaces/ITutor";
 
 class Tutor {
-    static TUTOR_TABLE = "tutor"
+    static USER_TABLE = 'user'
+    static TUTOR_TABLE = 'tutor'
     static APPOINTMENT_TABLE = 'appointment'
 
     static async findAllTutors() {
-        return await knex(this.TUTOR_TABLE).select('*')
+        return await knex(this.TUTOR_TABLE).join(this.USER_TABLE, 'tutor.user_id', '=', 'user.id').select('*')
     }
 
     static async createTutor(newTutor: Omit<ITutor, "id">) {
