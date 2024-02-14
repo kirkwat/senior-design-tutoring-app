@@ -4,8 +4,7 @@ import { getTutors } from "src/api/tutorAPI";
 import { Button } from "src/components/ui/button";
 import { redirect } from "react-router-dom";
 import { Link } from 'react-router-dom';
-// import {ITutor} from '../../../backend/src/interfaces/ITutor'
-// import Tutor from '../../../backend/src/models/Tutor'
+import Calendar from 'react-calendar'
 
 interface Tutor {
    id: number;
@@ -15,14 +14,22 @@ interface Tutor {
 
 // List of all the tutors
 const TutorAvailabilities = () => {
+   type ValuePiece = Date | null;
+   type Value = ValuePiece | [ValuePiece, ValuePiece];
    const [tutors, setTutors] = useState<Tutor[] | null>(null);
+   const [date, setDate] = useState<Value>(new Date());
    
    useEffect(() => {
       getTutors().then((data) => setTutors(data)).catch((error) => console.error("Error fetching tutor data:", error));
     }, []);
 
     return (
-      <div>
+      <div className="flex">
+         <div className="mt-4 ml-5">
+            <h1 className="font-bold text-xl">Tutor Availabilities</h1>
+            <Calendar onChange={setDate} value={date} calendarType="gregory" />
+         </div>
+         <div className="ml-4">
         {tutors === null ? (
           <p>Loading...</p>
         ) : (
@@ -30,7 +37,7 @@ const TutorAvailabilities = () => {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[150px]">Tutor Name</TableHead>
-                <TableHead>Specialties</TableHead>
+                <TableHead className="w-[500px]">Bio</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -48,6 +55,7 @@ const TutorAvailabilities = () => {
             </TableBody>
           </Table>
         )}
+        </div>
       </div>
     );
   };
