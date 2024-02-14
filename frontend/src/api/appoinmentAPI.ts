@@ -11,13 +11,12 @@ export const createAppointment = (tutorID:number, start:string, end:string, zoom
 });
 
 
-
-
-
-
-
-
-
-
-
+export const findAppointmentByTutor = (tutorID:string) => new Promise((resolve, reject) => {
+    axios.get(`/appointments?tutor_id=${tutorID}`)
+        .then(x => resolve(x.data))
+        .catch(error => {
+            console.error('Error fetching tutors:', error);
+            reject(error);
+    });
+});
 
