@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import { Request, Response } from "express";
 import User from "../models/User";
 import { z } from "zod";
+import Tutor from "../models/Tutor";
 
 const newUserSchema = z.object({
   user: z.string(),
@@ -18,7 +19,7 @@ const handleNewUser = async (req: Request, res: Response) => {
     if (duplicate) return res.sendStatus(409);
 
     const hashedPwd = await bcrypt.hash(pwd, 10);
-    await User.createUser({
+    const newUser = await User.createUser({
       email: user,
       password: hashedPwd,
       name,
@@ -26,7 +27,13 @@ const handleNewUser = async (req: Request, res: Response) => {
       role,
     });
 
-    res.status(201).json({ success: `New user ${user} created!` });
+    if(role == "tutor"){
+      await Tutor.createTutor({
+        user_id: newUser[0],
+        bio: '',
+      });
+    }
+    res.status(201).json({ success: `New ${role} ${user} created!` });
   } catch (err) {
     if (err instanceof z.ZodError) {
       return res.status(400).json({ message: err.errors });

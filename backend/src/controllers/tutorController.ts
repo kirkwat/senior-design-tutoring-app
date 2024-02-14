@@ -7,6 +7,24 @@ const newTutorSchema = z.object({
     bio: z.string()
 });
 
+const handleFindAllTutors = async (req: Request, res: Response) => {
+  try{
+    const tutors = await Tutor.findAllTutors()
+
+    if(!tutors) {
+      res.json(null)
+    } else {
+      res.json(tutors)
+    }
+  } catch(err) {
+    if (err instanceof Error) {
+      res.status(500).json({ message: err.message });
+    } else {
+      res.status(500).json({ message: "An unknown error occurred" });
+    }
+  }
+}
+
 const handleFindAvailableTutorsByTime = async (req: Request, res: Response) => {
     try{
       const time_req = req.query.time
@@ -78,4 +96,4 @@ const handleFindAvailableTutorsByWeek = async (req: Request, res: Response) => {
   }
 }
 
-export {handleFindAvailableTutorsByTime, handleFindAvailableTutorsByDay, handleFindAvailableTutorsByWeek}
+export {handleFindAllTutors ,handleFindAvailableTutorsByTime, handleFindAvailableTutorsByDay, handleFindAvailableTutorsByWeek}
