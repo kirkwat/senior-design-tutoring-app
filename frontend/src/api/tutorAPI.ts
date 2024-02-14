@@ -4,6 +4,12 @@ interface Tutor {
     id: number;
     user_id: number;
     bio: string;
+    name: string;
+    email: string;
+    password: string;
+    profile_picture: string;
+    refreshToken: null;
+    role: string;
   }
 
 export const getTutors = (): Promise<Tutor[]> => new Promise((resolve, reject) => {

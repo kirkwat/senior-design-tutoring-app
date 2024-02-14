@@ -10,6 +10,12 @@ interface Tutor {
    id: number;
    user_id: number;
    bio: string;
+   name: string;
+   email: string;
+   password: string;
+   profile_picture: string;
+   refreshToken: null;
+   role: string;
  }
 
 // List of all the tutors
@@ -43,7 +49,7 @@ const TutorAvailabilities = () => {
             <TableBody>
               {tutors.map((tutor) => (
                 <TableRow key={tutor.id}>
-                  <TableCell>{tutor.id}</TableCell>
+                  <TableCell>{tutor.name}</TableCell>
                   <TableCell>{tutor.bio}</TableCell>
                   <TableCell>
                     <Button asChild>
