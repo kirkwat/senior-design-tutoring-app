@@ -25,19 +25,19 @@ const TutorAvailabilities = () => {
          <TableRow>
             <TableCell>John Doe</TableCell>
             <TableCell>Algebra, Geometry, Calculus</TableCell>
-            <TableCell><Button asChild><Link to={`makeAppointment/1`}>View Availabilities</Link></Button></TableCell>
+            <TableCell><Button asChild><Link to={`../makeAppointment/1`}>View Availabilities</Link></Button></TableCell>
          </TableRow>
 
          <TableRow>
             <TableCell>Jane Doe</TableCell>
             <TableCell>History</TableCell>
-            <TableCell><Button asChild><Link to={`makeAppointment/2`}>View Availabilities</Link></Button></TableCell>
+            <TableCell><Button asChild><Link to={`../makeAppointment/2`}>View Availabilities</Link></Button></TableCell>
          </TableRow>
 
          <TableRow>
             <TableCell>Kevin Doe</TableCell>
             <TableCell>Literature, Phycology</TableCell>
-            <TableCell><Button asChild><Link to={`makeAppointment/3`}>View Availabilities</Link></Button></TableCell>
+            <TableCell><Button asChild><Link to={`../makeAppointment/3`}>View Availabilities</Link></Button></TableCell>
          </TableRow>
          </TableBody>
          {/* -------------------------- */}
@@ -46,7 +46,7 @@ const TutorAvailabilities = () => {
           <TableRow key={tutor.id}>
             <TableCell>{tutor.name}</TableCell>
             <TableCell>{tutor.skills}</TableCell>
-            <TableCell><Button asChild><Link to={`makeAppointment/${tutor.id}`}>View Availabilities</Link></Button></TableCell>
+            <TableCell><Button asChild><Link to={`../makeAppointment/${tutor.id}`}>View Availabilities</Link></Button></TableCell>
           </TableRow>
         ))}
          </TableBody> */}
