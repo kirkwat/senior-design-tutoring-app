@@ -14,6 +14,7 @@ import refreshRoute from "./routes/refresh";
 import registerRoute from "./routes/register";
 import newAppointmentRoute from "./routes/createAppointment"
 import findAppointmentRoute from "./routes/findAppointments"
+import findAllTutorsRoute from "./routes/findAllTutors"
 import findTutorsRoute from "./routes/findTutors"
 
 dotenv.config();
@@ -36,6 +37,7 @@ app.use("/register", registerRoute);
 app.use("/appointment", newAppointmentRoute)
 app.use("/appointments", findAppointmentRoute)
 
+app.use("/tutors", findAllTutorsRoute)
 app.use("/available-tutors", findTutorsRoute)
 
 app.listen(PORT, () => {
