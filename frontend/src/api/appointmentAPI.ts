@@ -1,5 +1,15 @@
 import axios from "./axios";
 
+interface Appointment {
+    id: number,
+    tutor_id: number,
+    student_id: null,
+    selected_subject: null,
+    start_time: number,
+    end_time: number,
+    zoom_link: string
+ }
+
 
 export const createAppointment = (tutorID:number, start:string, end:string, zoom:string) => new Promise((resolve, reject) => {
     axios.post(`/appointment`, {"tutor_id": tutorID, "start": start, "end": end, "zoom_link": zoom})
@@ -11,7 +21,7 @@ export const createAppointment = (tutorID:number, start:string, end:string, zoom
 });
 
 
-export const findAppointmentByTutor = (tutorID:string) => new Promise((resolve, reject) => {
+export const findAppointmentByTutor = (tutorID:string): Promise<Appointment[]> => new Promise((resolve, reject) => {
     axios.get(`/appointments?tutor_id=${tutorID}`)
         .then(x => resolve(x.data))
         .catch(error => {

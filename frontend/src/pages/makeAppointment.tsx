@@ -7,7 +7,7 @@ import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css';
 import { getTutors, getTutorByID } from "src/api/tutorAPI";
 import {Table, TableBody, TableCaption, TableCell, TableHead, TableHeader,TableRow} from "src/components/ui/table"
-import { createAppointment } from "src/api/appointmentAPI"
+import { createAppointment, findAppointmentByTutor } from "src/api/appointmentAPI"
 
 interface Tutor {
    id: number;
@@ -21,6 +21,16 @@ interface Tutor {
    role: string;
  }
 
+ interface Appointment {
+   id: number,
+   tutor_id: number,
+   student_id: null,
+   selected_subject: null,
+   start_time: number,
+   end_time: number,
+   zoom_link: string
+}
+
 
 //Shows all available times for selected tutor
 const MakeAppointment = () => {
@@ -30,23 +40,17 @@ const MakeAppointment = () => {
    type Value = ValuePiece | [ValuePiece, ValuePiece];
    const [date, setDate] = useState<Value>(new Date());
    const [tutor, setTutor] = useState<Tutor | null>(null);
-   const [startTime, setStartTime] = useState<Date>(new Date());
-   const [endTime, setEndTime] = useState<Date>(new Date());
-   const [tempZoom, setZoom] = useState("") //TODO: Change when zoom link functionality added
+   const [appointments, setAppointments] = useState<Appointment[] | null>()
 
     useEffect(() => {
       getTutorByID().then((data) => setTutor(data)).catch((error) => console.error("Error fetching tutor data:", error));
+      if (tutorID) {
+         findAppointmentByTutor(tutorID).then((data) => setAppointments(data)).catch((error) => console.error("Error fetching tutor data:", error));
+      }
     }, []);
 
-    useEffect(() => {
-      console.log(date)
-    }, [date]);
-
     const handleSubmit = () => {
-      if (tutor) {
-         createAppointment(tutor.id, startTime.toISOString(), endTime.toISOString(), tempZoom)
-      }
-   
+      // TODO: Add functionality for adding student to an appointment
     };
 
    return (
@@ -58,17 +62,25 @@ const MakeAppointment = () => {
          </div>
          <div className="ml-4">
          <Table>
-         <TableHeader>
-            <TableRow>
-               <TableHead>Time</TableHead>
-               <TableHead>Status</TableHead>
-            </TableRow>
-            <TableRow>
-               <TableCell>11:00 am - 12:00 pm</TableCell>
-               <TableCell>Available</TableCell>
-               <TableCell><Button onClick={handleSubmit}>Schedule Appointment</Button></TableCell>
-            </TableRow>
+            <TableHeader>
+               <TableRow>
+                  <TableHead>Time</TableHead>
+                  <TableHead>Status</TableHead>
+               </TableRow>
             </TableHeader>
+            {appointments ? (
+            <TableBody>
+               {appointments.map((appointment) => (
+                  <TableRow key={appointment.id}>
+                  <TableCell>{`${appointment.start_time}-${appointment.end_time}`}</TableCell>
+                  <TableCell>Available</TableCell>
+                  <TableCell><Button onClick={handleSubmit}>Schedule Appointment</Button></TableCell>
+                  </TableRow>
+               ))}
+            </TableBody>
+            ) : (
+            <div>Loading...</div>
+            )}
          </Table>
          </div>
       </div>
