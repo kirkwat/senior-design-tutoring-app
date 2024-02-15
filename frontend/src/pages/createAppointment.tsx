@@ -28,19 +28,19 @@ const CreateAppointment = () => {
 
     const convertDate = (stringDate:string) => {
         const inputDate = new Date(stringDate);
-        const formattedDate = new Intl.DateTimeFormat('en-US', {
+        const formattedDate = new Intl.DateTimeFormat('ko-KR', {
             year: 'numeric',
             month: '2-digit',
             day: '2-digit',
         }).format(inputDate);
 
-        return formattedDate;
+        return formattedDate.replaceAll(". ", "-").replaceAll(".", "");
     }
 
     const formatDateTime = (time:string): string => {
         if (date) {
-            const newDate = date.toString().split('T')[0];
-            const formattedDate = convertDate(newDate)
+            const newDate = date.toString();
+            const formattedDate = convertDate(newDate.toString())
             return `${formattedDate}T${time}:00.000Z`;
         }
         return ''
@@ -48,7 +48,9 @@ const CreateAppointment = () => {
 
 
     const handleSubmit = () => {
-        createAppointment(1, startTime, endTime, "https://zoom.com/placeholder")
+        const newStart = formatDateTime(startTime)
+        console.log(newStart)
+        createAppointment(1, newStart, formatDateTime(endTime), "https://zoom.com/placeholder")
     }
 
 
