@@ -10,6 +10,10 @@ class Tutor {
         return await knex(this.TUTOR_TABLE).join(this.USER_TABLE, 'tutor.user_id', '=', 'user.id').select('*')
     }
 
+    static async findTutorByID(tutor_id?: string) {
+        return await knex(this.TUTOR_TABLE).join(this.USER_TABLE, 'tutor.user_id', '=', 'user.id').select('*').where({user_id:tutor_id})
+    }
+
     static async createTutor(newTutor: Omit<ITutor, "id">) {
         return knex<ITutor>(this.TUTOR_TABLE).insert(newTutor);
     }

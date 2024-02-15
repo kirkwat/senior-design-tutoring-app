@@ -29,6 +29,7 @@
 | Handle Refresh | GET | /refresh |  | Handles refresh token and provides new access token. |
 | Create Appointment | POST | /appointment | `tutor_id` (number), `start` (string), `end` (string), `zoom_link` (string) | Creates a new appointment for a given tutor |
 | Fetch Available Appointments | GET | /appointments?tutor_id |  | Fetches all of the available appointments for a tutor |
+| Fetch Tutor | GET | /tutor?tutor_id |  | Finds and returns the information about the tutor given the tutor_id |
 | Fetch Tutors | GET | /tutors |  | Retrieves all of the current tutors |
 | Fetch Available Tutors for a Time | GET | /available-tutors?time |  | Finds all of the available tutors for a given start time |
 | Fetch Available Tutors for the Day | GET | /available-tutors/day?time |  | Finds all of the available tutors for the entire day given any time of the day |

@@ -25,6 +25,26 @@ const handleFindAllTutors = async (req: Request, res: Response) => {
   }
 }
 
+const handleFindTutorByID = async (req: Request, res: Response) => {
+  try{
+    const tutor_id = req.query.tutor_id
+    const tid = tutor_id?.toString()
+    const tutor = await Tutor.findTutorByID(tid)
+
+    if(!tutor) {
+      res.json(null)
+    } else {
+      res.json(tutor)
+    }
+  } catch(err) {
+    if (err instanceof Error) {
+      res.status(500).json({ message: err.message });
+    } else {
+      res.status(500).json({ message: "An unknown error occurred" });
+    }
+  }
+}
+
 const handleFindAvailableTutorsByTime = async (req: Request, res: Response) => {
     try{
       const time_req = req.query.time
@@ -96,4 +116,8 @@ const handleFindAvailableTutorsByWeek = async (req: Request, res: Response) => {
   }
 }
 
-export {handleFindAllTutors ,handleFindAvailableTutorsByTime, handleFindAvailableTutorsByDay, handleFindAvailableTutorsByWeek}
+export {handleFindAllTutors,
+  handleFindTutorByID,
+  handleFindAvailableTutorsByTime, 
+  handleFindAvailableTutorsByDay, 
+  handleFindAvailableTutorsByWeek}
