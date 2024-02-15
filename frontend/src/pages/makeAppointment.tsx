@@ -7,7 +7,7 @@ import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css';
 import { getTutors, getTutorByID } from "src/api/tutorAPI";
 import {Table, TableBody, TableCaption, TableCell, TableHead, TableHeader,TableRow} from "src/components/ui/table"
-import { createAppointment } from "src/api/appoinmentAPI";
+import { createAppointment } from "src/api/appointmentAPI"
 
 interface Tutor {
    id: number;
