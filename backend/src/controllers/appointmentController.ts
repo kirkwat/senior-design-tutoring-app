@@ -15,7 +15,7 @@ const handleNewAppointment = async (req: Request, res: Response) => {
   
 
       const duplicate = await Appointment.findAppoitnmentByTutor(tutor_id,new Date(start))
-      if (duplicate) return res.sendStatus(409);
+      if (duplicate[0] != undefined) return res.sendStatus(409);
       await Appointment.createAppointment({
         tutor_id: tutor_id,
         student_id:undefined,
