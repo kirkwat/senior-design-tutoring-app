@@ -1,12 +1,22 @@
 import axios from "./axios";
 
-export const getTutors = () => new Promise((resolve, reject) => {
-    axios.get("/getTutors")
+
+export const createAppointment = (tutorID:number, start:string, end:string, zoom:string) => new Promise((resolve, reject) => {
+    axios.post(`/appointment`, {"tutor_id": tutorID, "start": start, "end": end, "zoom_link": zoom})
         .then(x => resolve(x.data))
-        .catch(x => {
-            alert(x);
-            reject(x);
-        });
+        .catch(error => {
+            console.error('Error fetching tutors:', error);
+            reject(error);
+    });
 });
 
+
+export const findAppointmentByTutor = (tutorID:string) => new Promise((resolve, reject) => {
+    axios.get(`/appointments?tutor_id=${tutorID}`)
+        .then(x => resolve(x.data))
+        .catch(error => {
+            console.error('Error fetching tutors:', error);
+            reject(error);
+    });
+});
 
