@@ -16,7 +16,7 @@ class Appointment {
     }
 
     static async findOpenAppointmentsByTutor(tutor_id?: string) {
-        return knex(this.APPOINTMENT_TABLE).select('*').where({tutor_id,student_id:!null});
+        return knex(this.APPOINTMENT_TABLE).select('*').where({tutor_id,student_id:null});
     }
 }
 
