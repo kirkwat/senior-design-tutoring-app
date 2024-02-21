@@ -42,6 +42,11 @@ const handleFindAvailableAppointments = async (req: Request, res: Response) => {
     const tutor_id = req.query.tutor_id
     const tid = tutor_id?.toString()
     const appointments = await Appointment.findOpenAppointmentsByTutor(tid)
+    console.log(typeof(appointments))
+    for(let i=0; i<appointments.length; i++){
+      appointments[i].start_time = new Date(appointments[i].start_time)
+      appointments[i].end_time = new Date(appointments[i].end_time)
+    }
 
     if(!appointments) {
       res.json(null)
