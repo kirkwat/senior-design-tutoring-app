@@ -22,8 +22,8 @@ export const getTutors = (): Promise<Tutor[]> => new Promise((resolve, reject) =
   });
 
 
-export const getTutorByID = (): Promise<Tutor> => new Promise((resolve, reject) => {
-    axios.get("/tutors")
+export const getTutorByID = (tutor_id:string): Promise<Tutor> => new Promise((resolve, reject) => {
+    axios.get(`/tutor?tutor_id=${tutor_id}`)
         .then(response => resolve(response.data))
         .catch(error => {
         console.error('Error fetching tutors:', error);

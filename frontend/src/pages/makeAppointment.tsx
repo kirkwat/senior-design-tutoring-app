@@ -43,8 +43,8 @@ const MakeAppointment = () => {
    const [appointments, setAppointments] = useState<Appointment[] | null>()
 
     useEffect(() => {
-      getTutorByID().then((data) => setTutor(data)).catch((error) => console.error("Error fetching tutor data:", error));
       if (tutorID) {
+         getTutorByID(tutorID).then((data) => setTutor(data)).catch((error) => console.error("Error fetching tutor data:", error));
          findAppointmentByTutor(tutorID).then((data) => setAppointments(data)).catch((error) => console.error("Error fetching tutor data:", error));
       }
     }, []);
@@ -53,12 +53,19 @@ const MakeAppointment = () => {
       // TODO: Add functionality for adding student to an appointment
     };
 
+
+
+
+
    return (
       <div className="flex">
          <div className="mt-4 ml-5">
-             {/* <h1>Availabilities for {tutor.name}</h1> */}
-            <h1 className="font-bold text-xl">Availabilities for John Doe</h1>
-            <Calendar onChange={setDate} value={date} calendarType="gregory" />
+         {tutor ? (
+            <h1 className="font-bold text-xl">Availabilities for {tutor.name}</h1>
+         ) : (
+            <h1>Availabilities</h1>
+         )}
+         <Calendar onChange={setDate} value={date} calendarType="gregory" />
          </div>
          <div className="ml-4">
          <Table>
@@ -79,7 +86,7 @@ const MakeAppointment = () => {
                ))}
             </TableBody>
             ) : (
-            <div>Loading...</div>
+            <p>Loading...</p>
             )}
          </Table>
          </div>
