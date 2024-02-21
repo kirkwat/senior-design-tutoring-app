@@ -5,9 +5,6 @@ import TimeInput from "src/components/ui/timeInput";
 import Calendar from 'react-calendar'
 import { Button } from "src/components/ui/button";
 
-
-
-
 const CreateAppointment = () => {
     type ValuePiece = Date | null;
     type Value = ValuePiece | [ValuePiece, ValuePiece];

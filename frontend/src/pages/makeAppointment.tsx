@@ -31,6 +31,17 @@ interface Tutor {
    zoom_link: string
 }
 
+interface NewAppointment {
+   id: number,
+   tutor_id: number,
+   student_id: null,
+   selected_subject: null,
+   start_time: string,
+   end_time: string,
+   zoom_link: string,
+   date: string
+}
+
 
 //Shows all available times for selected tutor
 const MakeAppointment = () => {
@@ -39,8 +50,10 @@ const MakeAppointment = () => {
 
    type Value = ValuePiece | [ValuePiece, ValuePiece];
    const [date, setDate] = useState<Value>(new Date());
+   const [formattedDate, setFormattedDate] = useState<String>();
    const [tutor, setTutor] = useState<Tutor | null>(null);
    const [appointments, setAppointments] = useState<Appointment[] | null>()
+   const [newAppointmentList, setNewAppointmentList] = useState<NewAppointment[] | null>()
 
     useEffect(() => {
       if (tutorID) {
@@ -49,13 +62,57 @@ const MakeAppointment = () => {
       }
     }, []);
 
+    useEffect(() => {
+      handleDateTime()
+    }, [appointments]);
+
+    useEffect(() => {
+      if (date) {
+         let newDate = new Date(date.toString())
+         setFormattedDate(`${newDate.getFullYear()}-${newDate.getMonth() + 1}-${newDate.getDate()}`)
+      }
+    }, [date]);
+
     const handleSubmit = () => {
       // TODO: Add functionality for adding student to an appointment
     };
 
+    const handleDateTime = () => {
+      if (appointments) {
+         let appList: NewAppointment[] = [];
+         for (let i = 0; i < appointments.length; i++) {
+            let app = appointments[i]
 
+            let startDate = new Date(app.start_time)
+            let newDate = `${startDate.getFullYear()}-${startDate.getMonth() + 1}-${startDate.getDate()}`
 
+            let newStartHours = startDate.getHours()
+            let startAM = newStartHours >= 12 ? 'PM' : 'AM';
+            let newStartTime = `${newStartHours % 12 || 12}:${startDate.getMinutes().toString().padStart(2, '0')}:${startDate.getSeconds().toString().padStart(2, '0')} ${startAM}`
 
+            let endDate = new Date(app.end_time)
+            let newEndHours = endDate.getHours()
+            let endAM = newEndHours >= 12 ? 'PM' : 'AM';
+            let newEndTime = `${newEndHours % 12 || 12}:${endDate.getMinutes().toString().padStart(2, '0')}:${endDate.getSeconds().toString().padStart(2, '0')} ${endAM}`
+
+            let newApp: NewAppointment = {
+               id: app.id,
+               tutor_id: app.tutor_id,
+               student_id: app.student_id,
+               selected_subject: app.selected_subject,
+               start_time: newStartTime,
+               end_time: newEndTime,
+               zoom_link: app.zoom_link,
+               date: newDate
+            }
+
+            appList.push(newApp)
+
+         }
+         setNewAppointmentList(appList)
+
+      }
+    }
 
    return (
       <div className="flex">
@@ -75,15 +132,19 @@ const MakeAppointment = () => {
                   <TableHead>Status</TableHead>
                </TableRow>
             </TableHeader>
-            {appointments ? (
+            {newAppointmentList ? (
             <TableBody>
-               {appointments.map((appointment) => (
-                  <TableRow key={appointment.id}>
-                  <TableCell>{`${appointment.start_time}-${appointment.end_time}`}</TableCell>
-                  <TableCell>Available</TableCell>
-                  <TableCell><Button onClick={handleSubmit}>Schedule Appointment</Button></TableCell>
-                  </TableRow>
-               ))}
+               {newAppointmentList.map((appointment) => {
+                  if (!formattedDate || appointment.date === formattedDate) {
+                  return (
+                     <TableRow key={appointment.id}>
+                        <TableCell>{`${appointment.start_time}-${appointment.end_time}`}</TableCell>
+                        <TableCell>Available</TableCell>
+                        <TableCell><Button onClick={handleSubmit}>Schedule Appointment</Button></TableCell>
+                     </TableRow>
+                  );
+                  }
+               })}
             </TableBody>
             ) : (
             <p>Loading...</p>
