@@ -1,47 +1,52 @@
-import express, { Application, Request, Response } from "express";
-import knex from "./config/knex";
+import express, { Request, Response } from "express";
+import dotenv from "dotenv";
 
-const app: Application = express();
-const port = 3000;
+import { logger } from "./middleware/logEvents";
+import cors from "cors";
+import credentials from "./middleware/credentials";
+import corsOptions from "./config/corsOptions";
+import cookieParser from "cookie-parser";
+import errorHandler from "./middleware/errorHandler";
 
+import authRoute from "./routes/auth";
+import logoutRoute from "./routes/logout";
+import refreshRoute from "./routes/refresh";
+import registerRoute from "./routes/register";
+import newAppointmentRoute from "./routes/createAppointment"
+import findAppointmentRoute from "./routes/findAppointments"
+import findAllTutorsRoute from "./routes/findAllTutors"
+import findTutorsRoute from "./routes/findTutors"
+import findTutorRoute from "./routes/findTutorByID"
+
+dotenv.config();
+
+const app = express();
+const PORT = process.env.PORT || 8080;
+
+app.use(logger);
+app.use(errorHandler);
 app.use(express.json());
+app.use(cookieParser());
+app.use(credentials);
+app.use(cors(corsOptions));
 
-//just example request
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello World!");
+app.use("/auth", authRoute);
+app.use("/logout", logoutRoute);
+app.use("/refresh", refreshRoute);
+app.use("/register", registerRoute);
+
+app.use("/appointment", newAppointmentRoute)
+app.use("/appointments", findAppointmentRoute)
+
+app.use("/tutor", findTutorRoute)
+app.use("/tutors", findAllTutorsRoute)
+app.use("/available-tutors", findTutorsRoute)
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
 
-//just example request
-app.post("/users", async (req: Request, res: Response) => {
-  try {
-    const { name, email } = req.body;
-
-    const [userId] = await knex("users").insert({
-      name,
-      email,
-    });
-
-    res.status(201).json({
-      id: userId,
-      message: "User created",
-    });
-  } catch (error) {
-    console.error("Error adding user:", error);
-    res.status(500).send("Error adding user");
-  }
+app.get("/health", (req: Request, res: Response) => {
+  res.status(200).send("OK");
 });
 
-//just example request
-app.get("/users", async (req: Request, res: Response) => {
-  try {
-    const users = await knex.select("*").from("users");
-    res.json(users);
-  } catch (error) {
-    console.error("Error fetching users:", error);
-    res.status(500).send("Error fetching users");
-  }
-});
-
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
