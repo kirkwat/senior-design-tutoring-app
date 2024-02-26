@@ -18,6 +18,14 @@ class Appointment {
     static async findOpenAppointmentsByTutor(tutor_id?: string) {
         return knex(this.APPOINTMENT_TABLE).select('*').where({tutor_id,student_id:null});
     }
+
+    static async findStudentsAppointments(student_id?: string) {
+        return knex(this.APPOINTMENT_TABLE).select('*').where({student_id});
+    }
+
+    static async signUpForAppointment(student_id: string, selected_subject: string, appointment_id?: string){
+        return knex(this.APPOINTMENT_TABLE).where({id: appointment_id}).update({student_id,selected_subject})
+    }
 }
 
 export default Appointment
