@@ -5,6 +5,7 @@ import { Button } from "src/components/ui/button";
 import { redirect } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import Calendar from 'react-calendar'
+import { findAppointmentByTutor } from "src/api/appointmentAPI";
 
 interface Tutor {
    id: number;
@@ -18,16 +19,39 @@ interface Tutor {
    role: string;
  }
 
+ interface Appointment {
+  id: number,
+  tutor_id: number,
+  student_id: null,
+  selected_subject: null,
+  start_time: number,
+  end_time: number,
+  zoom_link: string
+}
+
 // List of all the tutors
 const TutorAvailabilities = () => {
    type ValuePiece = Date | null;
    type Value = ValuePiece | [ValuePiece, ValuePiece];
    const [tutors, setTutors] = useState<Tutor[] | null>(null);
    const [date, setDate] = useState<Value>(new Date());
+   const [availableTutors, setAvailableTutors] = useState<Tutor[] | null>(null);
+   const [curAppointment, setCurAppointment] = useState<Appointment | null>(null);
+   const [curAvailable, setCurAvailable] = useState<Appointment[] | null>(null);
    
    useEffect(() => {
       getTutors().then((data) => setTutors(data)).catch((error) => console.error("Error fetching tutor data:", error));
     }, []);
+
+    // useEffect(() => {
+    //   if (tutors) {
+    //     for (let i = 0; i < tutors.length; i++) {
+    //       findAppointmentByTutor(`${tutors[i].id}`).then((data) => setCurAvailable(data)).catch((error) => console.error("Error fetching appointment data:", error));
+
+    //     }
+    //   }
+
+    // }, [date]);
 
     return (
       <div className="flex">
