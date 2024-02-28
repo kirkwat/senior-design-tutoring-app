@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { createAppointment } from "src/api/appointmentAPI"
 import TimeInput from "src/components/ui/timeInput";
 import Calendar from 'react-calendar'
@@ -13,6 +13,7 @@ const CreateAppointment = () => {
     const [date, setDate] = useState<Value>(new Date());
     const [startTime, setStartTime] = useState<string>('12:00');
     const [endTime, setEndTime] = useState<string>('12:00');
+    const navigate = useNavigate();
 
 
     const handleStartTime = (value: string) => {
@@ -44,10 +45,10 @@ const CreateAppointment = () => {
       };
 
 
-    const handleSubmit = () => {
-        const newStart = formatDateTime(startTime)
-        console.log(newStart)
-        createAppointment(1, newStart, formatDateTime(endTime), "https://zoom.com/placeholder")
+    const handleSubmit = () => {   
+      const newStart = formatDateTime(startTime)
+      createAppointment(1, newStart, formatDateTime(endTime), "https://zoom.com/placeholder")
+      navigate("/tutorAvailabilities/")
     }
 
 
