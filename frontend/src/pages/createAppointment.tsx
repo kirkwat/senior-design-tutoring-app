@@ -12,7 +12,7 @@ const CreateAppointment = () => {
     const {tutorID} = useParams()
     const [date, setDate] = useState<Value>(new Date());
     const [startTime, setStartTime] = useState<string>('12:00');
-    const [endTime, setEndTime] = useState<string>('12:00');
+    const [endTime, setEndTime] = useState<string>('13:00');
     const navigate = useNavigate();
 
 
@@ -37,17 +37,21 @@ const CreateAppointment = () => {
 
     const formatDateTime = (time:string): string => {
         if (date) {
+            //Convert to central time
+            const newTimeDate = new Date(`2024-01-01T${time}:00`)
+            newTimeDate.setHours(newTimeDate.getHours() + 6);
+            const newTime = newTimeDate.toTimeString().slice(0, 5);
+
             const newDate = date.toString();
             const formattedDate = convertDate(newDate.toString())
-            return `${formattedDate}T${time}:00.000Z`;
+            return `${formattedDate}T${newTime}:00.000Z`;
         }
         return ''
       };
 
 
     const handleSubmit = () => {   
-      const newStart = formatDateTime(startTime)
-      createAppointment(1, newStart, formatDateTime(endTime), "https://zoom.com/placeholder")
+      createAppointment(1, formatDateTime(startTime), formatDateTime(endTime), "https://zoom.com/placeholder")
       navigate("/tutorAvailabilities/")
     }
 
