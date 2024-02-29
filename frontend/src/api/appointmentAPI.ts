@@ -1,4 +1,4 @@
-import axios from "./axios";
+import { AxiosInstance } from "axios";
 
 interface Appointment {
   id: number;
@@ -11,13 +11,14 @@ interface Appointment {
 }
 
 export const createAppointment = (
+  axiosPrivate: AxiosInstance,
   tutorID: number,
   start: string,
   end: string,
   zoom: string,
 ) =>
   new Promise((resolve, reject) => {
-    axios
+    axiosPrivate
       .post(`/appointment`, {
         tutor_id: tutorID,
         start: start,
@@ -32,11 +33,12 @@ export const createAppointment = (
   });
 
 export const findAppointmentByTutor = (
+  axiosPrivate: AxiosInstance,
   tutorID: string,
 ): Promise<Appointment[]> =>
   new Promise((resolve, reject) => {
-    axios
-      .get(`/appointments?tutor_id=${tutorID}`)
+    axiosPrivate
+      .get(`/appointment?tutor_id=${tutorID}`)
       .then((x) => resolve(x.data))
       .catch((error) => {
         console.error("Error fetching tutors:", error);

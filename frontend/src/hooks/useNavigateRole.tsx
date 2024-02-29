@@ -4,7 +4,7 @@ import useAuth from "./useAuth";
 
 const userRoleRoutes = {
   admin: "admin",
-  user: "dashboard",
+  user: "user",
   tutor: "tutor",
 };
 

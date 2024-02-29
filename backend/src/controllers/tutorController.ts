@@ -69,7 +69,7 @@ const handleFindAvailableTutorsByTime = async (req: Request, res: Response) => {
 
 const handleFindAvailableTutorsByDay = async (req: Request, res: Response) => {
   try {
-    const time_req = req.query.time;
+    const time_req = req.query.day;
     var time = 0;
     if (time_req) {
       time = new Date(time_req.toString()).setUTCHours(0, 0, 0, 0);
@@ -92,7 +92,7 @@ const handleFindAvailableTutorsByDay = async (req: Request, res: Response) => {
 
 const handleFindAvailableTutorsByWeek = async (req: Request, res: Response) => {
   try {
-    const time_req = req.query.time;
+    const time_req = req.query.week;
     var time = 0;
     if (time_req) {
       const date = new Date(time_req.toString());

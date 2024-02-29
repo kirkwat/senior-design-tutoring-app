@@ -4,8 +4,10 @@ import { createAppointment } from "src/api/appointmentAPI";
 import TimeInput from "src/components/ui/timeInput";
 import Calendar from "react-calendar";
 import { Button } from "src/components/ui/button";
+import useAxiosPrivate from "src/hooks/useAxiosPrivate";
 
 const CreateAppointment = () => {
+  const axiosPrivate = useAxiosPrivate();
   type ValuePiece = Date | null;
   type Value = ValuePiece | [ValuePiece, ValuePiece];
 
@@ -50,6 +52,7 @@ const CreateAppointment = () => {
 
   const handleSubmit = () => {
     createAppointment(
+      axiosPrivate,
       1,
       formatDateTime(startTime),
       formatDateTime(endTime),

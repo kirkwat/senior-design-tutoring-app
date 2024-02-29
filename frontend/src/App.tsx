@@ -26,31 +26,37 @@ const App = () => {
       <Router>
         <Layout>
           <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="login" element={<Login />} />
-            <Route path="register" element={<Register />} />
-            <Route path="unauthorized" element={<Unauthorized />} />
-            <Route
-              path="tutorAvailabilities"
-              element={<TutorAvailabilities />}
-            />
-            <Route
-              path="makeAppointment/:tutorID"
-              element={<MakeAppointment />}
-            />
-            <Route
-              path="createAppointment/:tutorID"
-              element={<CreateAppointment />}
-            />{" "}
-            {/*TOTO: Remove after testing*/}
             <Route element={<PersistLogin />}>
+              <Route path="/" element={<Login />} />
+              <Route path="login" element={<Login />} />
+              <Route path="register" element={<Register />} />
+              <Route path="unauthorized" element={<Unauthorized />} />
+
+              <Route
+                element={
+                  <RequireAuth allowedRoles={[ROLES.User, ROLES.Tutor]} />
+                }
+              >
+                <Route
+                  path="tutorAvailabilities"
+                  element={<TutorAvailabilities />}
+                />
+              </Route>
+
               <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
                 <Route path="user" element={<User />} />
+                <Route
+                  path="makeAppointment/:tutorID"
+                  element={<MakeAppointment />}
+                />
               </Route>
 
               <Route element={<RequireAuth allowedRoles={[ROLES.Tutor]} />}>
                 <Route path="tutor" element={<Tutor />} />
-                {/* <Route path="createAppointment/:tutorID" element={<CreateAppointment/>} /> */}
+                <Route
+                  path="createAppointment/:tutorID"
+                  element={<CreateAppointment />}
+                />
               </Route>
 
               <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>

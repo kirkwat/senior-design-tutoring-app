@@ -19,6 +19,7 @@ import {
   createAppointment,
   findAppointmentByTutor,
 } from "src/api/appointmentAPI";
+import useAxiosPrivate from "src/hooks/useAxiosPrivate";
 
 interface Tutor {
   id: number;
@@ -55,6 +56,7 @@ interface NewAppointment {
 
 //Shows all available times for selected tutor
 const MakeAppointment = () => {
+  const axiosPrivate = useAxiosPrivate();
   const { tutorID } = useParams();
   type ValuePiece = Date | null;
 
@@ -69,10 +71,10 @@ const MakeAppointment = () => {
 
   useEffect(() => {
     if (tutorID) {
-      getTutorByID(tutorID)
+      getTutorByID(axiosPrivate, tutorID)
         .then((data) => setTutor(data))
         .catch((error) => console.error("Error fetching tutor data:", error));
-      findAppointmentByTutor(tutorID)
+      findAppointmentByTutor(axiosPrivate, tutorID)
         .then((data) => setAppointments(data))
         .catch((error) => console.error("Error fetching tutor data:", error));
     }

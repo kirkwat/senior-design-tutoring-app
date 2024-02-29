@@ -1,4 +1,4 @@
-import axios from "./axios";
+import { AxiosInstance } from "axios";
 
 interface Tutor {
   id: number;
@@ -12,10 +12,10 @@ interface Tutor {
   role: string;
 }
 
-export const getTutors = (): Promise<Tutor[]> =>
+export const getTutors = (axiosPrivate: AxiosInstance): Promise<Tutor[]> =>
   new Promise((resolve, reject) => {
-    axios
-      .get("/tutors")
+    axiosPrivate
+      .get("/tutor")
       .then((response) => resolve(response.data))
       .catch((error) => {
         console.error("Error fetching tutors:", error);
@@ -23,10 +23,13 @@ export const getTutors = (): Promise<Tutor[]> =>
       });
   });
 
-export const getTutorByID = (tutor_id: string): Promise<Tutor> =>
+export const getTutorByID = (
+  axiosPrivate: AxiosInstance,
+  tutor_id: string,
+): Promise<Tutor> =>
   new Promise((resolve, reject) => {
-    axios
-      .get(`/tutor?tutor_id=${tutor_id}`)
+    axiosPrivate
+      .get(`/tutor/${tutor_id}`)
       .then((response) => resolve(response.data))
       .catch((error) => {
         console.error("Error fetching tutors:", error);
@@ -34,10 +37,13 @@ export const getTutorByID = (tutor_id: string): Promise<Tutor> =>
       });
   });
 
-export const findAvailableTutorsByTime = (time: number): Promise<Tutor[]> =>
+export const findAvailableTutorsByTime = (
+  axiosPrivate: AxiosInstance,
+  time: number,
+): Promise<Tutor[]> =>
   new Promise((resolve, reject) => {
-    axios
-      .get(`/available-tutors?time=${time}`)
+    axiosPrivate
+      .get(`/tutor/available?time=${time}`)
       .then((response) => resolve(response.data))
       .catch((error) => {
         console.error("Error fetching tutors:", error);
@@ -45,10 +51,13 @@ export const findAvailableTutorsByTime = (time: number): Promise<Tutor[]> =>
       });
   });
 
-export const findAvailableTutorsByDay = (day: number): Promise<Tutor[]> =>
+export const findAvailableTutorsByDay = (
+  axiosPrivate: AxiosInstance,
+  day: number,
+): Promise<Tutor[]> =>
   new Promise((resolve, reject) => {
-    axios
-      .get(`/available-tutors/day?day=${day}`)
+    axiosPrivate
+      .get(`/tutor/available/day?day=${day}`)
       .then((response) => resolve(response.data))
       .catch((error) => {
         console.error("Error fetching tutors:", error);
@@ -56,10 +65,13 @@ export const findAvailableTutorsByDay = (day: number): Promise<Tutor[]> =>
       });
   });
 
-export const findAvailableTutorsByWeek = (week: number): Promise<Tutor[]> =>
+export const findAvailableTutorsByWeek = (
+  axiosPrivate: AxiosInstance,
+  week: number,
+): Promise<Tutor[]> =>
   new Promise((resolve, reject) => {
-    axios
-      .get(`/available-tutors/week?week=${week}`)
+    axiosPrivate
+      .get(`/tutor/available/week?week=${week}`)
       .then((response) => resolve(response.data))
       .catch((error) => {
         console.error("Error fetching tutors:", error);

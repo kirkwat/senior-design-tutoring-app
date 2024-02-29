@@ -18,7 +18,7 @@ const REGISTER_URL = "/register";
 const LOGIN_URL = "/auth";
 
 const Register = () => {
-  const { setAuth } = useAuth();
+  const { setAuth, auth } = useAuth();
   const navigateUserRole = useNavigateRole();
 
   const userRef = useRef<HTMLInputElement>(null);
@@ -43,6 +43,12 @@ const Register = () => {
   const [userRole, setUserRole] = useState<"user" | "tutor">("user");
 
   const [errMsg, setErrMsg] = useState("");
+
+  useEffect(() => {
+    if (auth.accessToken) {
+      navigateUserRole();
+    }
+  }, [auth.accessToken, navigateUserRole]);
 
   useEffect(() => {
     if (userRef.current) {
