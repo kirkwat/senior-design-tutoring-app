@@ -12,12 +12,12 @@ import authRoute from "./routes/auth";
 import logoutRoute from "./routes/logout";
 import refreshRoute from "./routes/refresh";
 import registerRoute from "./routes/register";
-import registerAppointmentRoute from "./routes/registerForAppointment"
-import newAppointmentRoute from "./routes/createAppointment"
-import findAppointmentRoute from "./routes/findAppointments"
-import findAllTutorsRoute from "./routes/findAllTutors"
-import findTutorsRoute from "./routes/findTutors"
-import findTutorRoute from "./routes/findTutorByID"
+import registerAppointmentRoute from "./routes/registerForAppointment";
+import newAppointmentRoute from "./routes/createAppointment";
+import findAppointmentRoute from "./routes/findAppointments";
+import findAllTutorsRoute from "./routes/findAllTutors";
+import findTutorsRoute from "./routes/findTutors";
+import findTutorRoute from "./routes/findTutorByID";
 
 dotenv.config();
 
@@ -36,13 +36,13 @@ app.use("/logout", logoutRoute);
 app.use("/refresh", refreshRoute);
 app.use("/register", registerRoute);
 
-app.use("/appointment", newAppointmentRoute)
-app.use("/appointments", findAppointmentRoute)
-app.use("/appointment", registerAppointmentRoute)
+app.use("/appointment", newAppointmentRoute);
+app.use("/appointments", findAppointmentRoute);
+app.use("/appointment", registerAppointmentRoute);
 
-app.use("/tutor", findTutorRoute)
-app.use("/tutors", findAllTutorsRoute)
-app.use("/available-tutors", findTutorsRoute)
+app.use("/tutor", findTutorRoute);
+app.use("/tutors", findAllTutorsRoute);
+app.use("/available-tutors", findTutorsRoute);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
@@ -51,4 +51,3 @@ app.listen(PORT, () => {
 app.get("/health", (req: Request, res: Response) => {
   res.status(200).send("OK");
 });
-

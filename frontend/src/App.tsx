@@ -30,10 +30,19 @@ const App = () => {
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
             <Route path="unauthorized" element={<Unauthorized />} />
-            <Route path="tutorAvailabilities"  element={<TutorAvailabilities />} />
-            <Route path="makeAppointment/:tutorID"  element={<MakeAppointment />} />
-            <Route path="createAppointment/:tutorID" element={<CreateAppointment/>} /> {/*TOTO: Remove after testing*/}
-
+            <Route
+              path="tutorAvailabilities"
+              element={<TutorAvailabilities />}
+            />
+            <Route
+              path="makeAppointment/:tutorID"
+              element={<MakeAppointment />}
+            />
+            <Route
+              path="createAppointment/:tutorID"
+              element={<CreateAppointment />}
+            />{" "}
+            {/*TOTO: Remove after testing*/}
             <Route element={<PersistLogin />}>
               <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
                 <Route path="user" element={<User />} />
@@ -48,7 +57,6 @@ const App = () => {
                 <Route path="admin" element={<Admin />} />
               </Route>
             </Route>
-
             <Route path="*" element={<Missing />} />
           </Routes>
         </Layout>

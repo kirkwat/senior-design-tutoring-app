@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useState } from "react";
 
 interface TimeInputProps {
   label: string;
