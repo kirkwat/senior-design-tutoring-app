@@ -12,12 +12,8 @@ import authRoute from "./routes/auth";
 import logoutRoute from "./routes/logout";
 import refreshRoute from "./routes/refresh";
 import registerRoute from "./routes/register";
-import registerAppointmentRoute from "./routes/registerForAppointment";
-import newAppointmentRoute from "./routes/createAppointment";
-import findAppointmentRoute from "./routes/findAppointments";
-import findAllTutorsRoute from "./routes/findAllTutors";
-import findTutorsRoute from "./routes/findTutors";
-import findTutorRoute from "./routes/findTutorByID";
+import appointmentRoute from "./routes/appointment";
+import tutorRoute from "./routes/tutor";
 import verifyJWT from "./middleware/verifyJWT";
 
 dotenv.config();
@@ -38,13 +34,9 @@ app.use("/refresh", refreshRoute);
 app.use("/register", registerRoute);
 
 app.use(verifyJWT);
-app.use("/appointment", newAppointmentRoute);
-app.use("/appointments", findAppointmentRoute);
-app.use("/appointment", registerAppointmentRoute);
+app.use("/appointment", appointmentRoute);
 
-app.use("/tutor", findTutorRoute);
-app.use("/tutors", findAllTutorsRoute);
-app.use("/available-tutors", findTutorsRoute);
+app.use("/tutor", tutorRoute);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
