@@ -72,22 +72,20 @@ const handleIsAvailable = async (req: Request, res: Response) => {
   try {
     const tutor_id = req.query.tutor_id;
     const tid = tutor_id?.toString();
-    const start = req.query.start_time;
-    const start_time = start?.toString();
+    const time_req = req.query.day;
+    var time = 0;
+    if (time_req) {
+      time = new Date(time_req.toString()).setUTCHours(0, 0, 0, 0);
+    }
 
-    if (start_time) {
-      const appointment = await Appointment.isAvailable(
-        new Date(start_time),
-        tid,
-      );
-
-      if (!appointment[0]) {
-        res.json(false);
-      } else if (appointment[0]) {
-        res.json(true);
-      }
-    } else {
-      res.json(null);
+    const appointment = await Appointment.isAvailable(
+      time,
+      tid,
+    );
+    if (!appointment[0]) {
+      res.json(false);
+    } else if (appointment[0]) {
+      res.json(true);
     }
   } catch (err) {
     if (err instanceof Error) {

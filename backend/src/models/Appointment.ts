@@ -16,10 +16,14 @@ class Appointment {
     );
   }
 
-  static async isAvailable(start_date: Date, tutor_id?: string) {
-    return knex(this.APPOINTMENT_TABLE)
+  static async isAvailable(day: number, tutor_id?: string) {
+    const subquery = knex(this.APPOINTMENT_TABLE)
+      .select("tutor_id")
+      .whereBetween("start_time", [day, day + 86400000]); // adding number of milliseconds in a day
+    return await knex(this.APPOINTMENT_TABLE)
       .select("*")
-      .where({ tutor_id, start_time: start_date.getTime(), student_id: null });
+      .whereIn("id", subquery)
+      .where({ tutor_id, student_id: null });
   }
 
   static async findOpenAppointmentsByTutor(tutor_id?: string) {
