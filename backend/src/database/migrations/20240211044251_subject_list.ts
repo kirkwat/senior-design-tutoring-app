@@ -4,7 +4,7 @@ export async function up(knex: Knex) {
   return knex.schema.createTable("subject_list", (table) => {
     table.increments("id").primary();
     table.integer("subject_id").notNullable();
-    table.foreign("subject_id").references("subjects.id");
+    table.foreign("subject_id").references("subject.id");
     table.string("name").notNullable();
   });
 }
