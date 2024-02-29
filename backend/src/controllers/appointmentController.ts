@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { z } from "zod";
 import Appointment from "../models/Appointment";
+import { start } from "repl";
 
 const newAppointmentSchema = z.object({
     tutor_id: z.number(),
@@ -60,6 +61,34 @@ const handleFindAvailableAppointments = async (req: Request, res: Response) => {
   }
 }
 
+const handleIsAvailable = async (req: Request, res: Response) => {
+  try{
+    const tutor_id = req.query.tutor_id
+    const tid = tutor_id?.toString()
+    const start = req.query.start_time
+    const start_time = start?.toString()
+
+    if(start_time){
+      const appointment = await Appointment.isAvailable(new Date(start_time),tid)
+    
+      if(!appointment[0]){
+        res.json(false)
+      }
+      else if(appointment[0]) {
+        res.json(true)
+      }
+    } else {
+      res.json(null)
+    }
+  } catch(err) {
+    if (err instanceof Error) {
+      res.status(500).json({ message: err.message });
+    } else {
+      res.status(500).json({ message: "An unknown error occurred" });
+    }
+  }
+}
+
 const handleFindStudentsAppointments = async (req: Request, res: Response) => {
   try{
     const student_id = req.query.student_id
@@ -105,7 +134,8 @@ const handRegisterForAppointment = async (req: Request, res: Response) => {
 
 
 export { handleNewAppointment, 
-  handleFindAvailableAppointments, 
+  handleFindAvailableAppointments,
+  handleIsAvailable, 
   handleFindStudentsAppointments,
   handRegisterForAppointment };
   

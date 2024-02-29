@@ -28,6 +28,7 @@
 | Logout | GET | /logout |  | Logs out the current user. |
 | Handle Refresh | GET | /refresh |  | Handles refresh token and provides new access token. |
 | Create Appointment | POST | /appointment | `tutor_id` (number), `start` (string), `end` (string), `zoom_link` (string) | Creates a new appointment for a given tutor |
+| Check if Appointment is Available | GET | /appointments/available?start_time&tutor_id |  | Returns true if the appointment for the specified tutor at the specified time is available |
 | Fetch Available Appointments | GET | /appointments?tutor_id |  | Fetches all of the available appointments for a tutor |
 | Fetch a Students Appointments | GET | /appointments/student?student_id |  | Finds all of a students current appointments they have signed up for |
 | Register for Appointment | PUT | /appointment?appointment_id | `student_id` (number), `selected_subject` (number) | Registers a student under an appointment with a selected subject to be tutored on |
