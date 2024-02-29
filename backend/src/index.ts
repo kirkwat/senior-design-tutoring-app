@@ -18,6 +18,7 @@ import findAppointmentRoute from "./routes/findAppointments";
 import findAllTutorsRoute from "./routes/findAllTutors";
 import findTutorsRoute from "./routes/findTutors";
 import findTutorRoute from "./routes/findTutorByID";
+import verifyJWT from "./middleware/verifyJWT";
 
 dotenv.config();
 
@@ -36,6 +37,7 @@ app.use("/logout", logoutRoute);
 app.use("/refresh", refreshRoute);
 app.use("/register", registerRoute);
 
+app.use(verifyJWT);
 app.use("/appointment", newAppointmentRoute);
 app.use("/appointments", findAppointmentRoute);
 app.use("/appointment", registerAppointmentRoute);

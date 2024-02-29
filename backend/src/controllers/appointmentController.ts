@@ -129,11 +129,9 @@ const handRegisterForAppointment = async (req: Request, res: Response) => {
     const appid = student_id?.toString();
     await Appointment.signUpForAppointment(student_id, selected_subject, appid);
 
-    res
-      .status(201)
-      .json({
-        success: `Student id ${student_id} registered for appointment id ${appid}!`,
-      });
+    res.status(201).json({
+      success: `Student id ${student_id} registered for appointment id ${appid}!`,
+    });
   } catch (err) {
     if (err instanceof z.ZodError) {
       return res.status(400).json({ message: err.errors });
