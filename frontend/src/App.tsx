@@ -31,11 +31,11 @@ const App = () => {
               <Route path="login" element={<Login />} />
               <Route path="register" element={<Register />} />
               <Route path="unauthorized" element={<Unauthorized />} />
-              <Route path="tutorAvailabilities"  element={<TutorAvailabilities />} />
+              {/* <Route path="tutorAvailabilities"  element={<TutorAvailabilities />} />
               <Route path="makeAppointment/:tutorID"  element={<MakeAppointment />} />
-              <Route path="createAppointment/:tutorID" element={<CreateAppointment/>} /> {/*TOTO: Remove after testing*/}
+              <Route path="createAppointment/:tutorID" element={<CreateAppointment/>} /> TOTO: Remove after testing */}
 
-              {/* <Route
+              <Route
                 element={
                   <RequireAuth allowedRoles={[ROLES.User, ROLES.Tutor]} />
                 }
@@ -44,23 +44,23 @@ const App = () => {
                   path="tutorAvailabilities"
                   element={<TutorAvailabilities />}
                 />
-              </Route> */}
+              </Route>
 
-              {/* <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
+              <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
                 <Route path="user" element={<User />} />
                 <Route
                   path="makeAppointment/:tutorID"
                   element={<MakeAppointment />}
                 />
-              </Route> */}
+              </Route>
 
-              {/* <Route element={<RequireAuth allowedRoles={[ROLES.Tutor]} />}>
+              <Route element={<RequireAuth allowedRoles={[ROLES.Tutor]} />}>
                 <Route path="tutor" element={<Tutor />} />
                 <Route
                   path="createAppointment/:tutorID"
                   element={<CreateAppointment />}
                 />
-              </Route> */}
+              </Route>
 
               <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>
                 <Route path="admin" element={<Admin />} />
