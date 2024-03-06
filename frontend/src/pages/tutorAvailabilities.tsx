@@ -42,19 +42,20 @@ const TutorAvailabilities = () => {
    
    useEffect(() => {
       getTutors().then((data) => setTutors(data)).catch((error) => console.error("Error fetching tutor data:", error));
+      setAvailableList([true, false])
     }, []);
 
-    // useEffect(() => {
-    //   if (tutors) {
-    //     for (let i = 0; i < tutors.length; i++) {
-    //       checkAvailableAppointments('placeholder', `${tutors[i].id}`).then((data) => setCurAvailable(data)).catch((error) => console.error("Error fetching appointment data:", error));
-    //       if (availableList && curAvailable) {
-    //         availableList.push(curAvailable)
-    //       }
-    //     }
-    //   }
+    useEffect(() => {
+      if (tutors) {
+        for (let i = 0; i < tutors.length; i++) {
+          checkAvailableAppointments('2024-03-06', `${tutors[i].id}`).then((data) => setCurAvailable(data)).catch((error) => console.error("Error fetching appointment data:", error));
+          if (availableList && curAvailable) {
+            availableList.push(curAvailable)
+          }
+        }
+      }
 
-    // }, [date]);
+    }, [date]);
 
     return (
       <div className="flex">
@@ -74,7 +75,8 @@ const TutorAvailabilities = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {tutors.map((tutor) => (
+            {tutors.map((tutor, index) => (
+              availableList && availableList[index] === true ? (
                 <TableRow key={tutor.id}>
                   <TableCell>{tutor.name}</TableCell>
                   <TableCell>{tutor.bio}</TableCell>
@@ -84,8 +86,9 @@ const TutorAvailabilities = () => {
                     </Button>
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
+              ) : null
+            ))}
+          </TableBody>
           </Table>
         )}
         </div>
