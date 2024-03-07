@@ -28,6 +28,10 @@ app.use(cookieParser());
 app.use(credentials);
 app.use(cors(corsOptions));
 
+app.get("/health", (req: Request, res: Response) => {
+  res.status(200).send("OK");
+});
+
 app.use("/auth", authRoute);
 app.use("/logout", logoutRoute);
 app.use("/refresh", refreshRoute);
@@ -40,8 +44,4 @@ app.use("/tutor", tutorRoute);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-});
-
-app.get("/health", (req: Request, res: Response) => {
-  res.status(200).send("OK");
 });

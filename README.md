@@ -23,6 +23,8 @@
 
 ### API Routes
 
+The API routes below can be tested using this [Postman collection](/backend/api.postman_collection.json).
+
 | Action | Method | Endpoint | Body | Description |
 | --- | --- | --- | --- | --- |
 | Register | POST | /register | `user` (string), `pwd` (string), `name` (string), `role` (`user` or `tutor`) | Creates a new user. |
