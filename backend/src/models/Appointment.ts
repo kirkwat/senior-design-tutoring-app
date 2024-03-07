@@ -18,7 +18,7 @@ class Appointment {
 
   static async isAvailable(day: number, tutor_id?: string) {
     const subquery = knex(this.APPOINTMENT_TABLE)
-      .select("tutor_id")
+      .select("id")
       .whereBetween("start_time", [day, day + 86400000]); // adding number of milliseconds in a day
     return await knex(this.APPOINTMENT_TABLE)
       .select("*")
