@@ -6,6 +6,7 @@ import { redirect } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import Calendar from 'react-calendar'
 import { findAppointmentByTutor, checkAvailableAppointments } from "src/api/appointmentAPI";
+import useAxiosPrivate from "src/hooks/useAxiosPrivate";
 
 interface Tutor {
    id: number;
@@ -31,6 +32,7 @@ interface Tutor {
 
 // List of all the tutors
 const TutorAvailabilities = () => {
+   const axiosPrivate = useAxiosPrivate();
    type ValuePiece = Date | null;
    type Value = ValuePiece | [ValuePiece, ValuePiece];
    const [tutors, setTutors] = useState<Tutor[] | null>(null);
