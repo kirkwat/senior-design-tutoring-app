@@ -32,7 +32,7 @@ interface Tutor {
 
 // List of all the tutors
 const TutorAvailabilities = () => {
-   const axiosPrivate = useAxiosPrivate();
+  //  const axiosPrivate = useAxiosPrivate();
    type ValuePiece = Date | null;
    type Value = ValuePiece | [ValuePiece, ValuePiece];
    const [tutors, setTutors] = useState<Tutor[] | null>(null);
@@ -48,9 +48,11 @@ const TutorAvailabilities = () => {
     }, []);
 
     useEffect(() => {
-      if (tutors) {
+      if (tutors && date) {
         for (let i = 0; i < tutors.length; i++) {
-          checkAvailableAppointments('2024-03-06', `${tutors[i].id}`).then((data) => setCurAvailable(data)).catch((error) => console.error("Error fetching appointment data:", error));
+          let newDate = new Date(date.toString())
+          let formattedDate = `${newDate.getFullYear()}-${newDate.getMonth() + 1}-${newDate.getDate()}`
+          checkAvailableAppointments(formattedDate, `${tutors[i].id}`).then((data) => setCurAvailable(data)).catch((error) => console.error("Error fetching appointment data:", error));
           if (availableList && curAvailable) {
             availableList.push(curAvailable)
           }
