@@ -68,7 +68,7 @@ export const findAppointmentByTutor = (tutorID:string): Promise<Appointment[]> =
 // });
 
 export const checkAvailableAppointments = (day:string, tutorID:string): Promise<Boolean> => new Promise((resolve, reject) => {
-axios.get(`/appointment/available?day=${day}&tutorID=${tutorID}`)
+axios.get(`/appointment/available?day=${day}&tutor_id=${tutorID}`)
     .then(x => resolve(x.data))
     .catch(error => {
         console.error('Error fetching tutors:', error);

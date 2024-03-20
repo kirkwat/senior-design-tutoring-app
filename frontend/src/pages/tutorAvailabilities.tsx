@@ -44,15 +44,17 @@ const TutorAvailabilities = () => {
    
    useEffect(() => {
       getTutors().then((data) => setTutors(data)).catch((error) => console.error("Error fetching tutor data:", error));
-      setAvailableList([true, false])
+      setAvailableList([])
     }, []);
 
     useEffect(() => {
       if (tutors && date) {
+        // setAvailableList([])
         for (let i = 0; i < tutors.length; i++) {
           let newDate = new Date(date.toString())
-          let formattedDate = `${newDate.getFullYear()}-${newDate.getMonth() + 1}-${newDate.getDate()}`
+          let formattedDate = `${newDate.getFullYear()}-${(newDate.getMonth() + 1).toString().padStart(2, '0')}-${newDate.getDate().toString().padStart(2, '0')}`
           checkAvailableAppointments(formattedDate, `${tutors[i].id}`).then((data) => setCurAvailable(data)).catch((error) => console.error("Error fetching appointment data:", error));
+          console.log(formattedDate, curAvailable, tutors[i].id)
           if (availableList && curAvailable) {
             availableList.push(curAvailable)
           }
