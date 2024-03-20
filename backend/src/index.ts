@@ -37,7 +37,7 @@ app.use("/logout", logoutRoute);
 app.use("/refresh", refreshRoute);
 app.use("/register", registerRoute);
 
-app.use(verifyJWT);
+// app.use(verifyJWT);
 app.use("/appointment", appointmentRoute);
 
 app.use("/tutor", tutorRoute);
