@@ -12,11 +12,9 @@ import authRoute from "./routes/auth";
 import logoutRoute from "./routes/logout";
 import refreshRoute from "./routes/refresh";
 import registerRoute from "./routes/register";
-import newAppointmentRoute from "./routes/createAppointment"
-import findAppointmentRoute from "./routes/findAppointments"
-import findAllTutorsRoute from "./routes/findAllTutors"
-import findTutorsRoute from "./routes/findTutors"
-import findTutorRoute from "./routes/findTutorByID"
+import appointmentRoute from "./routes/appointment";
+import tutorRoute from "./routes/tutor";
+import verifyJWT from "./middleware/verifyJWT";
 
 dotenv.config();
 
@@ -30,23 +28,20 @@ app.use(cookieParser());
 app.use(credentials);
 app.use(cors(corsOptions));
 
+app.get("/health", (req: Request, res: Response) => {
+  res.status(200).send("OK");
+});
+
 app.use("/auth", authRoute);
 app.use("/logout", logoutRoute);
 app.use("/refresh", refreshRoute);
 app.use("/register", registerRoute);
 
-app.use("/appointment", newAppointmentRoute)
-app.use("/appointments", findAppointmentRoute)
+// app.use(verifyJWT);
+app.use("/appointment", appointmentRoute);
 
-app.use("/tutor", findTutorRoute)
-app.use("/tutors", findAllTutorsRoute)
-app.use("/available-tutors", findTutorsRoute)
+app.use("/tutor", tutorRoute);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
-app.get("/health", (req: Request, res: Response) => {
-  res.status(200).send("OK");
-});
-

@@ -27,10 +27,10 @@ const handleNewUser = async (req: Request, res: Response) => {
       role,
     });
 
-    if(role == "tutor"){
+    if (role == "tutor") {
       await Tutor.createTutor({
         user_id: newUser[0],
-        bio: '',
+        bio: "",
       });
     }
     res.status(201).json({ success: `New ${role} ${user} created!` });

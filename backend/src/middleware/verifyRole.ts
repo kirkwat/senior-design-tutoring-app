@@ -1,10 +1,11 @@
 import { Request, Response, NextFunction } from "express";
+import { Role } from "../config/roles";
 
 interface RoleRequest extends Request {
-  role?: string;
+  role?: Role;
 }
 
-const verifyRoles = (...allowedRoles: string[]) => {
+const verifyRoles = (...allowedRoles: Role[]) => {
   return (req: RoleRequest, res: Response, next: NextFunction) => {
     if (!req.role) return res.sendStatus(401);
 

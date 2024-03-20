@@ -13,7 +13,7 @@ import { useNavigateRole } from "src/hooks/useNavigateRole";
 const LOGIN_URL = "/auth";
 
 const Login = () => {
-  const { setAuth, persist, setPersist } = useAuth();
+  const { setAuth, persist, setPersist, auth } = useAuth();
   const navigateUserRole = useNavigateRole();
 
   const userRef = useRef<HTMLInputElement>(null);
@@ -22,6 +22,12 @@ const Login = () => {
   const [user, setUser] = useState("");
   const [pwd, setPwd] = useState("");
   const [errMsg, setErrMsg] = useState("");
+
+  useEffect(() => {
+    if (auth.accessToken) {
+      navigateUserRole();
+    }
+  }, [auth.accessToken, navigateUserRole]);
 
   useEffect(() => {
     if (userRef.current) {

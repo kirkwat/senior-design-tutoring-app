@@ -18,7 +18,11 @@ const verifyJWT = (req: JWTRequest, res: Response, next: NextFunction) => {
   const token =
     typeof authHeader === "string" ? authHeader.split(" ")[1] : undefined;
 
-  if (!token || !token.startsWith("Bearer ")) return res.sendStatus(401);
+  if (
+    !token ||
+    (typeof authHeader === "string" && !authHeader.startsWith("Bearer "))
+  )
+    return res.sendStatus(401);
 
   if (!process.env.ACCESS_TOKEN_SECRET) {
     throw new Error("Environment variables not set");

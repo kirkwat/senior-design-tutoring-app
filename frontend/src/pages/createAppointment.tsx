@@ -1,18 +1,21 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { createAppointment } from "src/api/appointmentAPI"
 import TimeInput from "src/components/ui/timeInput";
 import Calendar from 'react-calendar'
 import { Button } from "src/components/ui/button";
+import useAxiosPrivate from "src/hooks/useAxiosPrivate";
 
 const CreateAppointment = () => {
+    const axiosPrivate = useAxiosPrivate();
     type ValuePiece = Date | null;
     type Value = ValuePiece | [ValuePiece, ValuePiece];
 
     const {tutorID} = useParams()
     const [date, setDate] = useState<Value>(new Date());
     const [startTime, setStartTime] = useState<string>('12:00');
-    const [endTime, setEndTime] = useState<string>('12:00');
+    const [endTime, setEndTime] = useState<string>('13:00');
+    const navigate = useNavigate();
 
 
     const handleStartTime = (value: string) => {
@@ -36,18 +39,22 @@ const CreateAppointment = () => {
 
     const formatDateTime = (time:string): string => {
         if (date) {
+            //Convert to central time
+            const newTimeDate = new Date(`2024-01-01T${time}:00`)
+            newTimeDate.setHours(newTimeDate.getHours() + 6);
+            const newTime = newTimeDate.toTimeString().slice(0, 5);
+
             const newDate = date.toString();
             const formattedDate = convertDate(newDate.toString())
-            return `${formattedDate}T${time}:00.000Z`;
+            return `${formattedDate}T${newTime}:00.000Z`;
         }
         return ''
       };
 
 
-    const handleSubmit = () => {
-        const newStart = formatDateTime(startTime)
-        console.log(newStart)
-        createAppointment(1, newStart, formatDateTime(endTime), "https://zoom.com/placeholder")
+    const handleSubmit = () => {   
+      createAppointment(1, formatDateTime(startTime), formatDateTime(endTime), "https://zoom.com/placeholder")
+      navigate("/tutorAvailabilities/")
     }
 
 
@@ -68,4 +75,3 @@ const CreateAppointment = () => {
   };
   
   export default CreateAppointment;
-  

@@ -8,6 +8,7 @@ import 'react-calendar/dist/Calendar.css';
 import { getTutors, getTutorByID } from "src/api/tutorAPI";
 import {Table, TableBody, TableCaption, TableCell, TableHead, TableHeader,TableRow} from "src/components/ui/table"
 import { createAppointment, findAppointmentByTutor } from "src/api/appointmentAPI"
+import useAxiosPrivate from "src/hooks/useAxiosPrivate";
 
 interface Tutor {
    id: number;
@@ -48,6 +49,7 @@ const MakeAppointment = () => {
     const {tutorID} = useParams()
     type ValuePiece = Date | null;
 
+    const axiosPrivate = useAxiosPrivate();
    type Value = ValuePiece | [ValuePiece, ValuePiece];
    const [date, setDate] = useState<Value>(new Date());
    const [formattedDate, setFormattedDate] = useState<String>();

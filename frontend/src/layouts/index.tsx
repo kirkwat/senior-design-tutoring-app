@@ -3,6 +3,7 @@ import useAuth from "src/hooks/useAuth";
 import useLogout from "../hooks/useLogout";
 import { Link, useNavigate } from "react-router-dom";
 import { useNavigateRole } from "src/hooks/useNavigateRole";
+import { NotebookPenIcon } from "lucide-react";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -22,7 +23,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <nav className="bg-foreground text-primary-foreground p-4 flex justify-between items-center">
-        <div className="font-bold text-xl">Tutoring App</div>
+        <div className="flex space-x-2 items-center">
+          <NotebookPenIcon className="w-6 h-6" />
+          <div className="font-bold text-xl">Tutoring App</div>
+        </div>
+
         {auth?.accessToken ? (
           <div className="flex space-x-2">
             <Button variant="ghost" onClick={() => navigateUserRole()}>

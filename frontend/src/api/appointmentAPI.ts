@@ -1,4 +1,5 @@
 import axios from "./axios";
+import { AxiosInstance } from "axios";
 
 interface Appointment {
     id: number,
@@ -9,7 +10,6 @@ interface Appointment {
     end_time: number,
     zoom_link: string
  }
-
 
 export const createAppointment = (tutorID:number, start:string, end:string, zoom:string) => new Promise((resolve, reject) => {
     axios.post(`/appointment`, {"tutor_id": tutorID, "start": start, "end": end, "zoom_link": zoom})
@@ -22,11 +22,58 @@ export const createAppointment = (tutorID:number, start:string, end:string, zoom
 
 
 export const findAppointmentByTutor = (tutorID:string): Promise<Appointment[]> => new Promise((resolve, reject) => {
-    axios.get(`/appointments?tutor_id=${tutorID}`)
+    axios.get(`/appointment?tutor_id=${tutorID}`)
         .then(x => resolve(x.data))
         .catch(error => {
             console.error('Error fetching tutors:', error);
             reject(error);
     });
 });
+
+
+// export const createAppointment = (
+//     axiosPrivate: AxiosInstance,
+//     tutorID: number,
+//     start: string,
+//     end: string,
+//     zoom: string,
+//   ) =>
+//     new Promise((resolve, reject) => {
+//       axiosPrivate
+//         .post(`/appointment`, {
+//           tutor_id: tutorID,
+//           start: start,
+//           end: end,
+//           zoom_link: zoom,
+//         })
+//         .then((x) => resolve(x.data))
+//         .catch((error) => {
+//           console.error("Error fetching tutors:", error);
+//           reject(error);
+//         });
+//     });
+  
+// export const findAppointmentByTutor = (
+//     axiosPrivate: AxiosInstance,
+//     tutorID: string,
+//     ): Promise<Appointment[]> =>
+//     new Promise((resolve, reject) => {
+//         axiosPrivate
+//         .get(`/appointment?tutor_id=${tutorID}`)
+//         .then((x) => resolve(x.data))
+//         .catch((error) => {
+//             console.error("Error fetching tutors:", error);
+//             reject(error);
+//         });
+// });
+
+export const checkAvailableAppointments = (day:string, tutorID:string): Promise<Boolean> => new Promise((resolve, reject) => {
+axios.get(`/appointment/available?day=${day}&tutor_id=${tutorID}`)
+    .then(x => resolve(x.data))
+    .catch(error => {
+        console.error('Error fetching tutors:', error);
+        reject(error);
+    });
+});
+
 
