@@ -31,7 +31,7 @@ The API routes below can be tested using this [Postman collection](/backend/api.
 | Login | POST | /auth | `user` (string), `pwd` (string) | Authenticates a user and returns JWT token. |
 | Logout | GET | /logout |  | Logs out the current user. |
 | Handle Refresh | GET | /refresh |  | Handles refresh token and provides new access token. |
-| Create Appointment | POST | /appointment | `tutor_id` (number), `start` (string), `end` (string), `zoom_link` (string) | Creates a new appointment for a given tutor |
+| Create Appointment | POST | /appointment/:tutorID | `start` (string), `end` (string), `zoom_link` (string) | Creates a new appointment for a given tutor |
 | Check if Appointment is Available | GET | /appointment/available?day&tutor_id |  | Returns true if the appointment for the specified tutor at the specified time is available |
 | Fetch Available Appointments | GET | /appointment?tutor_id |  | Fetches all of the available appointments for a tutor |
 | Fetch a Students Appointments | GET | /appointment/student?student_id |  | Finds all of a students current appointments they have signed up for |

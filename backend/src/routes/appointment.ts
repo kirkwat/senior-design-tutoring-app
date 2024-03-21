@@ -11,7 +11,7 @@ import verifyRoles from "../middleware/verifyRole";
 const router = express.Router();
 
 router
-  .post("/", verifyRoles("tutor"), handleNewAppointment)
+  .post("/:tutorID", verifyRoles("tutor"), handleNewAppointment)
   .put("/", verifyRoles("user"), handRegisterForAppointment)
   .get("/", verifyRoles("user", "tutor"), handleFindAvailableAppointments)
   .get("/available", verifyRoles("user", "tutor"), handleIsAvailable)
