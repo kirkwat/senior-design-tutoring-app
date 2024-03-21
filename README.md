@@ -34,8 +34,8 @@ The API routes below can be tested using this [Postman collection](/backend/api.
 | Create Appointment | POST | /appointment/:tutorID | `start` (string), `end` (string), `zoom_link` (string) | Creates a new appointment for a given tutor |
 | Check if Appointment is Available | GET | /appointment/available?day&tutor_id |  | Returns true if the appointment for the specified tutor at the specified time is available |
 | Fetch Available Appointments | GET | /appointment?tutor_id |  | Fetches all of the available appointments for a tutor |
-| Fetch a Students Appointments | GET | /appointment/student?student_id |  | Finds all of a students current appointments they have signed up for |
-| Register for Appointment | PUT | /appointment?appointment_id | `student_id` (number), `selected_subject` (number) | Registers a student under an appointment with a selected subject to be tutored on |
+| Fetch a Students Appointments | GET | /appointment/student/:studentID |  | Finds all of a students current appointments they have signed up for |
+| Register for Appointment | PUT | /appointment/:appointmentID | `student_id` (number), `selected_subject` (number) | Registers a student under an appointment with a selected subject to be tutored on |
 | Fetch Tutor | GET | /tutor/:tutorID |  | Finds and returns the information about the tutor given the tutorID |
 | Fetch Tutors | GET | /tutor |  | Retrieves all of the current tutors |
 | Fetch Available Tutors for a Time | GET | /tutor/available?time |  | Finds all of the available tutors for a given start time |

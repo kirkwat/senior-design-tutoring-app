@@ -2,6 +2,8 @@ import knex from "../config/knex";
 import { IAppointment } from "../interfaces/IAppointment";
 
 class Appointment {
+  static USER_TABLE = "user";
+  static TUTOR_TABLE = "tutor";
   static APPOINTMENT_TABLE = "appointment";
 
   static findAppoitnmentByTutor(tutor_id: number, start_date: Date) {
@@ -33,7 +35,10 @@ class Appointment {
   }
 
   static async findStudentsAppointments(student_id?: string) {
-    return knex(this.APPOINTMENT_TABLE).select("*").where({ student_id });
+    const subquery = knex(this.USER_TABLE).join(this.TUTOR_TABLE,"tutor.user_id", "=", "user.id").select("*")
+    return knex(this.APPOINTMENT_TABLE).join(this.USER_TABLE,"appointment.tutor_id","=","user.id")
+    .select("appointment.*","user.name")
+    .where({ student_id });
   }
 
   static async signUpForAppointment(

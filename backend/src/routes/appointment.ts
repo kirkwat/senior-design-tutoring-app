@@ -12,9 +12,9 @@ const router = express.Router();
 
 router
   .post("/:tutorID", verifyRoles("tutor"), handleNewAppointment)
-  .put("/", verifyRoles("user"), handRegisterForAppointment)
+  .put("/:appointmentID", verifyRoles("user"), handRegisterForAppointment)
   .get("/", verifyRoles("user", "tutor"), handleFindAvailableAppointments)
   .get("/available", verifyRoles("user", "tutor"), handleIsAvailable)
-  .get("/student", verifyRoles("user"), handleFindStudentsAppointments);
+  .get("/student/:studentID", verifyRoles("user"), handleFindStudentsAppointments);
 
 export default router;

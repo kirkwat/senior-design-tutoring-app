@@ -96,7 +96,7 @@ const handleIsAvailable = async (req: Request, res: Response) => {
 
 const handleFindStudentsAppointments = async (req: Request, res: Response) => {
   try {
-    const student_id = req.query.student_id;
+    const student_id = req.params.studentID;
     const sid = student_id?.toString();
     const appointments = await Appointment.findStudentsAppointments(sid);
     for (let i = 0; i < appointments.length; i++) {
@@ -121,8 +121,8 @@ const handleFindStudentsAppointments = async (req: Request, res: Response) => {
 const handRegisterForAppointment = async (req: Request, res: Response) => {
   try {
     const { student_id, selected_subject } = req.body;
-    const appointment_id = req.query.appointment_id;
-    const appid = student_id?.toString();
+    const appointment_id = req.params.appointmentID;
+    const appid = appointment_id?.toString();
     await Appointment.signUpForAppointment(student_id, selected_subject, appid);
 
     res.status(201).json({
