@@ -49,6 +49,18 @@ class Tutor {
       .select("*")
       .whereIn("id", subquery);
   }
+
+  static async updateTutorProfilePicture(tutor_id: number, profile_picture: number) {
+    const subquery = knex(this.TUTOR_TABLE).select("user_id").where({id:tutor_id})
+    return await knex(this.USER_TABLE)
+      .whereIn("id", subquery)
+      .update({profile_picture})
+  }
+
+  static async updateTutorBio(tutor_id: number, bio: string) {
+    return knex(this.TUTOR_TABLE).where({id: tutor_id}).update({bio})
+  }
+
 }
 
 export default Tutor;

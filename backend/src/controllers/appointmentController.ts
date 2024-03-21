@@ -4,7 +4,6 @@ import Appointment from "../models/Appointment";
 import { start } from "repl";
 
 const newAppointmentSchema = z.object({
-  tutor_id: z.number(),
   start: z.string(),
   end: z.string(),
   zoom_link: z.string(),
@@ -12,17 +11,18 @@ const newAppointmentSchema = z.object({
 
 const handleNewAppointment = async (req: Request, res: Response) => {
   try {
-    const { tutor_id, start, end, zoom_link } = newAppointmentSchema.parse(
+    const tutorID = Number(req.params.tutorID)
+    const {start, end, zoom_link } = newAppointmentSchema.parse(
       req.body,
     );
 
     const duplicate = await Appointment.findAppoitnmentByTutor(
-      tutor_id,
+      tutorID,
       new Date(start),
     );
     if (duplicate[0] != undefined) return res.sendStatus(409);
     await Appointment.createAppointment({
-      tutor_id: tutor_id,
+      tutor_id: tutorID,
       student_id: undefined,
       selected_subject: undefined,
       start_time: new Date(start),
@@ -32,7 +32,7 @@ const handleNewAppointment = async (req: Request, res: Response) => {
 
     res
       .status(201)
-      .json({ success: `New appointment by tutor id ${tutor_id} created!` });
+      .json({ success: `New appointment by tutor id ${tutorID} created!` });
   } catch (err) {
     if (err instanceof z.ZodError) {
       return res.status(400).json({ message: err.errors });
@@ -72,11 +72,9 @@ const handleIsAvailable = async (req: Request, res: Response) => {
   try {
     const tutor_id = req.query.tutor_id;
     const tid = tutor_id?.toString();
-    const time_req = req.query.day;
-    var time = 0;
-    if (time_req) {
-      time = new Date(time_req.toString()).setUTCHours(0, 0, 0, 0);
-    }
+    let time_req = String(req.query.day)
+    time_req = time_req.concat('T00:00:00')
+    let time = new Date(time_req).getTime()
 
     const appointment = await Appointment.isAvailable(
       time,
