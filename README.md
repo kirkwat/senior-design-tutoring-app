@@ -36,8 +36,11 @@ The API routes below can be tested using this [Postman collection](/backend/api.
 | Fetch Available Appointments | GET | /appointment?tutor_id |  | Fetches all of the available appointments for a tutor |
 | Fetch a Students Appointments | GET | /appointment/student?student_id |  | Finds all of a students current appointments they have signed up for |
 | Register for Appointment | PUT | /appointment?appointment_id | `student_id` (number), `selected_subject` (number) | Registers a student under an appointment with a selected subject to be tutored on |
-| Fetch Tutor | GET | /tutor/:tutor_id |  | Finds and returns the information about the tutor given the tutor_id |
+| Fetch Tutor | GET | /tutor/:tutorID |  | Finds and returns the information about the tutor given the tutorID |
 | Fetch Tutors | GET | /tutor |  | Retrieves all of the current tutors |
 | Fetch Available Tutors for a Time | GET | /tutor/available?time |  | Finds all of the available tutors for a given start time |
 | Fetch Available Tutors for the Day | GET | /tutor/available/day?time |  | Finds all of the available tutors for the entire day given any time of the day |
 | Fetch Available Tutors for the Week | GET | /tutor/available/week?time |  | Finds all of the available tutors for the entire week (starting Sunday) given any time of any day in the week |
+| Fetch a student | GET | /student/:studentID |  | Finds and returns the information about a student given the students user id |
+| Update student profile | PUT | /student/profile/:studentID | `profile_picture` (number) | Updates the profile for a student given the students user id and the information (body) to update|
+| Update tutor profile | PUT | /tutor/profile/:tutorID | `profile_picture` (number), `bio` (string), `subjects` (string[]) | Updates the profile for a tutor given the tutor id and the information (body) to update|

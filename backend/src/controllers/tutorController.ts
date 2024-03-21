@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { z } from "zod";
 import Tutor from "../models/Tutor";
+import Subject from "../models/Subject";
 
 const newTutorSchema = z.object({
   user_id: z.number(),
@@ -115,10 +116,77 @@ const handleFindAvailableTutorsByWeek = async (req: Request, res: Response) => {
   }
 };
 
+const handleUpdateTutorProfile = async (req: Request, res: Response) => {
+  try {
+    const tid = req.params.tutorID
+    var tutorID = -1;
+    if(tid){
+      tutorID = Number(tid)
+    }
+    const {profile_picture, bio, subjects} = req.body
+    if(profile_picture){
+      await Tutor.updateTutorProfilePicture(tutorID,profile_picture)
+    }
+    if(bio){
+      await Tutor.updateTutorBio(tutorID, bio)
+    }
+    if(subjects){
+      const currentSubjects = await Subject.findAllSubjectsForTutor(tutorID)
+      var subjectsToAdd = []
+      var subjectsToRemove = []
+      // Find the subjects to add
+      for(const [key1, newSubject] of Object.entries(subjects)){
+        var found = false
+        for(const [key2, currSubject] of Object.entries(currentSubjects)){
+          if(String(newSubject) == String(currSubject.name)){ 
+            found = true
+            break
+          }
+        }
+        if(!found) subjectsToAdd.push(String(newSubject))
+      }
+      // Find the subjects to delete
+      for(const [key1, currSubject] of Object.entries(currentSubjects)){
+        var found = false
+        for(const [key2, newSubject] of Object.entries(subjects)){
+          if(String(newSubject) == String(currSubject.name)){ 
+            found = true
+            break
+          }
+        }
+        if(!found) subjectsToRemove.push(String(currSubject.name))
+      }
+      for(const [key,subject] of Object.entries(subjectsToAdd)){
+        const subjectID = await Subject.findSubject(subject)
+        if(subjectID[0] != undefined) {
+          await Subject.assignTutorToSubject(tutorID,subject)
+        } else {
+          await Subject.addNewSubject(subject)
+          await Subject.assignTutorToSubject(tutorID,subject)
+        }
+      }
+      for(const [key,subject] of Object.entries(subjectsToRemove)){
+        await Subject.removeSubjectFromTutor(tutorID, subject)
+      }
+    }
+
+    res.status(201).json({
+      success: `Tutor id ${tid} successfully updated profile`,
+    });
+  } catch (err) {
+    if (err instanceof Error) {
+      res.status(500).json({ message: err.message });
+    } else {
+      res.status(500).json({ message: "An unknown error occurred" });
+    }
+  }
+};
+
 export {
   handleFindAllTutors,
   handleFindTutorByID,
   handleFindAvailableTutorsByTime,
   handleFindAvailableTutorsByDay,
   handleFindAvailableTutorsByWeek,
+  handleUpdateTutorProfile
 };
