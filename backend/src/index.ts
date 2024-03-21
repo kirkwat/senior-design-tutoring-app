@@ -14,6 +14,7 @@ import refreshRoute from "./routes/refresh";
 import registerRoute from "./routes/register";
 import appointmentRoute from "./routes/appointment";
 import tutorRoute from "./routes/tutor";
+import studentRoute from "./routes/student";
 import verifyJWT from "./middleware/verifyJWT";
 
 dotenv.config();
@@ -41,6 +42,7 @@ app.use("/register", registerRoute);
 app.use("/appointment", appointmentRoute);
 
 app.use("/tutor", tutorRoute);
+app.use("/student", studentRoute);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
