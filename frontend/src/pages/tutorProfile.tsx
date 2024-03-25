@@ -43,7 +43,7 @@ const TutorProfile = () => {
                 </div>
 
                 <div className="flex justify-center mt-5">
-                    <div className="flex-1">
+                    <div className="flex-1 ml-40">
                         <div className="text-center">
                             <h1>Knowledge Areas</h1>
                             <ul className="list-disc list-inside">
@@ -52,11 +52,12 @@ const TutorProfile = () => {
                             </ul>
                         </div>
                     </div>
-                    <div className="flex-1">
-                        <div className="text-center">
+                    <div className="flex-1 ml-40">
+                        <div className="">
                             <h1>Contact Info</h1>
                             <ul className="list-disc list-inside">
-                                <li className="mb-2">Email: {tutor.email}</li>
+                                {/* <li className="mb-2">Email: {tutor.email}</li> */}
+                                <li className="mb-2">Email: johnsmith@example.com</li>
                             </ul>
                         </div>
                     </div>
