@@ -49,30 +49,23 @@ const TutorAvailabilities = () => {
   const [tutors, setTutors] = useState<Tutor[] | null>(null);
   const [date, setDate] = useState<Value>(new Date());
   const [availableTutors, setAvailableTutors] = useState<Tutor[] | null>(null);
-  const [curAppointment, setCurAppointment] = useState<Appointment | null>(
-    null,
-  );
+  const [curAppointment, setCurAppointment] = useState<Appointment | null>(null);
   const [curAvailable, setCurAvailable] = useState<Boolean | null>(null);
   const [availableList, setAvailableList] = useState<Boolean[] | null>(null);
 
   useEffect(() => {
-    getTutors()
-      .then((data) => setTutors(data))
-      .catch((error) => console.error("Error fetching tutor data:", error));
+    getTutors().then((data) => setTutors(data)).catch((error) => console.error("Error fetching tutor data:", error));
     setAvailableList([]);
   }, []);
 
   useEffect(() => {
     if (tutors && date) {
-      // setAvailableList([])
+      setAvailableList([])
       for (let i = 0; i < tutors.length; i++) {
         let newDate = new Date(date.toString());
         let formattedDate = `${newDate.getFullYear()}-${(newDate.getMonth() + 1).toString().padStart(2, "0")}-${newDate.getDate().toString().padStart(2, "0")}`;
-        checkAvailableAppointments(formattedDate, `${tutors[i].id}`)
-          .then((data) => setCurAvailable(data))
-          .catch((error) =>
-            console.error("Error fetching appointment data:", error),
-          );
+        checkAvailableAppointments(formattedDate, `${tutors[i].id}`).then((data) => setCurAvailable(data))
+          .catch((error) => console.error("Error fetching appointment data:", error));
         console.log(formattedDate, curAvailable, tutors[i].id);
         if (availableList && curAvailable) {
           availableList.push(curAvailable);
