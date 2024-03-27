@@ -28,7 +28,8 @@ const handleFindAllTutors = async (req: Request, res: Response) => {
 
 const handleFindTutorByID = async (req: Request, res: Response) => {
   try {
-    const tid = req.params.tutor_id;
+    const tid = req.params.tutorID;
+    console.log(tid)
     const tutor = await Tutor.findTutorByID(tid);
 
     if (!tutor) {
