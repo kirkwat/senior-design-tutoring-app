@@ -1,22 +1,11 @@
 import { useState, useEffect } from "react";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "src/components/ui/table";
+import {Table,TableBody,TableCaption,TableCell,TableHead,TableHeader,TableRow} from "src/components/ui/table";
 import { getTutors } from "src/api/tutorAPI";
 import { Button } from "src/components/ui/button";
 import { redirect } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Calendar from "react-calendar";
-import {
-  findAppointmentByTutor,
-  checkAvailableAppointments,
-} from "src/api/appointmentAPI";
+import {findAppointmentByTutor,checkAvailableAppointments,} from "src/api/appointmentAPI";
 import useAxiosPrivate from "src/hooks/useAxiosPrivate";
 
 interface Tutor {

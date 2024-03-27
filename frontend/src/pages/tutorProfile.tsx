@@ -21,6 +21,7 @@ interface Tutor {
 const TutorProfile = () => {
     const {tutorID} = useParams()
     const [tutor, setTutor] = useState<Tutor | null>(null);
+    const navigate = useNavigate();
 
 
     useEffect(() => {
@@ -28,46 +29,56 @@ const TutorProfile = () => {
            getTutorByID(tutorID).then((data) => setTutor(data)).catch((error) => console.error("Error fetching tutor data:", error));
         }
       }, [tutorID]);
+    
+    const handleEditProfile = () => {
+        navigate(`/editTutorProfile/${tutorID}`)
+    }
 
     return (
         <>
-        {tutor && (
-            <div className="">
-                <div className="flex mt-10 ml-40 mb-10">
-                    <ProfilePic imageUrl={require('../static/default.jpg')} size={256} />
-                    <div className="ml-10 mt-5">
-                        <h1 className="font-bold text-5xl">{tutor.name}</h1>
-                        <h2 className="mt-2 text-2xl">Tutor</h2>
-                        <p>{tutor.bio}</p>
-                    </div>
-                </div>
+        <div className="relative"> 
+            {/* TODO: Change to where it only appears if you are logged in as that user */}
+            <Button className="absolute top-0 right-0 mr-5" onClick={handleEditProfile}>Edit Profile</Button>
 
-                <div className="flex justify-center mt-5">
-                    <div className="flex-1 ml-40">
-                        <div className="text-center">
-                            <h1>Knowledge Areas</h1>
-                            <ul className="list-disc list-inside">
-                                <li className="mb-2">Algebra</li>
-                                <li className="mb-2">Calculus</li>
-                            </ul>
+            {tutor && (
+                <div className="">
+                    <div className="flex mt-10 ml-40 mb-10">
+                        <ProfilePic imageUrl={require('../static/default.jpg')} size={256} />
+                        <div className="ml-10 mt-5">
+                            <h1 className="font-bold text-5xl">{tutor.name}</h1>
+                            <h2 className="mt-2 text-2xl">Tutor</h2>
+                            <p style={{ maxWidth: "600px" }}>{tutor.bio}</p>
                         </div>
                     </div>
-                    <div className="flex-1 ml-40">
-                        <div className="">
-                            <h1>Contact Info</h1>
-                            <ul className="list-disc list-inside">
-                                <li className="mb-2">Email: {tutor.email}</li>
-                            </ul>
+
+                    <div className="flex justify-center mt-5">
+                        <div className="flex-1 ml-40">
+                            <div className="text-center">
+                                <h1>Knowledge Areas</h1>
+                                <ul className="list-disc list-inside">
+                                    {tutor.subjects && tutor.subjects.map((subject, index) => (
+                                        <li key={index} className="mb-2">{subject}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
+                        <div className="flex-1 ml-40">
+                            <div className="">
+                                <h1>Contact Info</h1>
+                                <ul className="list-disc list-inside">
+                                    <li className="mb-2">Email: {tutor.email}</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div className="flex justify-center">
-                    <Button className="mt-5" type="submit">View Availabilities</Button>
+                    <div className="flex justify-center">
+                        <Button className="mt-5" type="submit">View Availabilities</Button>
+                    </div>
                 </div>
-            </div>
-        )}
-    </>
+            )}
+        </div>
+        </>
       );
 };
 
