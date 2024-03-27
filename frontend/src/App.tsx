@@ -14,6 +14,7 @@ import TutorAvailabilities from "./pages/tutorAvailabilities";
 import MakeAppointment from "./pages/makeAppointment";
 import CreateAppointment from "./pages/createAppointment";
 import TutorProfile from "./pages/tutorProfile";
+import EditTutorProfile from "./pages/editTutorProfile";
 
 const ROLES = {
   User: "user",
@@ -33,6 +34,7 @@ const App = () => {
               <Route path="register" element={<Register />} />
               <Route path="unauthorized" element={<Unauthorized />} />
               <Route path="tutorProfile/:tutorID" element={<TutorProfile />} />
+              <Route path="editTutorProfile/:tutorID" element={<EditTutorProfile />} />
               {/*TOTO: Remove after testing*/}
               <Route path="tutorAvailabilities"  element={<TutorAvailabilities />} />
               <Route path="makeAppointment/:tutorID"  element={<MakeAppointment />} />
