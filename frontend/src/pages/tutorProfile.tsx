@@ -12,11 +12,11 @@ interface Tutor {
     name: string;
     email: string;
     password: string;
-    profile_picture: string;
+    profile_picture: number;
     refreshToken: null;
     role: string;
+    subjects: string[];
   }
-
 
 const TutorProfile = () => {
     const {tutorID} = useParams()
@@ -27,8 +27,7 @@ const TutorProfile = () => {
         if (tutorID) {
            getTutorByID(tutorID).then((data) => setTutor(data)).catch((error) => console.error("Error fetching tutor data:", error));
         }
-      }, []);
-
+      }, [tutorID]);
 
     return (
         <>
@@ -37,8 +36,9 @@ const TutorProfile = () => {
                 <div className="flex mt-10 ml-40 mb-10">
                     <ProfilePic imageUrl={require('../static/default.jpg')} size={256} />
                     <div className="ml-10 mt-5">
-                        <h1 className="font-bold text-5xl">John Smith</h1>
+                        <h1 className="font-bold text-5xl">{tutor.name}</h1>
                         <h2 className="mt-2 text-2xl">Tutor</h2>
+                        <p>{tutor.bio}</p>
                     </div>
                 </div>
 
@@ -56,8 +56,7 @@ const TutorProfile = () => {
                         <div className="">
                             <h1>Contact Info</h1>
                             <ul className="list-disc list-inside">
-                                {/* <li className="mb-2">Email: {tutor.email}</li> */}
-                                <li className="mb-2">Email: johnsmith@example.com</li>
+                                <li className="mb-2">Email: {tutor.email}</li>
                             </ul>
                         </div>
                     </div>
@@ -72,8 +71,4 @@ const TutorProfile = () => {
       );
 };
 
-
 export default TutorProfile;
-
-
-

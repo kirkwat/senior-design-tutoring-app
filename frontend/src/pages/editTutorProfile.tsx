@@ -5,6 +5,8 @@ import { ProfilePic } from "src/components/ui/profilePicture";
 import { Button } from "src/components/ui/button";
 import { Input } from "src/components/ui/input";
 import { Textarea } from "src/components/ui/textarea";
+import { Label } from "src/components/ui/label";
+import { updateTutorProfile } from "src/api/tutorAPI";
 
 interface Tutor {
     id: number;
@@ -13,9 +15,10 @@ interface Tutor {
     name: string;
     email: string;
     password: string;
-    profile_picture: string;
+    profile_picture: number;
     refreshToken: null;
     role: string;
+    subjects: string[];
   }
 
 
@@ -32,10 +35,12 @@ const EditTutorProfile = () => {
         if (tutorID) {
            getTutorByID(tutorID).then((data) => setTutor(data)).catch((error) => console.error("Error fetching tutor data:", error));
         }
-      }, []);
+      }, [tutorID]);
     
     const handleSubmit = () => {
-
+        if (tutor) {
+            updateTutorProfile(tutor.id, tutor.profile_picture, tutor.bio, tutor.subjects)
+        }
     }
 
     return (
@@ -47,6 +52,8 @@ const EditTutorProfile = () => {
                     <div className="ml-10 mt-5">
                         <Input type="name" placeholder="Name" />
                         <h2 className="mt-2 text-2xl">Tutor</h2>
+                        <Label htmlFor="bio">Bio</Label>
+                        <Textarea placeholder="Bio" />
                     </div>
                 </div>
 
