@@ -25,7 +25,7 @@ router
   .get("/available/week", handleFindAvailableTutorsByWeek)
   .get("/:tutorID", handleFindTutorByID)
   .get("/:tutorID/subjects", handleFindTutorsSubjects)
-  .get("/", verifyRoles("user"), handleFindAllTutors)
-  .put("/profile/:tutorID", verifyRoles("tutor"), handleUpdateTutorProfile)
+  .get("/", handleFindAllTutors)
+  .put("/profile/:tutorID", handleUpdateTutorProfile)
 
 export default router;

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getTutorByID } from "src/api/tutorAPI";
+import { getTutorByID, getTutorSubjects } from "src/api/tutorAPI";
 import { ProfilePic } from "src/components/ui/profilePicture";
 import { Button } from "src/components/ui/button";
 
@@ -21,12 +21,14 @@ interface Tutor {
 const TutorProfile = () => {
     const {tutorID} = useParams()
     const [tutor, setTutor] = useState<Tutor | null>(null);
+    const [subjects, setSubjects] = useState<Tutor[]>([])
     const navigate = useNavigate();
 
 
     useEffect(() => {
         if (tutorID) {
            getTutorByID(tutorID).then((data) => setTutor(data)).catch((error) => console.error("Error fetching tutor data:", error));
+           getTutorSubjects(tutorID).then((data) => setSubjects(data)).catch((error) => console.error("Error fetching tutor data:", error));
         }
       }, [tutorID]);
     
@@ -56,8 +58,8 @@ const TutorProfile = () => {
                             <div className="text-center">
                                 <h1>Knowledge Areas</h1>
                                 <ul className="list-disc list-inside">
-                                    {tutor.subjects && tutor.subjects.map((subject, index) => (
-                                        <li key={index} className="mb-2">{subject}</li>
+                                    {subjects && subjects.map((subject, index) => (
+                                        <li key={index} className="mb-2">{subject.name}</li>
                                     ))}
                                 </ul>
                             </div>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getTutorByID } from "src/api/tutorAPI";
+import { getTutorByID, getTutorSubjects } from "src/api/tutorAPI";
 import { ProfilePic } from "src/components/ui/profilePicture";
 import { Button } from "src/components/ui/button";
 import { Input } from "src/components/ui/input";
@@ -26,6 +26,7 @@ const EditTutorProfile = () => {
     const {tutorID} = useParams()
     const [tutor, setTutor] = useState<Tutor | null>(null);
     const [newBio, setNewBio] = useState<string>("");
+    const [subjectInput, setSubjectInput] = useState<Tutor[]>([]);
     const [newSubjects, setNewSubjects] = useState<string[]>([]);
     // const [newEmail, setNewEmail] = useState<string>((""));
     const [newProfilePicture, setNewProfilePicture] = useState<number>(0);
@@ -38,31 +39,39 @@ const EditTutorProfile = () => {
     useEffect(() => {
         if (tutorID) {
            getTutorByID(tutorID).then((data) => setTutor(data)).catch((error) => console.error("Error fetching tutor data:", error));
+           getTutorSubjects(tutorID).then((data) => setSubjectInput(data)).catch((error) => console.error("Error fetching tutor data:", error));
+
         }
       }, [tutorID]);
 
       useEffect(() => {
         if (tutor) {
-           setNewSubjects(["Algebra", "Calculus", "Trig"])
-           setNewSubject1(newSubjects.length >= 1 ? newSubjects[0] : "")
-           setNewSubject2(newSubjects.length >= 2 ? newSubjects[1] : "")
-           setNewSubject3(newSubjects.length >= 3 ? newSubjects[2] : "")
-
         //    setNewEmail(tutor.email)
            setNewBio(tutor.bio)
            setNewProfilePicture(tutor.profile_picture)
         }
       }, [tutor]);
+
+      useEffect(() => {
+        if (subjectInput[0]) {
+            setNewSubjects([subjectInput[0].name, subjectInput[1].name, subjectInput[2].name])
+            setNewSubject1(newSubjects.length >= 1 ? newSubjects[0] : "")
+            setNewSubject2(newSubjects.length >= 2 ? newSubjects[1] : "")
+            setNewSubject3(newSubjects.length >= 3 ? newSubjects[2] : "")
+        }
+      }, [subjectInput]);
     
     const handleSubmit = () => {
         if (tutor) {
-            handleNewSubjects()
-            updateTutorProfile(tutor.id, newProfilePicture, newBio, newSubjects)
+            let newNewSubjects = [newSubject1, newSubject2, newSubject3]
+            console.log(newNewSubjects)
+            updateTutorProfile(tutor.id, newProfilePicture, newBio, newNewSubjects)
             navigate(`/tutorProfile/${tutor.id}`);
         }
     }
 
     const handleNewSubjects = () => {
+        console.log([newSubject1, newSubject2, newSubject3])
         setNewSubjects([newSubject1, newSubject2, newSubject3])
     };
 

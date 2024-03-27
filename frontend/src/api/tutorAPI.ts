@@ -145,6 +145,17 @@ export const updateTutorProfile = (tutor_id:number, profile_picture:number, bio:
 });
 
 
+export const getTutorSubjects = (tutorID: string): Promise<Tutor[]> =>
+  new Promise((resolve, reject) => {
+    axios
+      .get(`/tutor/${tutorID}/subjects`)
+      .then((response) => resolve(response.data))
+      .catch((error) => {
+        console.error("Error fetching tutors:", error);
+        reject(error);
+      });
+  });
+
 
 
 
