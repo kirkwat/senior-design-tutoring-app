@@ -9,9 +9,10 @@ interface Tutor {
   name: string;
   email: string;
   password: string;
-  profile_picture: string;
+  profile_picture: number;
   refreshToken: null;
   role: string;
+  subjects: string[];
 }
 
 // export const getTutors = (axiosPrivate: AxiosInstance): Promise<Tutor[]> =>
@@ -51,8 +52,8 @@ export const getTutors = (): Promise<Tutor[]> =>
 export const getTutorByID = (tutor_id: string): Promise<Tutor> =>
   new Promise((resolve, reject) => {
     axios
-      .get(`/tutor?tutor_id=${tutor_id}`)
-      .then((response) => resolve(response.data))
+      .get(`/tutor/${tutor_id}`)
+      .then((response) => resolve(response.data[0]))
       .catch((error) => {
         console.error("Error fetching tutors:", error);
         reject(error);
@@ -130,3 +131,20 @@ export const findAvailableTutorsByWeek = (week: number): Promise<Tutor[]> =>
         reject(error);
       });
   });
+
+
+export const updateTutorProfile = (tutor_id:number, profile_picture:number, bio:string, subjects:string[]) =>
+  new Promise((resolve, reject) => {
+    axios
+      .put(`/tutor/profile/${tutor_id}`, {profile_picture:profile_picture, bio:bio, subjects:subjects})
+      .then((x) => resolve(x.data))
+      .catch((error) => {
+        console.error("Error updating tutor profile:", error);
+        reject(error);
+      });
+});
+
+
+
+
+
