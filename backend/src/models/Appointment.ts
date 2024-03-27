@@ -35,7 +35,6 @@ class Appointment {
   }
 
   static async findStudentsAppointments(student_id?: string) {
-    const subquery = knex(this.USER_TABLE).join(this.TUTOR_TABLE,"tutor.user_id", "=", "user.id").select("*")
     return knex(this.APPOINTMENT_TABLE).join(this.USER_TABLE,"appointment.tutor_id","=","user.id")
     .select("appointment.*","user.name")
     .where({ student_id });

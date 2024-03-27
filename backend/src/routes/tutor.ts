@@ -8,6 +8,7 @@ import {
   handleUpdateTutorProfile,
 } from "../controllers/tutorController";
 import verifyRoles from "../middleware/verifyRole";
+import { handleFindTutorsSubjects } from "../controllers/subjectController";
 
 const router = express.Router();
 
@@ -23,7 +24,8 @@ router
   .get("/available/day", handleFindAvailableTutorsByDay)
   .get("/available/week", handleFindAvailableTutorsByWeek)
   .get("/:tutorID", handleFindTutorByID)
-  .get("/", handleFindAllTutors)
-  .put("/profile/:tutorID", handleUpdateTutorProfile)
+  .get("/:tutorID/subjects", handleFindTutorsSubjects)
+  .get("/", verifyRoles("user"), handleFindAllTutors)
+  .put("/profile/:tutorID", verifyRoles("tutor"), handleUpdateTutorProfile)
 
 export default router;
