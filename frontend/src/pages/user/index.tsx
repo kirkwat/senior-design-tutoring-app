@@ -2,9 +2,11 @@ import { Button } from "src/components/ui/button";
 import AppointmentsTable from "./appointments-table";
 import { Appointment, columns } from "./columns";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 const data: Appointment[] = [
   {
+    id: 1,
     tutor: "Tutor 1",
     student_id: 1,
     selected_subject: "Math",
@@ -13,6 +15,7 @@ const data: Appointment[] = [
     zoom_link: "https://zoom.us/j/123456789",
   },
   {
+    id: 2,
     tutor: "Tutor 2",
     student_id: 2,
     selected_subject: "Science",
@@ -21,6 +24,7 @@ const data: Appointment[] = [
     zoom_link: "https://zoom.us/j/123456789",
   },
   {
+    id: 3,
     tutor: "Tutor 3",
     student_id: 2,
     selected_subject: "Math",
@@ -29,6 +33,7 @@ const data: Appointment[] = [
     zoom_link: "https://zoom.us/j/123456789",
   },
   {
+    id: 4,
     tutor: "Tutor 4",
     student_id: 2,
     selected_subject: "Reading",
@@ -37,6 +42,7 @@ const data: Appointment[] = [
     zoom_link: "https://zoom.us/j/123456789",
   },
   {
+    id: 5,
     tutor: "Tutor 5",
     student_id: 2,
     selected_subject: "Writing",
@@ -45,6 +51,7 @@ const data: Appointment[] = [
     zoom_link: "https://zoom.us/j/123456789",
   },
   {
+    id: 6,
     tutor: "Tutor 6",
     student_id: 2,
     selected_subject: "Math",
@@ -55,6 +62,15 @@ const data: Appointment[] = [
 ];
 
 export default function User() {
+  const [appointments, setAppointments] = useState<Appointment[]>(data);
+
+  const removeAppointment = (appointmentId: any) => {
+    console.log("remove appointment", appointmentId);
+    setAppointments((current) =>
+      current.filter((appointment: any) => appointment.id !== appointmentId),
+    );
+  };
+
   return (
     <div className="container min-h-[60vh] py-12 space-y-4">
       <div className="flex justify-between items-center">
@@ -69,7 +85,7 @@ export default function User() {
         Your Upcoming Appointments
       </p>
       <div className="">
-        <AppointmentsTable columns={columns} data={data} />
+        <AppointmentsTable data={appointments} onRemove={removeAppointment} />
       </div>
     </div>
   );

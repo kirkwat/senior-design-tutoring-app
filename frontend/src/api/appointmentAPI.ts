@@ -11,11 +11,19 @@ interface Appointment {
   zoom_link: string;
 }
 
-export const createAppointment = (tutorID: number,start: string,end: string, zoom: string,
+export const createAppointment = (
+  tutorID: number,
+  start: string,
+  end: string,
+  zoom: string,
 ) =>
   new Promise((resolve, reject) => {
     axios
-      .post(`/appointment/${tutorID}`, {start: start,end: end,zoom_link: zoom,})
+      .post(`/appointment/${tutorID}`, {
+        start: start,
+        end: end,
+        zoom_link: zoom,
+      })
       .then((x) => resolve(x.data))
       .catch((error) => {
         console.error("Error fetching tutors:", error);
@@ -23,7 +31,9 @@ export const createAppointment = (tutorID: number,start: string,end: string, zoo
       });
   });
 
-export const findAppointmentByTutor = (tutorID: string): Promise<Appointment[]> =>
+export const findAppointmentByTutor = (
+  tutorID: string,
+): Promise<Appointment[]> =>
   new Promise((resolve, reject) => {
     axios
       .get(`/appointment?tutor_id=${tutorID}`)
@@ -70,7 +80,10 @@ export const findAppointmentByTutor = (tutorID: string): Promise<Appointment[]> 
 //         });
 // });
 
-export const checkAvailableAppointments = (day: string, tutorID: string): Promise<Boolean> =>
+export const checkAvailableAppointments = (
+  day: string,
+  tutorID: string,
+): Promise<Boolean> =>
   new Promise((resolve, reject) => {
     axios
       .get(`/appointment/available?day=${day}&tutor_id=${tutorID}`)
