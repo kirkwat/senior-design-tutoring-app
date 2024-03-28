@@ -132,18 +132,25 @@ export const findAvailableTutorsByWeek = (week: number): Promise<Tutor[]> =>
       });
   });
 
-
-export const updateTutorProfile = (tutor_id:number, profile_picture:number, bio:string, subjects:string[]) =>
+export const updateTutorProfile = (
+  tutor_id: number,
+  profile_picture: number,
+  bio: string,
+  subjects: string[],
+) =>
   new Promise((resolve, reject) => {
     axios
-      .put(`/tutor/profile/${tutor_id}`, {profile_picture:profile_picture, bio:bio, subjects:subjects})
+      .put(`/tutor/profile/${tutor_id}`, {
+        profile_picture: profile_picture,
+        bio: bio,
+        subjects: subjects,
+      })
       .then((x) => resolve(x.data))
       .catch((error) => {
         console.error("Error updating tutor profile:", error);
         reject(error);
       });
-});
-
+  });
 
 export const getTutorSubjects = (tutorID: string): Promise<Tutor[]> =>
   new Promise((resolve, reject) => {
@@ -155,7 +162,3 @@ export const getTutorSubjects = (tutorID: string): Promise<Tutor[]> =>
         reject(error);
       });
   });
-
-
-
-

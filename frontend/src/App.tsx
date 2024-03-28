@@ -34,14 +34,26 @@ const App = () => {
               <Route path="register" element={<Register />} />
               <Route path="unauthorized" element={<Unauthorized />} />
               <Route path="tutorProfile/:tutorID" element={<TutorProfile />} />
-              <Route path="editTutorProfile/:tutorID" element={<EditTutorProfile />} />
+              <Route
+                path="editTutorProfile/:tutorID"
+                element={<EditTutorProfile />}
+              />
               {/*TOTO: Remove after testing*/}
-              <Route path="tutorAvailabilities"  element={<TutorAvailabilities />} />
-              <Route path="makeAppointment/:tutorID"  element={<MakeAppointment />} />
-              <Route path="createAppointment/:tutorID" element={<CreateAppointment/>} />
+              <Route
+                path="tutorAvailabilities"
+                element={<TutorAvailabilities />}
+              />
+              <Route
+                path="makeAppointment/:tutorID"
+                element={<MakeAppointment />}
+              />
+              <Route
+                path="createAppointment/:tutorID"
+                element={<CreateAppointment />}
+              />
               {/**********/}
 
-             <Route
+              <Route
                 element={
                   <RequireAuth allowedRoles={[ROLES.User, ROLES.Tutor]} />
                 }
