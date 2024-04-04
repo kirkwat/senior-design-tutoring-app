@@ -1,7 +1,8 @@
-import axios from "./axios";
+import { TutorAppointment } from "src/types/tutor-appointment";
 import { AxiosInstance } from "axios";
+import axios from "./axios";
 
-interface Appointment {
+interface OldAppointment {
   id: number;
   tutor_id: number;
   student_id: null;
@@ -37,7 +38,7 @@ export const createAppointment = (
 export const getTutorAppointments = (
   axiosPrivate: AxiosInstance,
   tutorID: number,
-) =>
+): Promise<TutorAppointment[]> =>
   new Promise((resolve, reject) => {
     axiosPrivate
       .get(`/appointment/tutor/${tutorID}`)
@@ -64,7 +65,7 @@ export const cancelAppointment = (
 
 export const findAppointmentByTutor = (
   tutorID: string,
-): Promise<Appointment[]> =>
+): Promise<OldAppointment[]> =>
   new Promise((resolve, reject) => {
     axios
       .get(`/appointment?tutor_id=${tutorID}`)

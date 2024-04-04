@@ -25,7 +25,7 @@ export default function TutorPage() {
 
     getTutorAppointments(axiosPrivate, auth.id)
       .then((data) => {
-        setAppointments(data as TutorAppointment[]);
+        setAppointments(data);
         setIsLoading(false);
       })
       .catch(() => setIsLoading(false));
@@ -33,9 +33,7 @@ export default function TutorPage() {
 
   useEffect(() => {
     fetchAppointments();
-  }, []);
-
-  console.log(appointments);
+  }, [auth?.id]);
 
   return (
     <div className="container min-h-[60vh] py-12 space-y-4">

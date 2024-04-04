@@ -59,7 +59,9 @@ const Login = () => {
         | "user"
         | undefined;
 
-      setAuth({ user, role, accessToken });
+      const id = response?.data?.id as number | undefined;
+
+      setAuth({ user, role, accessToken, id });
       setUser("");
       setPwd("");
       navigateUserRole(role);

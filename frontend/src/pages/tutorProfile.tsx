@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getTutorByID, getTutorSubjects } from "src/api/tutorAPI";
+import { getTutorByID, getTutorSubjects } from "src/api/tutor-api";
 import { ProfilePic } from "src/components/ui/profilePicture";
 import { Button } from "src/components/ui/button";
 
@@ -25,10 +25,10 @@ const TutorProfile = () => {
 
   useEffect(() => {
     if (tutorID) {
-      getTutorByID(tutorID)
+      getTutorByID(tutorID as unknown as number)
         .then((data) => setTutor(data))
         .catch((error) => console.error("Error fetching tutor data:", error));
-      getTutorSubjects(tutorID)
+      getTutorSubjects(tutorID as unknown as number)
         .then((data) => setSubjects(data))
         .catch((error) => console.error("Error fetching tutor data:", error));
     }
