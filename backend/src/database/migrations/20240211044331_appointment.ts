@@ -4,7 +4,7 @@ export async function up(knex: Knex) {
   return knex.schema.createTable("appointment", (table) => {
     table.increments("id").primary();
     table.integer("tutor_id").notNullable();
-    table.foreign("tutor_id").references("tutor.id");
+    table.foreign("tutor_id").references("user.id");
     table.integer("student_id");
     table.foreign("student_id").references("user.id");
     table.integer("selected_subject");

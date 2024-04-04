@@ -1,36 +1,53 @@
 import { Request, Response } from "express";
 import { z } from "zod";
 import Appointment from "../models/Appointment";
-import { start } from "repl";
 
 const newAppointmentSchema = z.object({
-  start: z.string(),
-  end: z.string(),
-  zoom_link: z.string(),
+  startDate: z.string().datetime(),
+  appointmentLength: z.number(),
+  weekSpan: z.number(),
+  zoomLink: z.string(),
 });
 
 const handleNewAppointment = async (req: Request, res: Response) => {
   try {
     const tutorID = Number(req.params.tutorID);
-    const { start, end, zoom_link } = newAppointmentSchema.parse(req.body);
+    const { startDate, appointmentLength, weekSpan, zoomLink } =
+      newAppointmentSchema.parse(req.body);
 
-    const duplicate = await Appointment.findAppoitnmentByTutor(
-      tutorID,
-      new Date(start),
-    );
-    if (duplicate[0] != undefined) return res.sendStatus(409);
-    await Appointment.createAppointment({
-      tutor_id: tutorID,
-      student_id: undefined,
-      selected_subject: undefined,
-      start_time: new Date(start),
-      end_time: new Date(end),
-      zoom_link: zoom_link,
-    });
+    let createdCount = 0;
+    let failedCount = 0;
 
-    res
-      .status(201)
-      .json({ success: `New appointment by tutor id ${tutorID} created!` });
+    for (let week = 0; week < weekSpan; week++) {
+      const startDateTime = new Date(startDate);
+      startDateTime.setDate(startDateTime.getDate() + 7 * week);
+
+      const endDateTime = new Date(startDateTime);
+      endDateTime.setMinutes(startDateTime.getMinutes() + appointmentLength);
+
+      const duplicates = await Appointment.findAppointmentByTutor(
+        tutorID,
+        startDateTime,
+      );
+
+      if (duplicates.length === 0) {
+        await Appointment.createAppointment({
+          tutor_id: tutorID,
+          start_time: startDateTime,
+          end_time: endDateTime,
+          zoom_link: zoomLink,
+        });
+        createdCount++;
+      } else {
+        failedCount++;
+      }
+    }
+
+    if (createdCount === 0) {
+      throw new Error("Failed to create appointments due to time conflicts.");
+    }
+
+    res.status(201).json({ created: createdCount, failed: failedCount });
   } catch (err) {
     if (err instanceof z.ZodError) {
       return res.status(400).json({ message: err.errors });

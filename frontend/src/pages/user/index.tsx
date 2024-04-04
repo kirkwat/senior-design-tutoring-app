@@ -84,9 +84,7 @@ export default function User() {
       <p className="text-gray-500 md:text-xl/relaxed dark:text-gray-400">
         Your Upcoming Appointments
       </p>
-      <div className="">
-        <AppointmentsTable data={appointments} onRemove={removeAppointment} />
-      </div>
+      <AppointmentsTable data={appointments} onRemove={removeAppointment} />
     </div>
   );
 }

@@ -18,7 +18,7 @@ import {
 import {
   createAppointment,
   findAppointmentByTutor,
-} from "src/api/appointmentAPI";
+} from "src/api/appointment-api";
 import useAxiosPrivate from "src/hooks/useAxiosPrivate";
 
 interface Tutor {

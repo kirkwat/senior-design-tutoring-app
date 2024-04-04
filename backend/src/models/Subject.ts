@@ -1,4 +1,3 @@
-import { sub } from "date-fns";
 import knex from "../config/knex";
 
 class Subject {

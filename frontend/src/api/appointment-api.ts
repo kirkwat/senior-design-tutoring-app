@@ -12,17 +12,20 @@ interface Appointment {
 }
 
 export const createAppointment = (
+  axiosPrivate: AxiosInstance,
   tutorID: number,
-  start: string,
-  end: string,
-  zoom: string,
+  startDate: string,
+  appointmentLength: number,
+  weekSpan: number,
+  zoomLink: string,
 ) =>
   new Promise((resolve, reject) => {
-    axios
+    axiosPrivate
       .post(`/appointment/${tutorID}`, {
-        start: start,
-        end: end,
-        zoom_link: zoom,
+        startDate,
+        appointmentLength,
+        weekSpan,
+        zoomLink,
       })
       .then((x) => resolve(x.data))
       .catch((error) => {

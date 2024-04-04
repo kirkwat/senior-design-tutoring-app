@@ -25,12 +25,12 @@ const handleLogin = async (req: Request, res: Response) => {
     const match = await bcrypt.compare(pwd, foundUser.password);
     if (match) {
       const accessToken = jwt.sign(
-        { email: foundUser.email, role: foundUser.role },
+        { email: foundUser.email, role: foundUser.role, id: foundUser.id },
         process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: "15m" },
       );
       const refreshToken = jwt.sign(
-        { email: foundUser.email, role: foundUser.role },
+        { email: foundUser.email, role: foundUser.role, id: foundUser.id },
         process.env.REFRESH_TOKEN_SECRET,
         { expiresIn: "2d" },
       );
@@ -43,7 +43,7 @@ const handleLogin = async (req: Request, res: Response) => {
         secure: true,
         maxAge: 24 * 60 * 60 * 1000,
       });
-      res.json({ role: foundUser.role, accessToken });
+      res.json({ role: foundUser.role, accessToken, id: foundUser.id });
     } else {
       res.sendStatus(401);
     }

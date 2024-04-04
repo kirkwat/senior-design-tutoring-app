@@ -1,12 +1,6 @@
 import { Request, Response } from "express";
-import { z } from "zod";
 import Tutor from "../models/Tutor";
 import Subject from "../models/Subject";
-
-const newTutorSchema = z.object({
-  user_id: z.number(),
-  bio: z.string(),
-});
 
 const handleFindAllTutors = async (req: Request, res: Response) => {
   try {

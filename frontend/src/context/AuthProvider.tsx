@@ -4,7 +4,7 @@ export interface AuthState {
   auth: {
     accessToken?: string;
     role?: "user" | "tutor" | "admin";
-    user?: string;
+    id?: number;
   };
   setAuth: React.Dispatch<React.SetStateAction<{}>>;
   persist: boolean;
