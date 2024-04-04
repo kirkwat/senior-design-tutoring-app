@@ -27,13 +27,23 @@ import {
 } from "src/components/ui/alert-dialog";
 import { Button } from "src/components/ui/button";
 import { TutorAppointment } from "src/types/tutor-appointment";
+import useAxiosPrivate from "src/hooks/useAxiosPrivate";
+import { cancelAppointment } from "src/api/appointment-api";
+import { toast } from "sonner";
 
 interface DataTableProps {
   tab: "upcoming" | "available" | "past";
+  fetchAppointments: () => void;
   data: TutorAppointment[];
 }
 
-export default function TutorAppointmentsTable({ tab, data }: DataTableProps) {
+export default function TutorAppointmentsTable({
+  tab,
+  fetchAppointments,
+  data,
+}: DataTableProps) {
+  const axiosPrivate = useAxiosPrivate();
+
   const columns: ColumnDef<TutorAppointment>[] = useMemo(
     () => [
       ...(tab !== "available"
@@ -51,6 +61,16 @@ export default function TutorAppointmentsTable({ tab, data }: DataTableProps) {
       {
         accessorKey: "zoom_link",
         header: "Zoom Link",
+        cell: ({ row }) => (
+          <a
+            href={row.original.zoom_link}
+            target="_blank"
+            rel="noreferrer"
+            className="hover:underline"
+          >
+            {row.original.zoom_link}
+          </a>
+        ),
       },
       {
         accessorKey: "start_time",
@@ -71,20 +91,35 @@ export default function TutorAppointmentsTable({ tab, data }: DataTableProps) {
         ? [
             {
               id: "actions",
-              cell: ({ row }: { row: any }) => (
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button variant="destructive" size="sm">
-                      Cancel
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        This action cannot be undone. Only cancel if you are
-                        sure you want to cancel this appointment.
-                        <div className="grid grid-cols-3 my-3 border rounded-sm divide-x">
+              cell: ({ row }: { row: any }) => {
+                const startTime = new Date(row.original.start_time as number);
+                const currentTime = new Date();
+
+                const diff = Math.abs(
+                  startTime.getTime() - currentTime.getTime(),
+                );
+
+                const isLessThan24Hours = diff < 24 * 60 * 60 * 1000;
+
+                return (
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        disabled={isLessThan24Hours && tab === "upcoming"}
+                      >
+                        Cancel
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This action cannot be undone. Only cancel if you are
+                          sure you want to cancel this appointment.
+                        </AlertDialogDescription>
+                        <div className="grid grid-cols-3 my-3 border rounded-sm divide-x text-muted-foreground text-sm">
                           <div className="p-2">
                             <span className="font-medium">Tutor: </span>
                             <span>{row.original.tutor}</span>
@@ -100,24 +135,37 @@ export default function TutorAppointmentsTable({ tab, data }: DataTableProps) {
                             <span>{row.original.selected_subject}</span>
                           </div>
                         </div>
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>No, go back</AlertDialogCancel>
-                      <AlertDialogAction
-                        onClick={() => console.log("cancel", row.original.id)}
-                      >
-                        Yes, cancel
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              ),
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>No, go back</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => {
+                            toast.promise(
+                              cancelAppointment(axiosPrivate, row.original.id),
+                              {
+                                loading: "Cancelling appointment...",
+                                success: () => {
+                                  fetchAppointments();
+                                  return "Appointment cancelled!";
+                                },
+                                error:
+                                  "Error cancelling appointment. Please try again.",
+                              },
+                            );
+                          }}
+                        >
+                          Yes, cancel
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                );
+              },
             },
           ]
         : []),
     ],
-    [tab],
+    [axiosPrivate, fetchAppointments, tab],
   );
 
   const table = useReactTable({

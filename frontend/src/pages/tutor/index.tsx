@@ -19,7 +19,7 @@ export default function TutorPage() {
   const [appointments, setAppointments] = useState<TutorAppointment[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
+  const fetchAppointments = () => {
     if (!auth?.id) return;
     setIsLoading(true);
 
@@ -29,19 +29,19 @@ export default function TutorPage() {
         setIsLoading(false);
       })
       .catch(() => setIsLoading(false));
-  }, [auth?.id, axiosPrivate]);
+  };
+
+  useEffect(() => {
+    fetchAppointments();
+  }, []);
 
   console.log(appointments);
 
-  if (appointments.length !== 0) {
-    console.log("type", typeof appointments[0].start_time);
-  }
-
   return (
     <div className="container min-h-[60vh] py-12 space-y-4">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center flex-col gap-2 md:flex-row">
         <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl">
-          Tutor Page
+          Tutor Dashboard
         </h1>
         <div className="flex gap-4">
           <Button variant="outline">
@@ -54,7 +54,7 @@ export default function TutorPage() {
       </div>
 
       <Tabs defaultValue="upcoming">
-        <div className="flex justify-between">
+        <div className="flex justify-between flex-col items-center gap-2 md:flex-row">
           <p className="text-gray-500 md:text-xl/relaxed dark:text-gray-400">
             Your Appointments
           </p>
@@ -79,10 +79,12 @@ export default function TutorPage() {
             <TabsContent value="upcoming">
               <TutorAppointmentsTable
                 tab="upcoming"
+                fetchAppointments={fetchAppointments}
                 data={appointments
                   .filter(
                     (appointment) =>
                       appointment.student_id !== null &&
+                      appointment.status === "booked" &&
                       appointment.end_time > Date.now(),
                   )
                   .sort((a, b) => a.start_time - b.start_time)}
@@ -91,16 +93,26 @@ export default function TutorPage() {
             <TabsContent value="available">
               <TutorAppointmentsTable
                 tab="available"
+                fetchAppointments={fetchAppointments}
                 data={appointments
-                  .filter((appointment) => appointment.student_id === null)
+                  .filter(
+                    (appointment) =>
+                      appointment.student_id === null &&
+                      appointment.status === "available",
+                  )
                   .sort((a, b) => a.start_time - b.start_time)}
               />
             </TabsContent>
             <TabsContent value="past">
               <TutorAppointmentsTable
                 tab="past"
+                fetchAppointments={fetchAppointments}
                 data={appointments
-                  .filter((appointment) => appointment.end_time < Date.now())
+                  .filter(
+                    (appointment) =>
+                      appointment.end_time < Date.now() ||
+                      appointment.status === "cancelled",
+                  )
                   .sort((a, b) => b.start_time - a.start_time)}
               />
             </TabsContent>

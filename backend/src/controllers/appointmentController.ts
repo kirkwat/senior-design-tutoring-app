@@ -25,7 +25,7 @@ const handleNewAppointment = async (req: Request, res: Response) => {
       const endDateTime = new Date(startDateTime);
       endDateTime.setMinutes(startDateTime.getMinutes() + appointmentLength);
 
-      const duplicates = await Appointment.findAppointmentByTutor(
+      const duplicates = await Appointment.findNonCancelledAppointmentByTutor(
         tutorID,
         startDateTime,
       );
@@ -66,6 +66,21 @@ const handleGetTutorAppointments = async (req: Request, res: Response) => {
     const appointments = await Appointment.findTutorAppointments(tutorID);
 
     res.json(appointments);
+  } catch (err) {
+    if (err instanceof Error) {
+      res.status(500).json({ message: err.message });
+    } else {
+      res.status(500).json({ message: "An unknown error occurred" });
+    }
+  }
+};
+
+const handleCancelAppointment = async (req: Request, res: Response) => {
+  try {
+    const appointmentID = Number(req.params.appointmentID);
+    await Appointment.cancelAppointment(appointmentID);
+
+    res.json({ success: `Appointment ${appointmentID} has been cancelled.` });
   } catch (err) {
     if (err instanceof Error) {
       res.status(500).json({ message: err.message });
@@ -170,6 +185,7 @@ const handRegisterForAppointment = async (req: Request, res: Response) => {
 export {
   handleNewAppointment,
   handleGetTutorAppointments,
+  handleCancelAppointment,
   handleFindAvailableAppointments,
   handleIsAvailable,
   handleFindStudentsAppointments,

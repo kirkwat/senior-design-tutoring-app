@@ -48,6 +48,20 @@ export const getTutorAppointments = (
       });
   });
 
+export const cancelAppointment = (
+  axiosPrivate: AxiosInstance,
+  appointmentID: number,
+) =>
+  new Promise((resolve, reject) => {
+    axiosPrivate
+      .put(`/appointment/cancel/${appointmentID}`)
+      .then((x) => resolve(x.data))
+      .catch((error) => {
+        console.error("Error fetching tutors:", error);
+        reject(error);
+      });
+  });
+
 export const findAppointmentByTutor = (
   tutorID: string,
 ): Promise<Appointment[]> =>

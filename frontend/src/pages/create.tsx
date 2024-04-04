@@ -36,7 +36,7 @@ const createAppointmentFormSchema = z.object({
   }),
   appointmentLength: z.string(),
   weekSpan: z.string(),
-  zoomLink: z.string(),
+  zoomLink: z.string().url({ message: "Please enter a valid url." }),
 });
 
 export default function CreateAppointment() {
@@ -120,7 +120,7 @@ export default function CreateAppointment() {
                     mode="single"
                     selected={field.value}
                     onSelect={field.onChange}
-                    disabled={(date) => date < new Date()}
+                    disabled={(date) => date <= new Date()}
                     className="rounded-md border w-fit"
                   />
                 </FormControl>
