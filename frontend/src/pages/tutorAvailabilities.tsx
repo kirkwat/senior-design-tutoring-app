@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "src/components/ui/table";
-import { getTutors } from "src/api/tutorAPI";
+import { getTutors } from "src/api/tutor-api";
 import { Button } from "src/components/ui/button";
 import { redirect } from "react-router-dom";
 import { Link } from "react-router-dom";

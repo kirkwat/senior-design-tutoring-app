@@ -1,8 +1,8 @@
+import { Tutor } from "src/types/tutor";
 import axios from "./axios";
-
 import { AxiosInstance } from "axios";
 
-interface Tutor {
+interface OldTutor {
   id: number;
   user_id: number;
   bio: string;
@@ -15,6 +15,43 @@ interface Tutor {
   subjects: string[];
 }
 
+export const getTutorAndSubjects = (
+  axiosPrivate: AxiosInstance,
+  tutorID: number,
+): Promise<Tutor> =>
+  new Promise((resolve, reject) => {
+    axiosPrivate
+      .get(`/tutor/${tutorID}`)
+      .then((response) => resolve(response.data))
+      .catch((error) => {
+        console.error("Error fetching tutors:", error);
+        reject(error);
+      });
+  });
+
+export const editTutorProfile = (
+  axiosPrivate: AxiosInstance,
+  tutorID: number,
+  bio: string,
+  name: string,
+  profile_picture: string,
+  subjects: string[],
+): Promise<Tutor> =>
+  new Promise((resolve, reject) => {
+    axiosPrivate
+      .put(`/tutor/edit/${tutorID}`, {
+        bio,
+        name,
+        profile_picture,
+        subjects,
+      })
+      .then((response) => resolve(response.data))
+      .catch((error) => {
+        console.error("Error fetching tutors:", error);
+        reject(error);
+      });
+  });
+
 // export const getTutors = (axiosPrivate: AxiosInstance): Promise<Tutor[]> =>
 //   new Promise((resolve, reject) => {
 //     axiosPrivate
@@ -25,7 +62,7 @@ interface Tutor {
 //     });
 // });
 
-export const getTutors = (): Promise<Tutor[]> =>
+export const getTutors = (): Promise<OldTutor[]> =>
   new Promise((resolve, reject) => {
     axios
       .get("/tutor")
@@ -49,7 +86,7 @@ export const getTutors = (): Promise<Tutor[]> =>
 //         });
 //     });
 
-export const getTutorByID = (tutor_id: string): Promise<Tutor> =>
+export const getTutorByID = (tutor_id: number): Promise<OldTutor> =>
   new Promise((resolve, reject) => {
     axios
       .get(`/tutor/${tutor_id}`)
@@ -73,7 +110,7 @@ export const getTutorByID = (tutor_id: string): Promise<Tutor> =>
 //     });
 // });
 
-export const findAvailableTutorsByTime = (time: number): Promise<Tutor[]> =>
+export const findAvailableTutorsByTime = (time: number): Promise<OldTutor[]> =>
   new Promise((resolve, reject) => {
     axios
       .get(`/available-tutors?time=${time}`)
@@ -97,7 +134,7 @@ export const findAvailableTutorsByTime = (time: number): Promise<Tutor[]> =>
 //         });
 //     });
 
-export const findAvailableTutorsByDay = (day: number): Promise<Tutor[]> =>
+export const findAvailableTutorsByDay = (day: number): Promise<OldTutor[]> =>
   new Promise((resolve, reject) => {
     axios
       .get(`/available-tutors/day?day=${day}`)
@@ -121,7 +158,7 @@ export const findAvailableTutorsByDay = (day: number): Promise<Tutor[]> =>
 //         });
 //     });
 
-export const findAvailableTutorsByWeek = (week: number): Promise<Tutor[]> =>
+export const findAvailableTutorsByWeek = (week: number): Promise<OldTutor[]> =>
   new Promise((resolve, reject) => {
     axios
       .get(`/available-tutors/week?week=${week}`)
@@ -152,7 +189,7 @@ export const updateTutorProfile = (
       });
   });
 
-export const getTutorSubjects = (tutorID: string): Promise<Tutor[]> =>
+export const getTutorSubjects = (tutorID: number): Promise<OldTutor[]> =>
   new Promise((resolve, reject) => {
     axios
       .get(`/tutor/${tutorID}/subjects`)

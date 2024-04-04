@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Tutor from "../models/Tutor";
 import Subject from "../models/Subject";
+import { z } from "zod";
 
 const handleFindAllTutors = async (req: Request, res: Response) => {
   try {
@@ -22,16 +23,48 @@ const handleFindAllTutors = async (req: Request, res: Response) => {
 
 const handleFindTutorByID = async (req: Request, res: Response) => {
   try {
-    const tid = req.params.tutorID;
-    const tutor = await Tutor.findTutorByID(tid);
+    //!fix to handle if a tutor does not have any subjects
 
-    if (!tutor) {
-      res.json(null);
+    const tutor_id = parseInt(req.params.tutorID);
+    const tutors = await Tutor.getUserAndTheirSubjects(tutor_id);
+
+    if (tutors.length === 0) {
+      res.status(404).json({ message: "Tutor not found" });
     } else {
-      res.json(tutor);
+      res.json(tutors[0]);
     }
   } catch (err) {
     if (err instanceof Error) {
+      res.status(500).json({ message: err.message });
+    } else {
+      res.status(500).json({ message: "An unknown error occurred" });
+    }
+  }
+};
+
+const editTutorSchema = z.object({
+  bio: z.string().optional(),
+  name: z.string(),
+  profile_picture: z.string().optional(),
+  subjects: z.array(z.string()).optional(),
+});
+
+const handleEditTutorProfile = async (req: Request, res: Response) => {
+  try {
+    const tutorID = Number(req.params.tutorID);
+    const { bio, name, profile_picture, subjects } = editTutorSchema.parse(
+      req.body,
+    );
+
+    //!continue editing profile here
+
+    res
+      .status(201)
+      .json({ success: `Tutor id ${tutorID} successfully updated profile` });
+  } catch (err) {
+    if (err instanceof z.ZodError) {
+      return res.status(400).json({ message: err.errors });
+    } else if (err instanceof Error) {
       res.status(500).json({ message: err.message });
     } else {
       res.status(500).json({ message: "An unknown error occurred" });
@@ -179,6 +212,7 @@ const handleUpdateTutorProfile = async (req: Request, res: Response) => {
 export {
   handleFindAllTutors,
   handleFindTutorByID,
+  handleEditTutorProfile,
   handleFindAvailableTutorsByTime,
   handleFindAvailableTutorsByDay,
   handleFindAvailableTutorsByWeek,

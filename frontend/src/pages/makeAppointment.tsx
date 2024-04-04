@@ -5,7 +5,7 @@ import { Button } from "src/components/ui/button";
 import { Link } from "react-router-dom";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import { getTutors, getTutorByID } from "src/api/tutorAPI";
+import { getTutors, getTutorByID } from "src/api/tutor-api";
 import {
   Table,
   TableBody,
@@ -71,7 +71,7 @@ const MakeAppointment = () => {
 
   useEffect(() => {
     if (tutorID) {
-      getTutorByID(tutorID)
+      getTutorByID(tutorID as unknown as number)
         .then((data) => setTutor(data))
         .catch((error) => console.error("Error fetching tutor data:", error));
       findAppointmentByTutor(tutorID)

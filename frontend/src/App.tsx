@@ -54,10 +54,7 @@ const App = () => {
                 <Route element={<RequireAuth allowedRoles={[ROLES.Tutor]} />}>
                   <Route path="tutor" element={<Tutor />} />
                   <Route path="tutor/create" element={<CreateAppointment />} />
-                  <Route
-                    path="editTutorProfile/:tutorID"
-                    element={<EditTutorProfile />}
-                  />
+                  <Route path="tutor/edit" element={<EditTutorProfile />} />
                 </Route>
                 <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>
                   <Route path="admin" element={<Admin />} />

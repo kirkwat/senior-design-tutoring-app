@@ -1,170 +1,250 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { getTutorByID, getTutorSubjects } from "src/api/tutorAPI";
-import { ProfilePic } from "src/components/ui/profilePicture";
-import { Button } from "src/components/ui/button";
+import { useNavigate } from "react-router-dom";
+import { getTutorAndSubjects } from "src/api/tutor-api";
+import { Button, buttonVariants } from "src/components/ui/button";
 import { Input } from "src/components/ui/input";
+import { updateTutorProfile } from "src/api/tutor-api";
+import useAuth from "src/hooks/useAuth";
+import useAxiosPrivate from "src/hooks/useAxiosPrivate";
+
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "src/components/ui/form";
 import { Textarea } from "src/components/ui/textarea";
-import { Label } from "src/components/ui/label";
-import { updateTutorProfile } from "src/api/tutorAPI";
+import { Separator } from "src/components/ui/separator";
+import { Link } from "react-router-dom";
 
-interface Tutor {
-  id: number;
-  user_id: number;
-  bio: string;
-  name: string;
-  email: string;
-  password: string;
-  profile_picture: number;
-  refreshToken: null;
-  role: string;
-  subjects: string[];
-}
+const editProfileFormSchema = z.object({
+  name: z.string().min(2, "Name is required.").max(50),
+  bio: z.string().min(2, "Bio is required.").max(500),
+  profile_picture: z.string(),
+  subject1: z.string(),
+  subject2: z.string(),
+  subject3: z.string(),
+  subject4: z.string(),
+});
 
-const EditTutorProfile = () => {
-  const { tutorID } = useParams();
-  const [tutor, setTutor] = useState<Tutor | null>(null);
-  const [newBio, setNewBio] = useState<string>("");
-  const [subjectInput, setSubjectInput] = useState<Tutor[]>([]);
-  const [newSubjects, setNewSubjects] = useState<string[]>([]);
-  // const [newEmail, setNewEmail] = useState<string>((""));
-  const [newProfilePicture, setNewProfilePicture] = useState<number>(0);
-  const [newSubject1, setNewSubject1] = useState<string>("");
-  const [newSubject2, setNewSubject2] = useState<string>("");
-  const [newSubject3, setNewSubject3] = useState<string>("");
+export default function EditProfilePage() {
+  const { auth } = useAuth();
+  const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const form = useForm<z.infer<typeof editProfileFormSchema>>({
+    resolver: zodResolver(editProfileFormSchema),
+    defaultValues: {
+      name: "",
+      bio: "",
+      profile_picture: "",
+      subject1: "",
+      subject2: "",
+      subject3: "",
+      subject4: "",
+    },
+  });
 
   useEffect(() => {
-    if (tutorID) {
-      getTutorByID(tutorID)
-        .then((data) => setTutor(data))
-        .catch((error) => console.error("Error fetching tutor data:", error));
-      getTutorSubjects(tutorID)
-        .then((data) => setSubjectInput(data))
-        .catch((error) => console.error("Error fetching tutor data:", error));
-    }
-  }, [tutorID]);
+    if (!auth?.id) return;
+    setIsLoading(true);
 
-  useEffect(() => {
-    if (tutor) {
-      //    setNewEmail(tutor.email)
-      setNewBio(tutor.bio);
-      setNewProfilePicture(tutor.profile_picture);
-    }
-  }, [tutor]);
+    getTutorAndSubjects(axiosPrivate, auth.id)
+      .then((data) => {
+        console.log("data", data);
+        form.reset({
+          name: data.name,
+          bio: data.bio || "",
+          profile_picture: data.profile_picture || "",
+          subject1: data.subjects[0] || "",
+          subject2: data.subjects[1] || "",
+          subject3: data.subjects[2] || "",
+          subject4: data.subjects[3] || "",
+        });
+        setIsLoading(false);
+      })
+      .catch(() => setIsLoading(false));
+  }, []);
 
-  useEffect(() => {
-    if (subjectInput[0]) {
-      setNewSubjects([
-        subjectInput[0].name,
-        subjectInput[1].name,
-        subjectInput[2].name,
-      ]);
-      setNewSubject1(newSubjects.length >= 1 ? newSubjects[0] : "");
-      setNewSubject2(newSubjects.length >= 2 ? newSubjects[1] : "");
-      setNewSubject3(newSubjects.length >= 3 ? newSubjects[2] : "");
-    }
-  }, [subjectInput]);
+  // 2. Define a submit handler.
+  function onSubmit(values: z.infer<typeof editProfileFormSchema>) {
+    const { subject1, subject2, subject3, subject4, ...rest } = values;
 
-  const handleSubmit = () => {
-    if (tutor) {
-      let newNewSubjects = [newSubject1, newSubject2, newSubject3];
-      console.log(newNewSubjects);
-      updateTutorProfile(tutor.id, newProfilePicture, newBio, newNewSubjects);
-      navigate(`/tutorProfile/${tutor.id}`);
-    }
-  };
+    const subjects = [subject1, subject2, subject3, subject4]
+      .map((subject) => subject.toLowerCase())
+      .filter((subject) => subject);
 
-  const handleNewSubjects = () => {
-    console.log([newSubject1, newSubject2, newSubject3]);
-    setNewSubjects([newSubject1, newSubject2, newSubject3]);
-  };
+    const formattedValues = {
+      ...rest,
+      subjects,
+    };
 
-  const handleNewSubject1 = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNewSubject1(event.target.value);
-  };
+    console.log(formattedValues);
 
-  const handleNewSubject2 = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNewSubject2(event.target.value);
-  };
+    // Do something with the form values.
+    // ✅ This will be type-safe and validated.
+    console.log(values);
+  }
 
-  const handleNewSubject3 = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNewSubject3(event.target.value);
-  };
-
-  // const handleNewEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //     setNewEmail(event.target.value);
+  // const handleSubmit = () => {
+  //   if (tutor) {
+  //     let newNewSubjects = [newSubject1, newSubject2, newSubject3];
+  //     console.log(newNewSubjects);
+  //     updateTutorProfile(tutor.id, newProfilePicture, newBio, newNewSubjects);
+  //     navigate(`/tutorProfile/${tutor.id}`);
+  //   }
   // };
 
-  const handleNewBio = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setNewBio(event.target.value);
-  };
-
   return (
-    <>
-      {tutor && (
-        <div className="">
-          <div className="flex mt-10 ml-40 mb-10">
-            <ProfilePic
-              imageUrl={require("../static/default.jpg")}
-              size={256}
-            />
-            <div className="ml-10 mt-5">
-              <h1 className="font-bold text-5xl">{tutor.name}</h1>
-              <h2 className="mt-2 text-2xl">Tutor</h2>
-              <Label htmlFor="bio">Bio</Label>
-              <Textarea
-                placeholder={newBio}
-                onChange={handleNewBio}
-                style={{ width: "500px", height: "100px" }}
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-center mt-5">
-            <div className="flex-1 ml-40">
-              <div className="text-center">
-                <h1 className="mb-2">Knowledge Areas</h1>
-                <Input
-                  className="mb-5"
-                  type="subject1"
-                  placeholder={newSubject1}
-                  onChange={handleNewSubject1}
-                />
-                <Input
-                  className="mb-5"
-                  type="subject2"
-                  placeholder={newSubject2}
-                  onChange={handleNewSubject2}
-                />
-                <Input
-                  className="mb-5"
-                  type="subject3"
-                  placeholder={newSubject3}
-                  onChange={handleNewSubject3}
-                />
-              </div>
-            </div>
-            <div className="flex-1 ml-40">
-              <div className="">
-                <h1>Contact Info</h1>
-                <ul className="list-disc list-inside">
-                  {/* <Input type="email" placeholder={newEmail} onChange={handleNewEmail} /> */}
-                  <li className="mb-2">Email: {tutor.email}</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex justify-center">
-            <Button className="mt-5" type="submit" onClick={handleSubmit}>
-              Save Changes
-            </Button>
-          </div>
+    <div className="container min-h-[60vh] py-12">
+      <div className="flex justify-between items-center flex-col gap-2 md:flex-row mb-4">
+        <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl">
+          Update your Tutor Profile
+        </h1>
+      </div>
+      <Form {...form}>
+        <div className="font-medium text-lg">Personal Info</div>
+        <div className="text-sm text-muted-foreground">
+          Update your personal information.
         </div>
-      )}
-    </>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="mt-4">
+          <div className="grid md:grid-cols-2 gap-x-8 gap-y-4">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="John Doe" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    This is your public display name.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="profile_picture"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Profile Picture</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="url"
+                      placeholder="https://imgur.com"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Provide a link to your profile picture.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <FormField
+            control={form.control}
+            name="bio"
+            render={({ field }) => (
+              <FormItem className="mt-4">
+                <FormLabel>Bio</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="I am studying math in college."
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Tell us a little bit about yourself.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Separator className="my-4" />
+          <div className="grid md:grid-cols-2 gap-x-8 gap-y-4 grid-cols-1">
+            <div className="col-span-1 md:col-span-2">
+              <div className="font-medium text-lg">Subjects</div>
+              <div className="text-sm text-muted-foreground">
+                Add the subjects you are comfortable tutoring. Not all fields
+                are required.
+              </div>
+            </div>
+            <FormField
+              control={form.control}
+              name="subject1"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Subject 1</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Mathematics" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="subject2"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Subject 2</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Chemistry" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="subject3"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Subject 3</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Reading" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="subject4"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Subject 4</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Writing" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="flex gap-4 mt-4">
+            <Link
+              to="/tutor"
+              className={buttonVariants({ variant: "outline" })}
+            >
+              Cancel
+            </Link>
+            <Button type="submit">Submit</Button>
+          </div>
+        </form>
+      </Form>
+    </div>
   );
-};
-
-export default EditTutorProfile;
+}
