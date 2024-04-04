@@ -9,9 +9,8 @@ class Student {
   }
 
   static async updateStudentProfile(id: number, profile_picture: number) {
-    return knex(this.USER_TABLE).where({id}).update({profile_picture})
+    return knex(this.USER_TABLE).where({ id }).update({ profile_picture });
   }
-
 }
 
-export default Student
+export default Student;

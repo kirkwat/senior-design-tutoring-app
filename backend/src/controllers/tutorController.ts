@@ -1,12 +1,6 @@
 import { Request, Response } from "express";
-import { z } from "zod";
 import Tutor from "../models/Tutor";
 import Subject from "../models/Subject";
-
-const newTutorSchema = z.object({
-  user_id: z.number(),
-  bio: z.string(),
-});
 
 const handleFindAllTutors = async (req: Request, res: Response) => {
   try {
@@ -118,55 +112,55 @@ const handleFindAvailableTutorsByWeek = async (req: Request, res: Response) => {
 
 const handleUpdateTutorProfile = async (req: Request, res: Response) => {
   try {
-    const tid = req.params.tutorID
+    const tid = req.params.tutorID;
     var tutorID = -1;
-    if(tid){
-      tutorID = Number(tid)
+    if (tid) {
+      tutorID = Number(tid);
     }
-    const {profile_picture, bio, subjects} = req.body
-    if(profile_picture){
-      await Tutor.updateTutorProfilePicture(tutorID,profile_picture)
+    const { profile_picture, bio, subjects } = req.body;
+    if (profile_picture) {
+      await Tutor.updateTutorProfilePicture(tutorID, profile_picture);
     }
-    if(bio){
-      await Tutor.updateTutorBio(tutorID, bio)
+    if (bio) {
+      await Tutor.updateTutorBio(tutorID, bio);
     }
-    if(subjects){
-      const currentSubjects = await Subject.findAllSubjectsForTutor(tutorID)
-      var subjectsToAdd = []
-      var subjectsToRemove = []
+    if (subjects) {
+      const currentSubjects = await Subject.findAllSubjectsForTutor(tutorID);
+      var subjectsToAdd = [];
+      var subjectsToRemove = [];
       // Find the subjects to add
-      for(const [key1, newSubject] of Object.entries(subjects)){
-        var found = false
-        for(const [key2, currSubject] of Object.entries(currentSubjects)){
-          if(String(newSubject) == String(currSubject.name)){ 
-            found = true
-            break
+      for (const [key1, newSubject] of Object.entries(subjects)) {
+        var found = false;
+        for (const [key2, currSubject] of Object.entries(currentSubjects)) {
+          if (String(newSubject) == String(currSubject.name)) {
+            found = true;
+            break;
           }
         }
-        if(!found) subjectsToAdd.push(String(newSubject))
+        if (!found) subjectsToAdd.push(String(newSubject));
       }
       // Find the subjects to delete
-      for(const [key1, currSubject] of Object.entries(currentSubjects)){
-        var found = false
-        for(const [key2, newSubject] of Object.entries(subjects)){
-          if(String(newSubject) == String(currSubject.name)){ 
-            found = true
-            break
+      for (const [key1, currSubject] of Object.entries(currentSubjects)) {
+        var found = false;
+        for (const [key2, newSubject] of Object.entries(subjects)) {
+          if (String(newSubject) == String(currSubject.name)) {
+            found = true;
+            break;
           }
         }
-        if(!found) subjectsToRemove.push(String(currSubject.name))
+        if (!found) subjectsToRemove.push(String(currSubject.name));
       }
-      for(const [key,subject] of Object.entries(subjectsToAdd)){
-        const subjectID = await Subject.findSubject(subject)
-        if(subjectID[0] != undefined) {
-          await Subject.assignTutorToSubject(tutorID,subject)
+      for (const [key, subject] of Object.entries(subjectsToAdd)) {
+        const subjectID = await Subject.findSubject(subject);
+        if (subjectID[0] != undefined) {
+          await Subject.assignTutorToSubject(tutorID, subject);
         } else {
-          await Subject.addNewSubject(subject)
-          await Subject.assignTutorToSubject(tutorID,subject)
+          await Subject.addNewSubject(subject);
+          await Subject.assignTutorToSubject(tutorID, subject);
         }
       }
-      for(const [key,subject] of Object.entries(subjectsToRemove)){
-        await Subject.removeSubjectFromTutor(tutorID, subject)
+      for (const [key, subject] of Object.entries(subjectsToRemove)) {
+        await Subject.removeSubjectFromTutor(tutorID, subject);
       }
     }
 
@@ -188,5 +182,5 @@ export {
   handleFindAvailableTutorsByTime,
   handleFindAvailableTutorsByDay,
   handleFindAvailableTutorsByWeek,
-  handleUpdateTutorProfile
+  handleUpdateTutorProfile,
 };

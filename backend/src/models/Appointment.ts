@@ -3,13 +3,39 @@ import { IAppointment } from "../interfaces/IAppointment";
 
 class Appointment {
   static USER_TABLE = "user";
-  static TUTOR_TABLE = "tutor";
   static APPOINTMENT_TABLE = "appointment";
 
-  static findAppoitnmentByTutor(tutor_id: number, start_date: Date) {
+  static findAppointmentByTutor(tutor_id: number, start_date: Date) {
     return knex(this.APPOINTMENT_TABLE)
       .select("*")
       .where({ tutor_id, start_time: start_date.getTime() });
+  }
+
+  static findNonCancelledAppointmentByTutor(
+    tutor_id: number,
+    start_date: Date,
+  ) {
+    return knex(this.APPOINTMENT_TABLE)
+      .select("*")
+      .where({ tutor_id, start_time: start_date.getTime() })
+      .whereNot({ status: "cancelled" });
+  }
+
+  static async findTutorAppointments(tutor_id: number) {
+    return knex(this.APPOINTMENT_TABLE)
+      .select(
+        "appointment.*",
+        "user.name as student_name",
+        "user.profile_picture as student_profile_picture",
+      )
+      .leftJoin("user", "appointment.student_id", "user.id")
+      .where({ tutor_id });
+  }
+
+  static async cancelAppointment(appointment_id: number) {
+    return knex<IAppointment>(this.APPOINTMENT_TABLE)
+      .where({ id: appointment_id })
+      .update({ status: "cancelled" });
   }
 
   static async createAppointment(newAppointment: Omit<IAppointment, "id">) {
@@ -35,9 +61,10 @@ class Appointment {
   }
 
   static async findStudentsAppointments(student_id?: string) {
-    return knex(this.APPOINTMENT_TABLE).join(this.USER_TABLE,"appointment.tutor_id","=","user.id")
-    .select("appointment.*","user.name")
-    .where({ student_id });
+    return knex(this.APPOINTMENT_TABLE)
+      .join(this.USER_TABLE, "appointment.tutor_id", "=", "user.id")
+      .select("appointment.*", "user.name")
+      .where({ student_id });
   }
 
   static async signUpForAppointment(

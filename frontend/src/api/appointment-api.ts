@@ -12,18 +12,49 @@ interface Appointment {
 }
 
 export const createAppointment = (
+  axiosPrivate: AxiosInstance,
   tutorID: number,
-  start: string,
-  end: string,
-  zoom: string,
+  startDate: string,
+  appointmentLength: number,
+  weekSpan: number,
+  zoomLink: string,
 ) =>
   new Promise((resolve, reject) => {
-    axios
+    axiosPrivate
       .post(`/appointment/${tutorID}`, {
-        start: start,
-        end: end,
-        zoom_link: zoom,
+        startDate,
+        appointmentLength,
+        weekSpan,
+        zoomLink,
       })
+      .then((x) => resolve(x.data))
+      .catch((error) => {
+        console.error("Error fetching tutors:", error);
+        reject(error);
+      });
+  });
+
+export const getTutorAppointments = (
+  axiosPrivate: AxiosInstance,
+  tutorID: number,
+) =>
+  new Promise((resolve, reject) => {
+    axiosPrivate
+      .get(`/appointment/tutor/${tutorID}`)
+      .then((x) => resolve(x.data))
+      .catch((error) => {
+        console.error("Error fetching tutors:", error);
+        reject(error);
+      });
+  });
+
+export const cancelAppointment = (
+  axiosPrivate: AxiosInstance,
+  appointmentID: number,
+) =>
+  new Promise((resolve, reject) => {
+    axiosPrivate
+      .put(`/appointment/cancel/${appointmentID}`)
       .then((x) => resolve(x.data))
       .catch((error) => {
         console.error("Error fetching tutors:", error);
@@ -43,42 +74,6 @@ export const findAppointmentByTutor = (
         reject(error);
       });
   });
-
-// export const createAppointment = (
-//     axiosPrivate: AxiosInstance,
-//     tutorID: number,
-//     start: string,
-//     end: string,
-//     zoom: string,
-//   ) =>
-//     new Promise((resolve, reject) => {
-//       axiosPrivate
-//         .post(`/appointment`, {
-//           tutor_id: tutorID,
-//           start: start,
-//           end: end,
-//           zoom_link: zoom,
-//         })
-//         .then((x) => resolve(x.data))
-//         .catch((error) => {
-//           console.error("Error fetching tutors:", error);
-//           reject(error);
-//         });
-//     });
-
-// export const findAppointmentByTutor = (
-//     axiosPrivate: AxiosInstance,
-//     tutorID: string,
-//     ): Promise<Appointment[]> =>
-//     new Promise((resolve, reject) => {
-//         axiosPrivate
-//         .get(`/appointment?tutor_id=${tutorID}`)
-//         .then((x) => resolve(x.data))
-//         .catch((error) => {
-//             console.error("Error fetching tutors:", error);
-//             reject(error);
-//         });
-// });
 
 export const checkAvailableAppointments = (
   day: string,

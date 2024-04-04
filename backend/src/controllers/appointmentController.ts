@@ -1,42 +1,88 @@
 import { Request, Response } from "express";
 import { z } from "zod";
 import Appointment from "../models/Appointment";
-import { start } from "repl";
 
 const newAppointmentSchema = z.object({
-  start: z.string(),
-  end: z.string(),
-  zoom_link: z.string(),
+  startDate: z.string().datetime(),
+  appointmentLength: z.number(),
+  weekSpan: z.number(),
+  zoomLink: z.string(),
 });
 
 const handleNewAppointment = async (req: Request, res: Response) => {
   try {
-    const tutorID = Number(req.params.tutorID)
-    const {start, end, zoom_link } = newAppointmentSchema.parse(
-      req.body,
-    );
+    const tutorID = Number(req.params.tutorID);
+    const { startDate, appointmentLength, weekSpan, zoomLink } =
+      newAppointmentSchema.parse(req.body);
 
-    const duplicate = await Appointment.findAppoitnmentByTutor(
-      tutorID,
-      new Date(start),
-    );
-    if (duplicate[0] != undefined) return res.sendStatus(409);
-    await Appointment.createAppointment({
-      tutor_id: tutorID,
-      student_id: undefined,
-      selected_subject: undefined,
-      start_time: new Date(start),
-      end_time: new Date(end),
-      zoom_link: zoom_link,
-    });
+    let createdCount = 0;
+    let failedCount = 0;
 
-    res
-      .status(201)
-      .json({ success: `New appointment by tutor id ${tutorID} created!` });
+    for (let week = 0; week < weekSpan; week++) {
+      const startDateTime = new Date(startDate);
+      startDateTime.setDate(startDateTime.getDate() + 7 * week);
+
+      const endDateTime = new Date(startDateTime);
+      endDateTime.setMinutes(startDateTime.getMinutes() + appointmentLength);
+
+      const duplicates = await Appointment.findNonCancelledAppointmentByTutor(
+        tutorID,
+        startDateTime,
+      );
+
+      if (duplicates.length === 0) {
+        await Appointment.createAppointment({
+          tutor_id: tutorID,
+          start_time: startDateTime,
+          end_time: endDateTime,
+          zoom_link: zoomLink,
+          status: "available",
+        });
+        createdCount++;
+      } else {
+        failedCount++;
+      }
+    }
+
+    if (createdCount === 0) {
+      throw new Error("Failed to create appointments due to time conflicts.");
+    }
+
+    res.status(201).json({ created: createdCount, failed: failedCount });
   } catch (err) {
     if (err instanceof z.ZodError) {
       return res.status(400).json({ message: err.errors });
     } else if (err instanceof Error) {
+      res.status(500).json({ message: err.message });
+    } else {
+      res.status(500).json({ message: "An unknown error occurred" });
+    }
+  }
+};
+
+const handleGetTutorAppointments = async (req: Request, res: Response) => {
+  try {
+    const tutorID = Number(req.params.tutorID);
+    const appointments = await Appointment.findTutorAppointments(tutorID);
+
+    res.json(appointments);
+  } catch (err) {
+    if (err instanceof Error) {
+      res.status(500).json({ message: err.message });
+    } else {
+      res.status(500).json({ message: "An unknown error occurred" });
+    }
+  }
+};
+
+const handleCancelAppointment = async (req: Request, res: Response) => {
+  try {
+    const appointmentID = Number(req.params.appointmentID);
+    await Appointment.cancelAppointment(appointmentID);
+
+    res.json({ success: `Appointment ${appointmentID} has been cancelled.` });
+  } catch (err) {
+    if (err instanceof Error) {
       res.status(500).json({ message: err.message });
     } else {
       res.status(500).json({ message: "An unknown error occurred" });
@@ -72,14 +118,11 @@ const handleIsAvailable = async (req: Request, res: Response) => {
   try {
     const tutor_id = req.query.tutor_id;
     const tid = tutor_id?.toString();
-    let time_req = String(req.query.day)
-    time_req = time_req.concat('T00:00:00')
-    let time = new Date(time_req).getTime()
+    let time_req = String(req.query.day);
+    time_req = time_req.concat("T00:00:00");
+    let time = new Date(time_req).getTime();
 
-    const appointment = await Appointment.isAvailable(
-      time,
-      tid,
-    );
+    const appointment = await Appointment.isAvailable(time, tid);
     if (!appointment[0]) {
       res.json(false);
     } else if (appointment[0]) {
@@ -141,6 +184,8 @@ const handRegisterForAppointment = async (req: Request, res: Response) => {
 
 export {
   handleNewAppointment,
+  handleGetTutorAppointments,
+  handleCancelAppointment,
   handleFindAvailableAppointments,
   handleIsAvailable,
   handleFindStudentsAppointments,

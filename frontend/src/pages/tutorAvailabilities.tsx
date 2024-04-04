@@ -16,7 +16,7 @@ import Calendar from "react-calendar";
 import {
   findAppointmentByTutor,
   checkAvailableAppointments,
-} from "src/api/appointmentAPI";
+} from "src/api/appointment-api";
 import useAxiosPrivate from "src/hooks/useAxiosPrivate";
 
 interface Tutor {

@@ -1,5 +1,4 @@
 import {
-  ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
@@ -41,7 +40,7 @@ interface DataTableProps<TData, TValue> {
   onRemove: (row: TValue) => void;
 }
 
-export default function AppointmentsTable<TData, TValue>({
+export default function UserAppointmentsTable<TData, TValue>({
   data,
   onRemove,
 }: DataTableProps<TData, TValue>) {
