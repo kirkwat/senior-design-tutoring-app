@@ -6,7 +6,7 @@ export async function up(knex: Knex) {
     table.foreign("tutor_id").references("tutor.id");
     table.integer("subject_id").notNullable();
     table.foreign("subject_id").references("subject_list.id");
-    table.primary(["tutor_id","subject_id"])
+    table.primary(["tutor_id", "subject_id"]);
   });
 }
 

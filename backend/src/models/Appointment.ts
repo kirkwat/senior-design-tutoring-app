@@ -35,9 +35,10 @@ class Appointment {
   }
 
   static async findStudentsAppointments(student_id?: string) {
-    return knex(this.APPOINTMENT_TABLE).join(this.USER_TABLE,"appointment.tutor_id","=","user.id")
-    .select("appointment.*","user.name")
-    .where({ student_id });
+    return knex(this.APPOINTMENT_TABLE)
+      .join(this.USER_TABLE, "appointment.tutor_id", "=", "user.id")
+      .select("appointment.*", "user.name")
+      .where({ student_id });
   }
 
   static async signUpForAppointment(

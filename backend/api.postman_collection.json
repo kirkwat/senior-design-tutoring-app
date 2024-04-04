@@ -1,340 +1,302 @@
 {
-	"info": {
-		"_postman_id": "38f1d59a-267b-4a5f-8583-c548d6710c7a",
-		"name": "Tutoring App",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "31521752"
-	},
-	"item": [
-		{
-			"name": "auth",
-			"item": [
-				{
-					"name": "register",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"user\":\"tutor@gmail.com\",\r\n    \"pwd\":\"Password1!\",\r\n    \"name\":\"user\",\r\n    \"role\":\"tutor\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:8080/register",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"register"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "auth",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"user\":\"user@gmail.com\",\r\n    \"pwd\":\"Password1!\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:8080/auth",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"auth"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "refresh",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MDk4NDQ4OTUsImV4cCI6MTcwOTg0NTc5NX0.5w0uWR-vjk4CP5jyHHSXHXDVKIVBdN8yOlMFn9Oj0jE",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:8080/refresh",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"refresh"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "appointment",
-			"item": [
-				{
-					"name": "create appointment - tutor",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InR1dG9yQGdtYWlsLmNvbSIsInJvbGUiOiJ0dXRvciIsImlhdCI6MTcwOTg0NTM4OSwiZXhwIjoxNzA5ODQ2Mjg5fQ.1BsAamhLXLzhWPlAH5PFa9z3Ap_y2IwIwiL0fQgt9UY",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"tutor_id\": 2,\r\n    \"start\": \"2023-03-15T17:00:00-09:00\",\r\n    \"end\": \"2023-03-15T17:00:00-09:30\",\r\n    \"zoom_link\": \"https://zoom.com/meeting\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8080/appointment?tutor_id=2",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"appointment"
-							],
-							"query": [
-								{
-									"key": "tutor_id",
-									"value": "2"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "fetch appointments - tutor",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InR1dG9yQGdtYWlsLmNvbSIsInJvbGUiOiJ0dXRvciIsImlhdCI6MTcwOTg0NTM4OSwiZXhwIjoxNzA5ODQ2Mjg5fQ.1BsAamhLXLzhWPlAH5PFa9z3Ap_y2IwIwiL0fQgt9UY",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/appointment?tutor_id=2",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"appointment"
-							],
-							"query": [
-								{
-									"key": "tutor_id",
-									"value": "2"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "fetch appointments - student",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MDk4NDU2MDEsImV4cCI6MTcwOTg0NjUwMX0.9HJGOYjbS9fgEWXmFwhmkl8TG9gF4ZoZSMMghUvr3l0",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/appointment/student?student_id=2",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"appointment",
-								"student"
-							],
-							"query": [
-								{
-									"key": "student_id",
-									"value": "2"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "register appointment",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MDk4NDU2MDEsImV4cCI6MTcwOTg0NjUwMX0.9HJGOYjbS9fgEWXmFwhmkl8TG9gF4ZoZSMMghUvr3l0",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PUT",
-						"header": [],
-						"url": {
-							"raw": ""
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "tutor",
-			"item": [
-				{
-					"name": "fetch tutor",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/tutor/3",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"tutor",
-								"3"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "fetch tutors",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MDk4NDYwNTAsImV4cCI6MTcwOTg0Njk1MH0.TI220_2J3-mZSnOt3esRGafXogPsyEfDVb4607MbKOk",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/tutor",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"tutor"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "health",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"Kirk\",\r\n    \"email\": \"test@test.com\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:8080/health",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"health"
-					]
-				}
-			},
-			"response": []
-		}
-	]
+  "info": {
+    "_postman_id": "38f1d59a-267b-4a5f-8583-c548d6710c7a",
+    "name": "Tutoring App",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "31521752"
+  },
+  "item": [
+    {
+      "name": "auth",
+      "item": [
+        {
+          "name": "register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"user\":\"tutor@gmail.com\",\r\n    \"pwd\":\"Password1!\",\r\n    \"name\":\"user\",\r\n    \"role\":\"tutor\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/register",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "auth",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"user\":\"user@gmail.com\",\r\n    \"pwd\":\"Password1!\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/auth",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["auth"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "refresh",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MDk4NDQ4OTUsImV4cCI6MTcwOTg0NTc5NX0.5w0uWR-vjk4CP5jyHHSXHXDVKIVBdN8yOlMFn9Oj0jE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:8080/refresh",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["refresh"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "appointment",
+      "item": [
+        {
+          "name": "create appointment - tutor",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InR1dG9yQGdtYWlsLmNvbSIsInJvbGUiOiJ0dXRvciIsImlhdCI6MTcwOTg0NTM4OSwiZXhwIjoxNzA5ODQ2Mjg5fQ.1BsAamhLXLzhWPlAH5PFa9z3Ap_y2IwIwiL0fQgt9UY",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"tutor_id\": 2,\r\n    \"start\": \"2023-03-15T17:00:00-09:00\",\r\n    \"end\": \"2023-03-15T17:00:00-09:30\",\r\n    \"zoom_link\": \"https://zoom.com/meeting\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/appointment?tutor_id=2",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["appointment"],
+              "query": [
+                {
+                  "key": "tutor_id",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "fetch appointments - tutor",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InR1dG9yQGdtYWlsLmNvbSIsInJvbGUiOiJ0dXRvciIsImlhdCI6MTcwOTg0NTM4OSwiZXhwIjoxNzA5ODQ2Mjg5fQ.1BsAamhLXLzhWPlAH5PFa9z3Ap_y2IwIwiL0fQgt9UY",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/appointment?tutor_id=2",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["appointment"],
+              "query": [
+                {
+                  "key": "tutor_id",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "fetch appointments - student",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MDk4NDU2MDEsImV4cCI6MTcwOTg0NjUwMX0.9HJGOYjbS9fgEWXmFwhmkl8TG9gF4ZoZSMMghUvr3l0",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/appointment/student?student_id=2",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["appointment", "student"],
+              "query": [
+                {
+                  "key": "student_id",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "register appointment",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MDk4NDU2MDEsImV4cCI6MTcwOTg0NjUwMX0.9HJGOYjbS9fgEWXmFwhmkl8TG9gF4ZoZSMMghUvr3l0",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": ""
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "tutor",
+      "item": [
+        {
+          "name": "fetch tutor",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/tutor/3",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["tutor", "3"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "fetch tutors",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MDk4NDYwNTAsImV4cCI6MTcwOTg0Njk1MH0.TI220_2J3-mZSnOt3esRGafXogPsyEfDVb4607MbKOk",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/tutor",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["tutor"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "health",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"Kirk\",\r\n    \"email\": \"test@test.com\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:8080/health",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["health"]
+        }
+      },
+      "response": []
+    }
+  ]
 }

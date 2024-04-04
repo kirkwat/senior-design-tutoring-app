@@ -18,14 +18,14 @@ router
   .get("/available/week", verifyRoles("user"), handleFindAvailableTutorsByWeek)
   .get("/:tutorID", handleFindTutorByID)
   .get("/", verifyRoles("user"), handleFindAllTutors)
-  .put("/profile/:tutorID", verifyRoles("tutor"), handleUpdateTutorProfile)
+  .put("/profile/:tutorID", verifyRoles("tutor"), handleUpdateTutorProfile);
 
-  // .get("/available", handleFindAvailableTutorsByTime)
-  // .get("/available/day", handleFindAvailableTutorsByDay)
-  // .get("/available/week", handleFindAvailableTutorsByWeek)
-  // .get("/:tutorID", handleFindTutorByID)
-  // .get("/:tutorID/subjects", handleFindTutorsSubjects)
-  // .get("/", handleFindAllTutors)
-  // .put("/profile/:tutorID", handleUpdateTutorProfile)
+// .get("/available", handleFindAvailableTutorsByTime)
+// .get("/available/day", handleFindAvailableTutorsByDay)
+// .get("/available/week", handleFindAvailableTutorsByWeek)
+// .get("/:tutorID", handleFindTutorByID)
+// .get("/:tutorID/subjects", handleFindTutorsSubjects)
+// .get("/", handleFindAllTutors)
+// .put("/profile/:tutorID", handleUpdateTutorProfile)
 
 export default router;

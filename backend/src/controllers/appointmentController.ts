@@ -11,10 +11,8 @@ const newAppointmentSchema = z.object({
 
 const handleNewAppointment = async (req: Request, res: Response) => {
   try {
-    const tutorID = Number(req.params.tutorID)
-    const {start, end, zoom_link } = newAppointmentSchema.parse(
-      req.body,
-    );
+    const tutorID = Number(req.params.tutorID);
+    const { start, end, zoom_link } = newAppointmentSchema.parse(req.body);
 
     const duplicate = await Appointment.findAppoitnmentByTutor(
       tutorID,
@@ -72,14 +70,11 @@ const handleIsAvailable = async (req: Request, res: Response) => {
   try {
     const tutor_id = req.query.tutor_id;
     const tid = tutor_id?.toString();
-    let time_req = String(req.query.day)
-    time_req = time_req.concat('T00:00:00')
-    let time = new Date(time_req).getTime()
+    let time_req = String(req.query.day);
+    time_req = time_req.concat("T00:00:00");
+    let time = new Date(time_req).getTime();
 
-    const appointment = await Appointment.isAvailable(
-      time,
-      tid,
-    );
+    const appointment = await Appointment.isAvailable(time, tid);
     if (!appointment[0]) {
       res.json(false);
     } else if (appointment[0]) {
