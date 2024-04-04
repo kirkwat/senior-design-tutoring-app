@@ -23,7 +23,6 @@ const handleNewUser = async (req: Request, res: Response) => {
       email: user,
       password: hashedPwd,
       name,
-      profile_picture: "",
       role,
     });
 

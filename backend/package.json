@@ -10,6 +10,8 @@
     "format": "prettier '**/*.{ts,json}' --write",
     "db:migrate": "knex migrate:latest --knexfile src/knexfile.ts",
     "db:migrate:make": "knex migrate:make --knexfile src/knexfile.ts",
+    "db:seed": "knex seed:run --knexfile src/knexfile.ts",
+    "db:seed:make": "knex seed:make --knexfile src/knexfile.ts",
     "db:rollback": "knex migrate:rollback --all --knexfile src/knexfile.ts"
   },
   "keywords": [],
