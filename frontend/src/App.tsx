@@ -14,7 +14,7 @@ import TutorAvailabilities from "./pages/tutorAvailabilities";
 import MakeAppointment from "./pages/makeAppointment";
 import CreateAppointment from "./pages/create";
 import TutorProfile from "./pages/tutorProfile";
-import EditTutorProfile from "./pages/editTutorProfile";
+import EditTutorProfilePage from "./pages/edit-tutor-profile";
 import { Toaster } from "./components/ui/sonner";
 
 const ROLES = {
@@ -54,7 +54,7 @@ const App = () => {
                 <Route element={<RequireAuth allowedRoles={[ROLES.Tutor]} />}>
                   <Route path="tutor" element={<Tutor />} />
                   <Route path="tutor/create" element={<CreateAppointment />} />
-                  <Route path="tutor/edit" element={<EditTutorProfile />} />
+                  <Route path="tutor/edit" element={<EditTutorProfilePage />} />
                 </Route>
                 <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>
                   <Route path="admin" element={<Admin />} />

@@ -21,8 +21,8 @@ class Tutor {
   static async getUserAndTheirSubjects(tutor_id: number) {
     const results = await knex(this.USER_TABLE)
       .where("user.id", tutor_id)
-      .join("subject", "user.id", "=", "subject.tutor_id")
-      .join("subject_list", "subject.subject_id", "=", "subject_list.id")
+      .leftJoin("subject", "user.id", "=", "subject.tutor_id")
+      .leftJoin("subject_list", "subject.subject_id", "=", "subject_list.id")
       .select(
         "user.id",
         "user.name",
@@ -51,6 +51,19 @@ class Tutor {
     }, {});
 
     return Object.values(formattedResult);
+  }
+
+  static async updateTutorProfile(
+    tutor_id: number,
+    bio: string,
+    name: string,
+    profile_picture: string,
+  ) {
+    await knex(this.USER_TABLE).where({ id: tutor_id }).update({
+      bio,
+      name,
+      profile_picture,
+    });
   }
 
   static async findAvailableTutorsByTime(time?: number) {

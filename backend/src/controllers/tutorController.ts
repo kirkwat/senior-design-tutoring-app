@@ -23,8 +23,6 @@ const handleFindAllTutors = async (req: Request, res: Response) => {
 
 const handleFindTutorByID = async (req: Request, res: Response) => {
   try {
-    //!fix to handle if a tutor does not have any subjects
-
     const tutor_id = parseInt(req.params.tutorID);
     const tutors = await Tutor.getUserAndTheirSubjects(tutor_id);
 
@@ -51,16 +49,25 @@ const editTutorSchema = z.object({
 
 const handleEditTutorProfile = async (req: Request, res: Response) => {
   try {
-    const tutorID = Number(req.params.tutorID);
+    const tutor_id = Number(req.params.tutorID);
     const { bio, name, profile_picture, subjects } = editTutorSchema.parse(
       req.body,
     );
 
-    //!continue editing profile here
+    await Tutor.updateTutorProfile(
+      tutor_id,
+      bio || "",
+      name,
+      profile_picture || "",
+    );
+
+    if (subjects) {
+      await Subject.updateTutorSubjects(tutor_id, subjects);
+    }
 
     res
       .status(201)
-      .json({ success: `Tutor id ${tutorID} successfully updated profile` });
+      .json({ success: `Tutor id ${tutor_id} successfully updated profile` });
   } catch (err) {
     if (err instanceof z.ZodError) {
       return res.status(400).json({ message: err.errors });

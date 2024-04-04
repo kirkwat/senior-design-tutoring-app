@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getTutorAndSubjects } from "src/api/tutor-api";
+import { editTutorProfile, getTutorAndSubjects } from "src/api/tutor-api";
 import { Button, buttonVariants } from "src/components/ui/button";
 import { Input } from "src/components/ui/input";
-import { updateTutorProfile } from "src/api/tutor-api";
 import useAuth from "src/hooks/useAuth";
 import useAxiosPrivate from "src/hooks/useAxiosPrivate";
 
@@ -22,6 +21,7 @@ import {
 import { Textarea } from "src/components/ui/textarea";
 import { Separator } from "src/components/ui/separator";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
 const editProfileFormSchema = z.object({
   name: z.string().min(2, "Name is required.").max(50),
@@ -33,11 +33,12 @@ const editProfileFormSchema = z.object({
   subject4: z.string(),
 });
 
-export default function EditProfilePage() {
+export default function EditTutorProfilePage() {
   const { auth } = useAuth();
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<z.infer<typeof editProfileFormSchema>>({
     resolver: zodResolver(editProfileFormSchema),
@@ -58,7 +59,6 @@ export default function EditProfilePage() {
 
     getTutorAndSubjects(axiosPrivate, auth.id)
       .then((data) => {
-        console.log("data", data);
         form.reset({
           name: data.name,
           bio: data.bio || "",
@@ -71,36 +71,47 @@ export default function EditProfilePage() {
         setIsLoading(false);
       })
       .catch(() => setIsLoading(false));
-  }, []);
+  }, [auth?.id]);
 
-  // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof editProfileFormSchema>) {
-    const { subject1, subject2, subject3, subject4, ...rest } = values;
+    if (!auth || !auth.id) {
+      return;
+    }
+
+    setIsSubmitting(false);
+
+    const { subject1, subject2, subject3, subject4 } = values;
 
     const subjects = [subject1, subject2, subject3, subject4]
       .map((subject) => subject.toLowerCase())
       .filter((subject) => subject);
 
-    const formattedValues = {
-      ...rest,
-      subjects,
-    };
-
-    console.log(formattedValues);
-
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+    toast.promise(
+      editTutorProfile(
+        axiosPrivate,
+        auth.id,
+        values.bio,
+        values.name,
+        values.profile_picture,
+        subjects,
+      ),
+      {
+        loading: "Updating profile...",
+        success: () => {
+          setIsSubmitting(false);
+          navigate("/tutor");
+          return "Profile updated successfully!";
+        },
+        error: (err) => {
+          setIsSubmitting(false);
+          return (
+            err.response?.data?.message ||
+            "An error occurred. Please try again."
+          );
+        },
+      },
+    );
   }
-
-  // const handleSubmit = () => {
-  //   if (tutor) {
-  //     let newNewSubjects = [newSubject1, newSubject2, newSubject3];
-  //     console.log(newNewSubjects);
-  //     updateTutorProfile(tutor.id, newProfilePicture, newBio, newNewSubjects);
-  //     navigate(`/tutorProfile/${tutor.id}`);
-  //   }
-  // };
 
   return (
     <div className="container min-h-[60vh] py-12">
@@ -237,11 +248,15 @@ export default function EditProfilePage() {
           <div className="flex gap-4 mt-4">
             <Link
               to="/tutor"
-              className={buttonVariants({ variant: "outline" })}
+              className={buttonVariants({
+                variant: "outline",
+              })}
             >
               Cancel
             </Link>
-            <Button type="submit">Submit</Button>
+            <Button type="submit" disabled={isSubmitting}>
+              Submit
+            </Button>
           </div>
         </form>
       </Form>

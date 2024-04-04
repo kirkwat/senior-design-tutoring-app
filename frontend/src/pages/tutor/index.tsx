@@ -33,7 +33,7 @@ export default function TutorPage() {
 
   useEffect(() => {
     fetchAppointments();
-  }, []);
+  }, [auth?.id]);
 
   return (
     <div className="container min-h-[60vh] py-12 space-y-4">
