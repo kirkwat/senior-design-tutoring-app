@@ -11,6 +11,17 @@ class Appointment {
       .where({ tutor_id, start_time: start_date.getTime() });
   }
 
+  static async findTutorAppointments(tutor_id: number) {
+    return knex(this.APPOINTMENT_TABLE)
+      .select(
+        "appointment.*",
+        "user.name as student_name",
+        "user.profile_picture as student_profile_picture",
+      )
+      .leftJoin("user", "appointment.student_id", "user.id")
+      .where({ tutor_id });
+  }
+
   static async createAppointment(newAppointment: Omit<IAppointment, "id">) {
     return await knex<IAppointment>(this.APPOINTMENT_TABLE).insert(
       newAppointment,

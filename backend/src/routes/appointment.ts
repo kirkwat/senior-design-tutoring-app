@@ -2,6 +2,7 @@ import express from "express";
 import {
   handleFindAvailableAppointments,
   handleFindStudentsAppointments,
+  handleGetTutorAppointments,
   handleIsAvailable,
   handleNewAppointment,
 } from "../controllers/appointmentController";
@@ -14,17 +15,12 @@ router
   .post("/:tutorID", verifyRoles("tutor"), handleNewAppointment)
   .put("/:appointmentID", verifyRoles("user"), handRegisterForAppointment)
   .get("/", verifyRoles("user", "tutor"), handleFindAvailableAppointments)
+  .get("/tutor/:tutorID", verifyRoles("tutor"), handleGetTutorAppointments)
   .get("/available", verifyRoles("user", "tutor"), handleIsAvailable)
   .get(
     "/student/:studentID",
     verifyRoles("user"),
     handleFindStudentsAppointments,
   );
-
-// .post("/:tutorID", handleNewAppointment)
-// .put("/:appointmentID", handRegisterForAppointment)
-// .get("/", handleFindAvailableAppointments)
-// .get("/available", handleIsAvailable)
-// .get("/student/:studentID", handleFindStudentsAppointments);
 
 export default router;

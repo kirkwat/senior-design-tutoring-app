@@ -1,6 +1,6 @@
 import { Button } from "src/components/ui/button";
-import AppointmentsTable from "./appointments-table";
-import { Appointment, columns } from "./columns";
+import UserAppointmentsTable from "./user-appointments-table";
+import { Appointment } from "./columns";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
@@ -84,7 +84,7 @@ export default function User() {
       <p className="text-gray-500 md:text-xl/relaxed dark:text-gray-400">
         Your Upcoming Appointments
       </p>
-      <AppointmentsTable data={appointments} onRemove={removeAppointment} />
+      <UserAppointmentsTable data={appointments} onRemove={removeAppointment} />
     </div>
   );
 }

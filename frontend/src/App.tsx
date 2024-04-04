@@ -53,7 +53,7 @@ const App = () => {
                 </Route>
                 <Route element={<RequireAuth allowedRoles={[ROLES.Tutor]} />}>
                   <Route path="tutor" element={<Tutor />} />
-                  <Route path="create" element={<CreateAppointment />} />
+                  <Route path="tutor/create" element={<CreateAppointment />} />
                   <Route
                     path="editTutorProfile/:tutorID"
                     element={<EditTutorProfile />}

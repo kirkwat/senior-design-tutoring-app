@@ -36,6 +36,7 @@ const handleNewAppointment = async (req: Request, res: Response) => {
           start_time: startDateTime,
           end_time: endDateTime,
           zoom_link: zoomLink,
+          status: "available",
         });
         createdCount++;
       } else {
@@ -52,6 +53,21 @@ const handleNewAppointment = async (req: Request, res: Response) => {
     if (err instanceof z.ZodError) {
       return res.status(400).json({ message: err.errors });
     } else if (err instanceof Error) {
+      res.status(500).json({ message: err.message });
+    } else {
+      res.status(500).json({ message: "An unknown error occurred" });
+    }
+  }
+};
+
+const handleGetTutorAppointments = async (req: Request, res: Response) => {
+  try {
+    const tutorID = Number(req.params.tutorID);
+    const appointments = await Appointment.findTutorAppointments(tutorID);
+
+    res.json(appointments);
+  } catch (err) {
+    if (err instanceof Error) {
       res.status(500).json({ message: err.message });
     } else {
       res.status(500).json({ message: "An unknown error occurred" });
@@ -153,6 +169,7 @@ const handRegisterForAppointment = async (req: Request, res: Response) => {
 
 export {
   handleNewAppointment,
+  handleGetTutorAppointments,
   handleFindAvailableAppointments,
   handleIsAvailable,
   handleFindStudentsAppointments,

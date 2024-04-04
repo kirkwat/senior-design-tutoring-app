@@ -12,6 +12,7 @@ export async function up(knex: Knex) {
     table.timestamp("start_time").notNullable();
     table.timestamp("end_time").notNullable();
     table.string("zoom_link").notNullable();
+    table.string("status").notNullable();
   });
 }
 
