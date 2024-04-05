@@ -16,6 +16,7 @@ import CreateAppointment from "./pages/create";
 import TutorProfile from "./pages/tutorProfile";
 import EditTutorProfilePage from "./pages/edit-tutor-profile";
 import { Toaster } from "./components/ui/sonner";
+import SearchPage from "./pages/search";
 
 const ROLES = {
   User: "user",
@@ -42,6 +43,7 @@ const App = () => {
 
                 <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
                   <Route path="user" element={<User />} />
+                  <Route path="search" element={<SearchPage />} />
                   <Route
                     path="tutorAvailabilities"
                     element={<TutorAvailabilities />}

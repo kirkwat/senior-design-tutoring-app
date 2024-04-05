@@ -1,90 +1,100 @@
-import { Button } from "src/components/ui/button";
-import UserAppointmentsTable from "./user-appointments-table";
-import { Appointment } from "./columns";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { getStudentAppointments } from "src/api/appointment-api";
+import { buttonVariants } from "src/components/ui/button";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "src/components/ui/tabs";
+import useAuth from "src/hooks/useAuth";
+import useAxiosPrivate from "src/hooks/useAxiosPrivate";
+import { StudentAppointment } from "src/types/appointment";
+import UserAppointmentsTable from "./user-appointment-table";
 
-const data: Appointment[] = [
-  {
-    id: 1,
-    tutor: "Tutor 1",
-    student_id: 1,
-    selected_subject: "Math",
-    start_time: new Date(),
-    end_time: new Date(new Date().getTime() + 30 * 60000),
-    zoom_link: "https://zoom.us/j/123456789",
-  },
-  {
-    id: 2,
-    tutor: "Tutor 2",
-    student_id: 2,
-    selected_subject: "Science",
-    start_time: new Date(),
-    end_time: new Date(new Date().getTime() + 30 * 60000),
-    zoom_link: "https://zoom.us/j/123456789",
-  },
-  {
-    id: 3,
-    tutor: "Tutor 3",
-    student_id: 2,
-    selected_subject: "Math",
-    start_time: new Date(),
-    end_time: new Date(new Date().getTime() + 30 * 60000),
-    zoom_link: "https://zoom.us/j/123456789",
-  },
-  {
-    id: 4,
-    tutor: "Tutor 4",
-    student_id: 2,
-    selected_subject: "Reading",
-    start_time: new Date(),
-    end_time: new Date(new Date().getTime() + 30 * 60000),
-    zoom_link: "https://zoom.us/j/123456789",
-  },
-  {
-    id: 5,
-    tutor: "Tutor 5",
-    student_id: 2,
-    selected_subject: "Writing",
-    start_time: new Date(),
-    end_time: new Date(new Date().getTime() + 30 * 60000),
-    zoom_link: "https://zoom.us/j/123456789",
-  },
-  {
-    id: 6,
-    tutor: "Tutor 6",
-    student_id: 2,
-    selected_subject: "Math",
-    start_time: new Date(),
-    end_time: new Date(new Date().getTime() + 30 * 60000),
-    zoom_link: "https://zoom.us/j/123456789",
-  },
-];
+export default function UserPage() {
+  const { auth } = useAuth();
+  const axiosPrivate = useAxiosPrivate();
+  const [appointments, setAppointments] = useState<StudentAppointment[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-export default function User() {
-  const [appointments, setAppointments] = useState<Appointment[]>(data);
+  const fetchAppointments = () => {
+    if (!auth?.id) return;
+    setIsLoading(true);
 
-  const removeAppointment = (appointmentId: any) => {
-    console.log("remove appointment", appointmentId);
-    setAppointments((current) =>
-      current.filter((appointment: any) => appointment.id !== appointmentId),
-    );
+    getStudentAppointments(axiosPrivate, auth.id)
+      .then((data) => {
+        setAppointments(data);
+        setIsLoading(false);
+      })
+      .catch(() => setIsLoading(false));
   };
+
+  useEffect(() => {
+    fetchAppointments();
+  }, [auth?.id]);
 
   return (
     <div className="container min-h-[60vh] py-12 space-y-4">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center flex-col gap-2 md:flex-row">
         <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl">
-          Students Page
+          Student Dashboard
         </h1>
-        <Button>
-          <Link to="/tutorAvailabilities">Tutor Availabilities</Link>
-        </Button>
+        <Link to="/search" className={buttonVariants()}>
+          Find a Tutor
+        </Link>
       </div>
-      <p className="text-gray-500 md:text-xl/relaxed dark:text-gray-400">
-        Your Upcoming Appointments
-      </p>
-      <UserAppointmentsTable data={appointments} onRemove={removeAppointment} />
+
+      <Tabs defaultValue="upcoming">
+        <div className="flex justify-between flex-col items-center gap-2 md:flex-row">
+          <p className="text-muted-foreground md:text-xl/relaxed">
+            Your Appointments
+          </p>
+          <TabsList>
+            <TabsTrigger value="upcoming" disabled={isLoading}>
+              Upcoming
+            </TabsTrigger>
+            <TabsTrigger value="past" disabled={isLoading}>
+              Past/Canceled
+            </TabsTrigger>
+          </TabsList>
+        </div>
+        {isLoading ? (
+          <div className="mt-8 md:mt-24 text-center text-muted-foreground font-medium text-xl">
+            Loading appointments...
+          </div>
+        ) : (
+          <div className="mt-8">
+            <TabsContent value="upcoming">
+              <UserAppointmentsTable
+                tab="upcoming"
+                fetchAppointments={fetchAppointments}
+                data={appointments
+                  .filter(
+                    (appointment) =>
+                      appointment.end_time > Date.now() &&
+                      appointment.status !== "cancelled",
+                  )
+                  .sort((a, b) => a.start_time - b.start_time)}
+              />
+            </TabsContent>
+            <TabsContent value="past">
+              <UserAppointmentsTable
+                tab="past"
+                fetchAppointments={fetchAppointments}
+                data={appointments
+                  .filter(
+                    (appointment) =>
+                      appointment.end_time < Date.now() ||
+                      appointment.status === "cancelled",
+                  )
+                  .sort((a, b) => b.start_time - a.start_time)}
+              />
+            </TabsContent>
+          </div>
+        )}
+      </Tabs>
     </div>
   );
 }

@@ -16,6 +16,7 @@ import appointmentRoute from "./routes/appointment";
 import tutorRoute from "./routes/tutor";
 import studentRoute from "./routes/student";
 import verifyJWT from "./middleware/verifyJWT";
+import path from "path";
 
 dotenv.config();
 
@@ -37,10 +38,10 @@ app.use("/auth", authRoute);
 app.use("/logout", logoutRoute);
 app.use("/refresh", refreshRoute);
 app.use("/register", registerRoute);
+app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
 
 app.use(verifyJWT);
 app.use("/appointment", appointmentRoute);
-
 app.use("/tutor", tutorRoute);
 app.use("/student", studentRoute);
 

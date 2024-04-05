@@ -26,38 +26,48 @@ import {
   AlertDialogTrigger,
 } from "src/components/ui/alert-dialog";
 import { Button } from "src/components/ui/button";
-import { TutorAppointment } from "src/types/appointment";
+import { StudentAppointment } from "src/types/appointment";
 import useAxiosPrivate from "src/hooks/useAxiosPrivate";
 import { cancelAppointment } from "src/api/appointment-api";
 import { toast } from "sonner";
+import { Avatar, AvatarFallback, AvatarImage } from "src/components/ui/avatar";
+import { getAvatarUrl } from "src/lib/utils";
 
 interface DataTableProps {
-  tab: "upcoming" | "available" | "past";
+  tab: "upcoming" | "past";
   fetchAppointments: () => void;
-  data: TutorAppointment[];
+  data: StudentAppointment[];
 }
 
-export default function TutorAppointmentsTable({
+export default function StudentAppointmentsTable({
   tab,
   fetchAppointments,
   data,
 }: DataTableProps) {
   const axiosPrivate = useAxiosPrivate();
 
-  const columns: ColumnDef<TutorAppointment>[] = useMemo(
+  const columns: ColumnDef<StudentAppointment>[] = useMemo(
     () => [
-      ...(tab !== "available"
-        ? ([
-            {
-              accessorKey: "student_name",
-              header: "Student Name",
-            },
-            {
-              accessorKey: "selected_subject",
-              header: "Subject",
-            },
-          ] as ColumnDef<TutorAppointment>[])
-        : []),
+      {
+        accessorKey: "tutor_name",
+        header: "Tutor Name",
+        cell: ({ row }) => (
+          <div className="flex gap-2 items-center">
+            <Avatar>
+              <AvatarImage
+                src={getAvatarUrl(row.original.tutor_profile_picture)}
+                alt={row.original.tutor_name}
+              />
+              <AvatarFallback>T</AvatarFallback>
+            </Avatar>
+            <div>{row.original.tutor_name}</div>
+          </div>
+        ),
+      },
+      {
+        accessorKey: "selected_subject",
+        header: "Subject",
+      },
       {
         accessorKey: "zoom_link",
         header: "Zoom Link",
@@ -138,10 +148,10 @@ export default function TutorAppointmentsTable({
                               {format(row.original.start_time, "M/d/yy")}
                             </span>
                           </div>
-                          {row.original.student_name && (
+                          {row.original.tutor_name && (
                             <div className="p-2">
-                              <span className="font-medium">Student: </span>
-                              <span>{row.original.student_name}</span>
+                              <span className="font-medium">Tutor: </span>
+                              <span>{row.original.tutor_name}</span>
                             </div>
                           )}
                           {row.original.selected_subject && (
@@ -180,7 +190,7 @@ export default function TutorAppointmentsTable({
                 );
               },
             },
-          ] as ColumnDef<TutorAppointment>[])
+          ] as ColumnDef<StudentAppointment>[])
         : []),
     ],
     [axiosPrivate, fetchAppointments, tab],

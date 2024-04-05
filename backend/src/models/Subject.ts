@@ -53,7 +53,7 @@ class Subject {
             name,
           });
 
-          subjectEntry = { id: insertedId };
+          subjectEntry = { id: insertedId[0] };
         }
 
         await knex(this.SUBJECT_TABLE).insert({

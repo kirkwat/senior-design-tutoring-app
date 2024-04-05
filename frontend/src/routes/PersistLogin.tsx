@@ -40,7 +40,7 @@ const PersistLogin = () => {
         <Outlet />
       ) : isLoading ? (
         <div className="mt-16 md:mt-48 text-center text-muted-foreground font-medium text-2xl">
-          Loading appointments...
+          Loading...
         </div>
       ) : (
         <Outlet />

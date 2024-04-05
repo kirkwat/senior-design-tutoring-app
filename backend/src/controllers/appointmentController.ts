@@ -9,7 +9,7 @@ const newAppointmentSchema = z.object({
   zoomLink: z.string(),
 });
 
-const handleNewAppointment = async (req: Request, res: Response) => {
+export const handleNewAppointment = async (req: Request, res: Response) => {
   try {
     const tutorID = Number(req.params.tutorID);
     const { startDate, appointmentLength, weekSpan, zoomLink } =
@@ -25,9 +25,10 @@ const handleNewAppointment = async (req: Request, res: Response) => {
       const endDateTime = new Date(startDateTime);
       endDateTime.setMinutes(startDateTime.getMinutes() + appointmentLength);
 
-      const duplicates = await Appointment.findNonCancelledAppointmentByTutor(
+      const duplicates = await Appointment.findOverlappingAppointments(
         tutorID,
         startDateTime,
+        endDateTime,
       );
 
       if (duplicates.length === 0) {
@@ -60,7 +61,10 @@ const handleNewAppointment = async (req: Request, res: Response) => {
   }
 };
 
-const handleGetTutorAppointments = async (req: Request, res: Response) => {
+export const handleGetTutorAppointments = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     const tutorID = Number(req.params.tutorID);
     const appointments = await Appointment.findTutorAppointments(tutorID);
@@ -75,7 +79,25 @@ const handleGetTutorAppointments = async (req: Request, res: Response) => {
   }
 };
 
-const handleCancelAppointment = async (req: Request, res: Response) => {
+export const handleGetStudentAppointments = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const studentID = Number(req.params.studentID);
+    const appointments = await Appointment.findStudentAppointments(studentID);
+
+    res.json(appointments);
+  } catch (err) {
+    if (err instanceof Error) {
+      res.status(500).json({ message: err.message });
+    } else {
+      res.status(500).json({ message: "An unknown error occurred" });
+    }
+  }
+};
+
+export const handleCancelAppointment = async (req: Request, res: Response) => {
   try {
     const appointmentID = Number(req.params.appointmentID);
     await Appointment.cancelAppointment(appointmentID);
@@ -90,7 +112,67 @@ const handleCancelAppointment = async (req: Request, res: Response) => {
   }
 };
 
-const handleFindAvailableAppointments = async (req: Request, res: Response) => {
+export const handleGetAvailableTutorAppointments = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const tutorID = Number(req.params.tutorID);
+    const appointments =
+      await Appointment.findAvailableTutorAppointments(tutorID);
+
+    res.json(appointments);
+  } catch (err) {
+    if (err instanceof Error) {
+      res.status(500).json({ message: err.message });
+    } else {
+      res.status(500).json({ message: "An unknown error occurred" });
+    }
+  }
+};
+
+const scheduleAppointmentSchema = z.object({
+  selectedSubject: z.string(),
+  studentID: z.number(),
+});
+
+export const handleScheduleAppointment = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const appointmentID = Number(req.params.appointmentID);
+    const { selectedSubject, studentID } = scheduleAppointmentSchema.parse(
+      req.body,
+    );
+
+    console.log("selectedSubject: ", selectedSubject);
+    console.log("studentID: ", studentID);
+
+    await Appointment.scheduleAppointment(
+      appointmentID,
+      studentID,
+      selectedSubject,
+    );
+
+    res.status(201).json({
+      success: `Appointment ${appointmentID} has been scheduled for student ${studentID}.`,
+    });
+  } catch (err) {
+    if (err instanceof z.ZodError) {
+      return res.status(400).json({ message: err.errors });
+    } else if (err instanceof Error) {
+      res.status(500).json({ message: err.message });
+    } else {
+      res.status(500).json({ message: "An unknown error occurred" });
+    }
+  }
+};
+
+export const handleFindAvailableAppointments = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     const tutor_id = req.query.tutor_id;
     const tid = tutor_id?.toString();
@@ -114,7 +196,7 @@ const handleFindAvailableAppointments = async (req: Request, res: Response) => {
   }
 };
 
-const handleIsAvailable = async (req: Request, res: Response) => {
+export const handleIsAvailable = async (req: Request, res: Response) => {
   try {
     const tutor_id = req.query.tutor_id;
     const tid = tutor_id?.toString();
@@ -137,7 +219,10 @@ const handleIsAvailable = async (req: Request, res: Response) => {
   }
 };
 
-const handleFindStudentsAppointments = async (req: Request, res: Response) => {
+export const handleFindStudentsAppointments = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     const student_id = req.params.studentID;
     const sid = student_id?.toString();
@@ -161,7 +246,10 @@ const handleFindStudentsAppointments = async (req: Request, res: Response) => {
   }
 };
 
-const handRegisterForAppointment = async (req: Request, res: Response) => {
+export const handRegisterForAppointment = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     const { student_id, selected_subject } = req.body;
     const appointment_id = req.params.appointmentID;
@@ -180,14 +268,4 @@ const handRegisterForAppointment = async (req: Request, res: Response) => {
       res.status(500).json({ message: "An unknown error occurred" });
     }
   }
-};
-
-export {
-  handleNewAppointment,
-  handleGetTutorAppointments,
-  handleCancelAppointment,
-  handleFindAvailableAppointments,
-  handleIsAvailable,
-  handleFindStudentsAppointments,
-  handRegisterForAppointment,
 };
