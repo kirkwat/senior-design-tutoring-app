@@ -3,6 +3,7 @@ import {
   handleCancelAppointment,
   handleFindAvailableAppointments,
   handleFindStudentsAppointments,
+  handleGetStudentAppointments,
   handleGetTutorAppointments,
   handleIsAvailable,
   handleNewAppointment,
@@ -22,11 +23,7 @@ router
   )
   .get("/", verifyRoles("user", "tutor"), handleFindAvailableAppointments)
   .get("/tutor/:tutorID", verifyRoles("tutor"), handleGetTutorAppointments)
-  .get("/available", verifyRoles("user", "tutor"), handleIsAvailable)
-  .get(
-    "/student/:studentID",
-    verifyRoles("user"),
-    handleFindStudentsAppointments,
-  );
+  .get("/student/:studentID", verifyRoles("user"), handleGetStudentAppointments)
+  .get("/available", verifyRoles("user", "tutor"), handleIsAvailable);
 
 export default router;

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getTutorAppointments } from "src/api/appointment-api";
-import { Button } from "src/components/ui/button";
+import { buttonVariants } from "src/components/ui/button";
 import {
   Tabs,
   TabsContent,
@@ -10,7 +10,7 @@ import {
 } from "src/components/ui/tabs";
 import useAuth from "src/hooks/useAuth";
 import useAxiosPrivate from "src/hooks/useAxiosPrivate";
-import { TutorAppointment } from "src/types/tutor-appointment";
+import { TutorAppointment } from "src/types/appointment";
 import TutorAppointmentsTable from "./tutor-appointment-table";
 
 export default function TutorPage() {
@@ -42,12 +42,15 @@ export default function TutorPage() {
           Tutor Dashboard
         </h1>
         <div className="flex gap-4">
-          <Button variant="outline">
-            <Link to="/tutor/edit">Edit Profile</Link>
-          </Button>
-          <Button>
-            <Link to="/tutor/create">Create Appointments</Link>
-          </Button>
+          <Link
+            to="/tutor/edit"
+            className={buttonVariants({ variant: "outline" })}
+          >
+            Edit Profile
+          </Link>
+          <Link to="/tutor/create" className={buttonVariants()}>
+            Create Availability Block
+          </Link>
         </div>
       </div>
 

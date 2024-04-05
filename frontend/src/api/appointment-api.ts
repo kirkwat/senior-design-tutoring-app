@@ -1,4 +1,4 @@
-import { TutorAppointment } from "src/types/tutor-appointment";
+import { TutorAppointment, StudentAppointment } from "src/types/appointment";
 import { AxiosInstance } from "axios";
 import axios from "./axios";
 
@@ -44,7 +44,7 @@ export const getTutorAppointments = (
       .get(`/appointment/tutor/${tutorID}`)
       .then((x) => resolve(x.data))
       .catch((error) => {
-        console.error("Error fetching tutors:", error);
+        console.error("Error fetching tutor appointments:", error);
         reject(error);
       });
   });
@@ -59,6 +59,20 @@ export const cancelAppointment = (
       .then((x) => resolve(x.data))
       .catch((error) => {
         console.error("Error fetching tutors:", error);
+        reject(error);
+      });
+  });
+
+export const getStudentAppointments = (
+  axiosPrivate: AxiosInstance,
+  studentID: number,
+): Promise<StudentAppointment[]> =>
+  new Promise((resolve, reject) => {
+    axiosPrivate
+      .get(`/appointment/student/${studentID}`)
+      .then((x) => resolve(x.data))
+      .catch((error) => {
+        console.error("Error fetching student appointments:", error);
         reject(error);
       });
   });

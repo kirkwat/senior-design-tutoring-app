@@ -42,6 +42,17 @@ class Appointment {
       .where({ tutor_id });
   }
 
+  static async findStudentAppointments(student_id: number) {
+    return knex(this.APPOINTMENT_TABLE)
+      .select(
+        "appointment.*",
+        "user.name as tutor_name",
+        "user.profile_picture as tutor_profile_picture",
+      )
+      .leftJoin("user", "appointment.tutor_id", "user.id")
+      .where({ student_id });
+  }
+
   static async cancelAppointment(appointment_id: number) {
     return knex<IAppointment>(this.APPOINTMENT_TABLE)
       .where({ id: appointment_id })
