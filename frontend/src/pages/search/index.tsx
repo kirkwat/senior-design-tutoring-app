@@ -22,6 +22,7 @@ export default function SearchPage() {
     getAllTutorsWithSubjects(axiosPrivate)
       .then((data) => {
         setTutors(data);
+        setSearchResults(data);
         setIsLoading(false);
       })
       .catch(() => setIsLoading(false));

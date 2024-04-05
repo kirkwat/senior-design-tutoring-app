@@ -119,7 +119,7 @@ export default function TutorAppointmentsTable({
                           This action cannot be undone. Only cancel if you are
                           sure you want to cancel this appointment.
                         </AlertDialogDescription>
-                        <div className="grid grid-cols-3 my-3 border rounded-sm divide-x text-muted-foreground text-sm">
+                        <div className="grid grid-cols-3 my-3 border rounded-sm text-muted-foreground text-sm">
                           <div className="p-2">
                             <span className="font-medium">Start Time: </span>
                             <span>
@@ -147,7 +147,9 @@ export default function TutorAppointmentsTable({
                           {row.original.selected_subject && (
                             <div className="p-2">
                               <span className="font-medium">Subject: </span>
-                              <span>{row.original.selected_subject}</span>
+                              <span className="capitalize">
+                                {row.original.selected_subject}
+                              </span>
                             </div>
                           )}
                         </div>

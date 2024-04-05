@@ -71,7 +71,11 @@ export default function UserPage() {
                 tab="upcoming"
                 fetchAppointments={fetchAppointments}
                 data={appointments
-                  .filter((appointment) => appointment.end_time > Date.now())
+                  .filter(
+                    (appointment) =>
+                      appointment.end_time > Date.now() &&
+                      appointment.status !== "cancelled",
+                  )
                   .sort((a, b) => a.start_time - b.start_time)}
               />
             </TabsContent>

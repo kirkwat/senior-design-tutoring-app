@@ -112,6 +112,63 @@ export const handleCancelAppointment = async (req: Request, res: Response) => {
   }
 };
 
+export const handleGetAvailableTutorAppointments = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const tutorID = Number(req.params.tutorID);
+    const appointments =
+      await Appointment.findAvailableTutorAppointments(tutorID);
+
+    res.json(appointments);
+  } catch (err) {
+    if (err instanceof Error) {
+      res.status(500).json({ message: err.message });
+    } else {
+      res.status(500).json({ message: "An unknown error occurred" });
+    }
+  }
+};
+
+const scheduleAppointmentSchema = z.object({
+  selectedSubject: z.string(),
+  studentID: z.number(),
+});
+
+export const handleScheduleAppointment = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const appointmentID = Number(req.params.appointmentID);
+    const { selectedSubject, studentID } = scheduleAppointmentSchema.parse(
+      req.body,
+    );
+
+    console.log("selectedSubject: ", selectedSubject);
+    console.log("studentID: ", studentID);
+
+    await Appointment.scheduleAppointment(
+      appointmentID,
+      studentID,
+      selectedSubject,
+    );
+
+    res.status(201).json({
+      success: `Appointment ${appointmentID} has been scheduled for student ${studentID}.`,
+    });
+  } catch (err) {
+    if (err instanceof z.ZodError) {
+      return res.status(400).json({ message: err.errors });
+    } else if (err instanceof Error) {
+      res.status(500).json({ message: err.message });
+    } else {
+      res.status(500).json({ message: "An unknown error occurred" });
+    }
+  }
+};
+
 export const handleFindAvailableAppointments = async (
   req: Request,
   res: Response,

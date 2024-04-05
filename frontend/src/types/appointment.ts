@@ -23,3 +23,14 @@ export interface StudentAppointment {
   zoom_link: string;
   status: "available" | "booked" | "cancelled";
 }
+
+export interface Appointment {
+  end_time: number;
+  id: number;
+  selected_subject: number | null;
+  start_time: number;
+  status: "available" | "booked" | "cancelled";
+  student_id: number | null;
+  tutor_id: number;
+  zoom_link: string;
+}

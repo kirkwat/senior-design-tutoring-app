@@ -30,6 +30,8 @@ import { StudentAppointment } from "src/types/appointment";
 import useAxiosPrivate from "src/hooks/useAxiosPrivate";
 import { cancelAppointment } from "src/api/appointment-api";
 import { toast } from "sonner";
+import { Avatar, AvatarFallback, AvatarImage } from "src/components/ui/avatar";
+import { getAvatarUrl } from "src/lib/utils";
 
 interface DataTableProps {
   tab: "upcoming" | "past";
@@ -49,6 +51,18 @@ export default function StudentAppointmentsTable({
       {
         accessorKey: "tutor_name",
         header: "Tutor Name",
+        cell: ({ row }) => (
+          <div className="flex gap-2 items-center">
+            <Avatar>
+              <AvatarImage
+                src={getAvatarUrl(row.original.tutor_profile_picture)}
+                alt={row.original.tutor_name}
+              />
+              <AvatarFallback>T</AvatarFallback>
+            </Avatar>
+            <div>{row.original.tutor_name}</div>
+          </div>
+        ),
       },
       {
         accessorKey: "selected_subject",
@@ -115,7 +129,7 @@ export default function StudentAppointmentsTable({
                           This action cannot be undone. Only cancel if you are
                           sure you want to cancel this appointment.
                         </AlertDialogDescription>
-                        <div className="grid grid-cols-3 my-3 border rounded-sm divide-x text-muted-foreground text-sm">
+                        <div className="grid grid-cols-3 my-3 border rounded-sm text-muted-foreground text-sm">
                           <div className="p-2">
                             <span className="font-medium">Start Time: </span>
                             <span>
@@ -136,14 +150,16 @@ export default function StudentAppointmentsTable({
                           </div>
                           {row.original.tutor_name && (
                             <div className="p-2">
-                              <span className="font-medium">Student: </span>
+                              <span className="font-medium">Tutor: </span>
                               <span>{row.original.tutor_name}</span>
                             </div>
                           )}
                           {row.original.selected_subject && (
                             <div className="p-2">
                               <span className="font-medium">Subject: </span>
-                              <span>{row.original.selected_subject}</span>
+                              <span className="capitalize">
+                                {row.original.selected_subject}
+                              </span>
                             </div>
                           )}
                         </div>

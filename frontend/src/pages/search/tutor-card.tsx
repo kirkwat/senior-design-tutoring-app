@@ -1,10 +1,10 @@
 import { Avatar, AvatarFallback, AvatarImage } from "src/components/ui/avatar";
 import { Badge } from "src/components/ui/badge";
-import { Button } from "src/components/ui/button";
 import { Card } from "src/components/ui/card";
 import { Separator } from "src/components/ui/separator";
 import { getAvatarUrl } from "src/lib/utils";
 import { Tutor } from "src/types/tutor";
+import ScheduleDialog from "./schedule-dialog";
 
 export default function TutorCard({ tutor }: { tutor: Tutor }) {
   return (
@@ -37,7 +37,7 @@ export default function TutorCard({ tutor }: { tutor: Tutor }) {
             </div>
           </div>
         )}
-        <Button className="mt-4 w-full self-end">Book Appointment</Button>
+        <ScheduleDialog tutor={tutor} />
       </div>
     </Card>
   );
