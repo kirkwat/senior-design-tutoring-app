@@ -5,7 +5,7 @@ const Admin = () => {
         <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl">
           Admins Page
         </h1>
-        <p className="text-gray-500 md:text-xl/relaxed dark:text-gray-400">
+        <p className="text-muted-foreground md:text-xl/relaxed">
           Only admins can access this page.
         </p>
       </div>

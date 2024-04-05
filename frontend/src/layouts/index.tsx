@@ -31,7 +31,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         {auth?.accessToken ? (
           <div className="flex space-x-2">
             <Button variant="ghost" onClick={() => navigateUserRole()}>
-              Home
+              Dashboard
             </Button>
             <Button variant="ghost" onClick={signOut}>
               Sign Out

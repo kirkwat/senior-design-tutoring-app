@@ -101,7 +101,7 @@ export default function CreateAppointment() {
           Create an Availability Block
         </h1>
       </div>
-      <p className="text-gray-500 md:text-xl/relaxed dark:text-gray-400 max-w-md">
+      <p className="text-muted-foreground md:text-xl/relaxed max-w-md">
         Schedule blocks of time where you are available to tutor students.
       </p>
       <Form {...form}>

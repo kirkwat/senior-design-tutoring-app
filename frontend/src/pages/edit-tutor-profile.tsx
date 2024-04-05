@@ -26,6 +26,7 @@ import { Textarea } from "src/components/ui/textarea";
 import { Separator } from "src/components/ui/separator";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
+import { getAvatarUrl } from "src/lib/utils";
 
 const editProfileFormSchema = z.object({
   name: z.string().min(2, "Name is required.").max(50),
@@ -155,11 +156,8 @@ export default function EditTutorProfilePage() {
                 <div className="relative w-fit self-center mx-auto">
                   <div className="group border bg-muted w-36 h-36 rounded-full overflow-hidden">
                     <img
-                      src={
-                        `${process.env.REACT_APP_API_URL}${profilePicture}` ||
-                        "/default_avatar.jpg"
-                      }
-                      alt="Profile Pic"
+                      src={getAvatarUrl(profilePicture)}
+                      alt="Avatar"
                       className="w-full h-full object-cover group-hover:opacity-50"
                     />
                     <div className="absolute inset-0 flex justify-center items-center opacity-0 group-hover:opacity-100">

@@ -3,28 +3,10 @@ import Tutor from "../models/Tutor";
 import Subject from "../models/Subject";
 import { z } from "zod";
 
-const handleFindAllTutors = async (req: Request, res: Response) => {
-  try {
-    const tutors = await Tutor.findAllTutors();
-
-    if (!tutors) {
-      res.json(null);
-    } else {
-      res.json(tutors);
-    }
-  } catch (err) {
-    if (err instanceof Error) {
-      res.status(500).json({ message: err.message });
-    } else {
-      res.status(500).json({ message: "An unknown error occurred" });
-    }
-  }
-};
-
-const handleFindTutorByID = async (req: Request, res: Response) => {
+export const handleFindTutorByID = async (req: Request, res: Response) => {
   try {
     const tutor_id = parseInt(req.params.tutorID);
-    const tutors = await Tutor.getUserAndTheirSubjects(tutor_id);
+    const tutors = await Tutor.getTutorAndTheirSubjects(tutor_id);
 
     if (tutors.length === 0) {
       res.status(404).json({ message: "Tutor not found" });
@@ -46,7 +28,7 @@ const editTutorSchema = z.object({
   subjects: z.array(z.string()).optional(),
 });
 
-const handleEditTutorProfile = async (req: Request, res: Response) => {
+export const handleEditTutorProfile = async (req: Request, res: Response) => {
   try {
     const tutor_id = Number(req.params.tutorID);
     const { bio, name, subjects } = editTutorSchema.parse(req.body);
@@ -71,7 +53,10 @@ const handleEditTutorProfile = async (req: Request, res: Response) => {
   }
 };
 
-const handleUpdateProfilePicture = async (req: Request, res: Response) => {
+export const handleUpdateProfilePicture = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     if (!req.file) {
       return res.status(400).send("No file uploaded.");
@@ -94,7 +79,28 @@ const handleUpdateProfilePicture = async (req: Request, res: Response) => {
   }
 };
 
-const handleFindAvailableTutorsByTime = async (req: Request, res: Response) => {
+export const handleGetAllTutors = async (req: Request, res: Response) => {
+  try {
+    const tutors = await Tutor.getAllTutorsWithSubjects();
+
+    if (tutors.length === 0) {
+      res.status(404).json({ message: "No tutors found." });
+    } else {
+      res.json(tutors);
+    }
+  } catch (err) {
+    if (err instanceof Error) {
+      res.status(500).json({ message: err.message });
+    } else {
+      res.status(500).json({ message: "An unknown error occurred." });
+    }
+  }
+};
+
+export const handleFindAvailableTutorsByTime = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     const time_req = req.query.time;
     var time = 0;
@@ -117,7 +123,10 @@ const handleFindAvailableTutorsByTime = async (req: Request, res: Response) => {
   }
 };
 
-const handleFindAvailableTutorsByDay = async (req: Request, res: Response) => {
+export const handleFindAvailableTutorsByDay = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     const time_req = req.query.day;
     var time = 0;
@@ -140,7 +149,10 @@ const handleFindAvailableTutorsByDay = async (req: Request, res: Response) => {
   }
 };
 
-const handleFindAvailableTutorsByWeek = async (req: Request, res: Response) => {
+export const handleFindAvailableTutorsByWeek = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     const time_req = req.query.week;
     var time = 0;
@@ -165,7 +177,7 @@ const handleFindAvailableTutorsByWeek = async (req: Request, res: Response) => {
   }
 };
 
-const handleUpdateTutorProfile = async (req: Request, res: Response) => {
+export const handleUpdateTutorProfile = async (req: Request, res: Response) => {
   try {
     const tid = req.params.tutorID;
     var tutorID = -1;
@@ -229,15 +241,4 @@ const handleUpdateTutorProfile = async (req: Request, res: Response) => {
       res.status(500).json({ message: "An unknown error occurred" });
     }
   }
-};
-
-export {
-  handleFindAllTutors,
-  handleFindTutorByID,
-  handleUpdateProfilePicture,
-  handleEditTutorProfile,
-  handleFindAvailableTutorsByTime,
-  handleFindAvailableTutorsByDay,
-  handleFindAvailableTutorsByWeek,
-  handleUpdateTutorProfile,
 };

@@ -48,7 +48,7 @@ export default function UserPage() {
 
       <Tabs defaultValue="upcoming">
         <div className="flex justify-between flex-col items-center gap-2 md:flex-row">
-          <p className="text-gray-500 md:text-xl/relaxed dark:text-gray-400">
+          <p className="text-muted-foreground md:text-xl/relaxed">
             Your Appointments
           </p>
           <TabsList>

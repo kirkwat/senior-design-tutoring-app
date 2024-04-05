@@ -104,7 +104,7 @@ const Login = () => {
       </Alert>
       <div className="space-y-2 text-center">
         <h1 className="text-3xl font-bold">Login</h1>
-        <p className="text-gray-500 dark:text-gray-400">
+        <p className="text-muted-foreground">
           Access your account by filling the form below
         </p>
       </div>

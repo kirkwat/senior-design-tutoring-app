@@ -1,7 +1,7 @@
 import express from "express";
 import {
   handleEditTutorProfile,
-  handleFindAllTutors,
+  handleGetAllTutors,
   handleFindAvailableTutorsByDay,
   handleFindAvailableTutorsByTime,
   handleFindAvailableTutorsByWeek,
@@ -19,7 +19,7 @@ router
   .get("/available/day", verifyRoles("user"), handleFindAvailableTutorsByDay)
   .get("/available/week", verifyRoles("user"), handleFindAvailableTutorsByWeek)
   .get("/:tutorID", handleFindTutorByID)
-  .get("/", verifyRoles("user"), handleFindAllTutors)
+  .get("/", verifyRoles("user"), handleGetAllTutors)
   .put("/profile/:tutorID", verifyRoles("tutor"), handleUpdateTutorProfile)
   .put("/edit/:tutorID", verifyRoles("tutor"), handleEditTutorProfile)
   .put(

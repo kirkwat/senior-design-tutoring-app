@@ -72,6 +72,19 @@ export const uploadTutorPicture = (
       });
   });
 
+export const getAllTutorsWithSubjects = (
+  axiosPrivate: AxiosInstance,
+): Promise<Tutor[]> =>
+  new Promise((resolve, reject) => {
+    axiosPrivate
+      .get("/tutor")
+      .then((response) => resolve(response.data))
+      .catch((error) => {
+        console.error("Error fetching tutors:", error);
+        reject(error);
+      });
+  });
+
 // export const getTutors = (axiosPrivate: AxiosInstance): Promise<Tutor[]> =>
 //   new Promise((resolve, reject) => {
 //     axiosPrivate
