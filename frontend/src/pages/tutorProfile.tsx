@@ -52,10 +52,7 @@ const TutorProfile = () => {
         {tutor && (
           <div className="">
             <div className="flex mt-10 ml-40 mb-10">
-              <ProfilePic
-                imageUrl={require("../static/default.jpg")}
-                size={256}
-              />
+              <ProfilePic imageUrl={"/default_avatar.jpg"} size={256} />
               <div className="ml-10 mt-5">
                 <h1 className="font-bold text-5xl">{tutor.name}</h1>
                 <h2 className="mt-2 text-2xl">Tutor</h2>

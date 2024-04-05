@@ -7,8 +7,10 @@ import {
   handleFindAvailableTutorsByWeek,
   handleFindTutorByID,
   handleUpdateTutorProfile,
+  handleUpdateProfilePicture,
 } from "../controllers/tutorController";
 import verifyRoles from "../middleware/verifyRole";
+import upload from "../middleware/fileUpload";
 
 const router = express.Router();
 
@@ -19,14 +21,12 @@ router
   .get("/:tutorID", handleFindTutorByID)
   .get("/", verifyRoles("user"), handleFindAllTutors)
   .put("/profile/:tutorID", verifyRoles("tutor"), handleUpdateTutorProfile)
-  .put("/edit/:tutorID", verifyRoles("tutor"), handleEditTutorProfile);
-
-// .get("/available", handleFindAvailableTutorsByTime)
-// .get("/available/day", handleFindAvailableTutorsByDay)
-// .get("/available/week", handleFindAvailableTutorsByWeek)
-// .get("/:tutorID", handleFindTutorByID)
-// .get("/:tutorID/subjects", handleFindTutorsSubjects)
-// .get("/", handleFindAllTutors)
-// .put("/profile/:tutorID", handleUpdateTutorProfile)
+  .put("/edit/:tutorID", verifyRoles("tutor"), handleEditTutorProfile)
+  .put(
+    "/avatar/:tutorID",
+    verifyRoles("tutor"),
+    upload.single("profile_picture"),
+    handleUpdateProfilePicture,
+  );
 
 export default router;

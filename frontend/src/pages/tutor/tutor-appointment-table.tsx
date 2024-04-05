@@ -47,7 +47,7 @@ export default function TutorAppointmentsTable({
   const columns: ColumnDef<TutorAppointment>[] = useMemo(
     () => [
       ...(tab !== "available"
-        ? [
+        ? ([
             {
               accessorKey: "student_name",
               header: "Student Name",
@@ -56,7 +56,7 @@ export default function TutorAppointmentsTable({
               accessorKey: "selected_subject",
               header: "Subject",
             },
-          ]
+          ] as ColumnDef<TutorAppointment>[])
         : []),
       {
         accessorKey: "zoom_link",
@@ -88,10 +88,10 @@ export default function TutorAppointmentsTable({
         cell: ({ row }) => format(row.original.start_time, "M/d/yy"),
       },
       ...(tab !== "past"
-        ? [
+        ? ([
             {
               id: "actions",
-              cell: ({ row }: { row: any }) => {
+              cell: ({ row }) => {
                 const startTime = new Date(row.original.start_time as number);
                 const currentTime = new Date();
 
@@ -121,8 +121,16 @@ export default function TutorAppointmentsTable({
                         </AlertDialogDescription>
                         <div className="grid grid-cols-3 my-3 border rounded-sm divide-x text-muted-foreground text-sm">
                           <div className="p-2">
-                            <span className="font-medium">Tutor: </span>
-                            <span>{row.original.tutor}</span>
+                            <span className="font-medium">Start Time: </span>
+                            <span>
+                              {format(row.original.start_time, "h:mma")}
+                            </span>
+                          </div>
+                          <div className="p-2">
+                            <span className="font-medium">End Time: </span>
+                            <span>
+                              {format(row.original.end_time, "h:mma")}
+                            </span>
                           </div>
                           <div className="p-2">
                             <span className="font-medium">Date: </span>
@@ -130,10 +138,18 @@ export default function TutorAppointmentsTable({
                               {format(row.original.start_time, "M/d/yy")}
                             </span>
                           </div>
-                          <div className="p-2">
-                            <span className="font-medium">Subject: </span>
-                            <span>{row.original.selected_subject}</span>
-                          </div>
+                          {row.original.student_name && (
+                            <div className="p-2">
+                              <span className="font-medium">Student: </span>
+                              <span>{row.original.student_name}</span>
+                            </div>
+                          )}
+                          {row.original.selected_subject && (
+                            <div className="p-2">
+                              <span className="font-medium">Subject: </span>
+                              <span>{row.original.selected_subject}</span>
+                            </div>
+                          )}
                         </div>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
@@ -162,7 +178,7 @@ export default function TutorAppointmentsTable({
                 );
               },
             },
-          ]
+          ] as ColumnDef<TutorAppointment>[])
         : []),
     ],
     [axiosPrivate, fetchAppointments, tab],

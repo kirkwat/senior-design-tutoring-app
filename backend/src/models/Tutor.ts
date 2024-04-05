@@ -53,16 +53,19 @@ class Tutor {
     return Object.values(formattedResult);
   }
 
-  static async updateTutorProfile(
-    tutor_id: number,
-    bio: string,
-    name: string,
-    profile_picture: string,
-  ) {
+  static async updateTutorProfile(tutor_id: number, bio: string, name: string) {
     await knex(this.USER_TABLE).where({ id: tutor_id }).update({
       bio,
       name,
-      profile_picture,
+    });
+  }
+
+  static async updateTutorProfilePicture(
+    tutor_id: number,
+    picture_url: string,
+  ) {
+    await knex("user").where("id", tutor_id).update({
+      profile_picture: picture_url,
     });
   }
 
@@ -91,18 +94,6 @@ class Tutor {
     return await knex<IUser>(this.USER_TABLE)
       .select("*")
       .whereIn("id", subquery);
-  }
-
-  static async updateTutorProfilePicture(
-    tutor_id: number,
-    profile_picture: number,
-  ) {
-    const subquery = knex(this.USER_TABLE)
-      .select("user_id")
-      .where({ id: tutor_id });
-    return await knex(this.USER_TABLE)
-      .whereIn("id", subquery)
-      .update({ profile_picture });
   }
 
   static async updateTutorBio(tutor_id: number, bio: string) {

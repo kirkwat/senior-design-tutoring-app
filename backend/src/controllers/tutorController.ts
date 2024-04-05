@@ -43,23 +43,15 @@ const handleFindTutorByID = async (req: Request, res: Response) => {
 const editTutorSchema = z.object({
   bio: z.string().optional(),
   name: z.string(),
-  profile_picture: z.string().optional(),
   subjects: z.array(z.string()).optional(),
 });
 
 const handleEditTutorProfile = async (req: Request, res: Response) => {
   try {
     const tutor_id = Number(req.params.tutorID);
-    const { bio, name, profile_picture, subjects } = editTutorSchema.parse(
-      req.body,
-    );
+    const { bio, name, subjects } = editTutorSchema.parse(req.body);
 
-    await Tutor.updateTutorProfile(
-      tutor_id,
-      bio || "",
-      name,
-      profile_picture || "",
-    );
+    await Tutor.updateTutorProfile(tutor_id, bio || "", name);
 
     if (subjects) {
       await Subject.updateTutorSubjects(tutor_id, subjects);
@@ -72,6 +64,29 @@ const handleEditTutorProfile = async (req: Request, res: Response) => {
     if (err instanceof z.ZodError) {
       return res.status(400).json({ message: err.errors });
     } else if (err instanceof Error) {
+      res.status(500).json({ message: err.message });
+    } else {
+      res.status(500).json({ message: "An unknown error occurred" });
+    }
+  }
+};
+
+const handleUpdateProfilePicture = async (req: Request, res: Response) => {
+  try {
+    if (!req.file) {
+      return res.status(400).send("No file uploaded.");
+    }
+    const tutor_id = Number(req.params.tutorID);
+    const filePath = `/uploads/images/${req.file.filename}`;
+
+    await Tutor.updateTutorProfilePicture(tutor_id, filePath);
+
+    res.status(201).json({
+      success: `Tutor id ${tutor_id} successfully updated profile picture`,
+      filePath: filePath,
+    });
+  } catch (err) {
+    if (err instanceof Error) {
       res.status(500).json({ message: err.message });
     } else {
       res.status(500).json({ message: "An unknown error occurred" });
@@ -219,6 +234,7 @@ const handleUpdateTutorProfile = async (req: Request, res: Response) => {
 export {
   handleFindAllTutors,
   handleFindTutorByID,
+  handleUpdateProfilePicture,
   handleEditTutorProfile,
   handleFindAvailableTutorsByTime,
   handleFindAvailableTutorsByDay,
