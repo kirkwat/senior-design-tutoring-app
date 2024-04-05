@@ -98,7 +98,7 @@ export default function CreateAppointment() {
     <div className="container min-h-[60vh] py-12 space-y-4 max-w-4xl">
       <div className="flex justify-between items-center">
         <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl">
-          Create an Appointment
+          Create an Availability Block
         </h1>
       </div>
       <p className="text-gray-500 md:text-xl/relaxed dark:text-gray-400 max-w-md">

@@ -25,9 +25,10 @@ const handleNewAppointment = async (req: Request, res: Response) => {
       const endDateTime = new Date(startDateTime);
       endDateTime.setMinutes(startDateTime.getMinutes() + appointmentLength);
 
-      const duplicates = await Appointment.findNonCancelledAppointmentByTutor(
+      const duplicates = await Appointment.findOverlappingAppointments(
         tutorID,
         startDateTime,
+        endDateTime,
       );
 
       if (duplicates.length === 0) {
