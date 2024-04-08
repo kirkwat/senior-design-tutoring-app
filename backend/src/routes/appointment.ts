@@ -1,9 +1,13 @@
 import express from "express";
 import {
+  handleCancelAppointment,
   handleFindAvailableAppointments,
-  handleFindStudentsAppointments,
+  handleGetAvailableTutorAppointments,
+  handleGetStudentAppointments,
+  handleGetTutorAppointments,
   handleIsAvailable,
   handleNewAppointment,
+  handleScheduleAppointment,
 } from "../controllers/appointmentController";
 import { handRegisterForAppointment } from "../controllers/appointmentController";
 import verifyRoles from "../middleware/verifyRole";
@@ -11,16 +15,26 @@ import verifyRoles from "../middleware/verifyRole";
 const router = express.Router();
 
 router
-  // .post("/", verifyRoles("tutor"), handleNewAppointment)
-  // .put("/", verifyRoles("user"), handRegisterForAppointment)
-  // .get("/", verifyRoles("user", "tutor"), handleFindAvailableAppointments)
-  // .get("/available", verifyRoles("user", "tutor"), handleIsAvailable)
-  // .get("/student", verifyRoles("user"), handleFindStudentsAppointments);
-
-  .post("/", handleNewAppointment)
-  .put("/", handRegisterForAppointment)
-  .get("/", handleFindAvailableAppointments)
-  .get("/available", handleIsAvailable)
-  .get("/student", handleFindStudentsAppointments);
+  .post("/:tutorID", verifyRoles("tutor"), handleNewAppointment)
+  .put(
+    "/schedule/:appointmentID",
+    verifyRoles("user"),
+    handleScheduleAppointment,
+  )
+  .put("/:appointmentID", verifyRoles("user"), handRegisterForAppointment)
+  .put(
+    "/cancel/:appointmentID",
+    verifyRoles("user", "tutor"),
+    handleCancelAppointment,
+  )
+  .get("/", verifyRoles("user", "tutor"), handleFindAvailableAppointments)
+  .get("/tutor/:tutorID", verifyRoles("tutor"), handleGetTutorAppointments)
+  .get(
+    "/available/:tutorID",
+    verifyRoles("user"),
+    handleGetAvailableTutorAppointments,
+  )
+  .get("/student/:studentID", verifyRoles("user"), handleGetStudentAppointments)
+  .get("/available", verifyRoles("user", "tutor"), handleIsAvailable);
 
 export default router;

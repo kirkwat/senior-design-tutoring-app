@@ -5,38 +5,40 @@ on:
     branches:
       - main
       - sprint1
+      - sprint2
   pull_request:
     branches:
       - main
       - sprint1
+      - sprint2
 
 jobs:
   build-express-server:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '18'
-    - name: Install dependencies (Express Server)
-      run: npm install
-      working-directory: ./backend
-    - name: Build (Express Server)
-      run: npm run build
-      working-directory: ./backend
+      - uses: actions/checkout@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "18"
+      - name: Install dependencies (Express Server)
+        run: npm install
+        working-directory: ./backend
+      - name: Build (Express Server)
+        run: npm run build
+        working-directory: ./backend
 
   build-react-app:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '18'
-    - name: Install dependencies (React App)
-      run: npm install
-      working-directory: ./frontend
-    - name: Build (React App)
-      run: npm run build
-      working-directory: ./frontend
+      - uses: actions/checkout@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "18"
+      - name: Install dependencies (React App)
+        run: npm install
+        working-directory: ./frontend
+      - name: Build (React App)
+        run: npm run build
+        working-directory: ./frontend

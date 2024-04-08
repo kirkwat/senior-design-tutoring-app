@@ -19,20 +19,13 @@ const handleNewUser = async (req: Request, res: Response) => {
     if (duplicate) return res.sendStatus(409);
 
     const hashedPwd = await bcrypt.hash(pwd, 10);
-    const newUser = await User.createUser({
+    await User.createUser({
       email: user,
       password: hashedPwd,
       name,
-      profile_picture: "",
       role,
     });
 
-    if (role == "tutor") {
-      await Tutor.createTutor({
-        user_id: newUser[0],
-        bio: "",
-      });
-    }
     res.status(201).json({ success: `New ${role} ${user} created!` });
   } catch (err) {
     if (err instanceof z.ZodError) {

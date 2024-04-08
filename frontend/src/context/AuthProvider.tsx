@@ -4,7 +4,7 @@ export interface AuthState {
   auth: {
     accessToken?: string;
     role?: "user" | "tutor" | "admin";
-    user?: string;
+    id?: number;
   };
   setAuth: React.Dispatch<React.SetStateAction<{}>>;
   persist: boolean;
@@ -14,7 +14,7 @@ export interface AuthState {
 const AuthContext = createContext<AuthState>({
   auth: {},
   setAuth: () => {},
-  persist: false,
+  persist: true,
   setPersist: () => {},
 });
 
@@ -24,7 +24,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [auth, setAuth] = useState({});
   const [persist, setPersist] = useState<boolean>(() => {
     const localPersist = localStorage.getItem("persist");
-    return localPersist !== null ? JSON.parse(localPersist) : false;
+    return localPersist !== null ? JSON.parse(localPersist) : true;
   });
 
   return (

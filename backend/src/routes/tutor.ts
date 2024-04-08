@@ -1,26 +1,32 @@
 import express from "express";
 import {
-  handleFindAllTutors,
+  handleEditTutorProfile,
+  handleGetAllTutors,
   handleFindAvailableTutorsByDay,
   handleFindAvailableTutorsByTime,
   handleFindAvailableTutorsByWeek,
   handleFindTutorByID,
+  handleUpdateTutorProfile,
+  handleUpdateProfilePicture,
 } from "../controllers/tutorController";
 import verifyRoles from "../middleware/verifyRole";
+import upload from "../middleware/fileUpload";
 
 const router = express.Router();
 
 router
-  // .get("/available", verifyRoles("user"), handleFindAvailableTutorsByTime)
-  // .get("/available/day", verifyRoles("user"), handleFindAvailableTutorsByDay)
-  // .get("/available/week", verifyRoles("user"), handleFindAvailableTutorsByWeek)
-  // .get("/:tutor_id", handleFindTutorByID)
-  // .get("/", verifyRoles("user"), handleFindAllTutors);
-
-  .get("/available", handleFindAvailableTutorsByTime)
-  .get("/available/day", handleFindAvailableTutorsByDay)
-  .get("/available/week", handleFindAvailableTutorsByWeek)
-  .get("/:tutor_id", handleFindTutorByID)
-  .get("/", handleFindAllTutors);
+  .get("/available", verifyRoles("user"), handleFindAvailableTutorsByTime)
+  .get("/available/day", verifyRoles("user"), handleFindAvailableTutorsByDay)
+  .get("/available/week", verifyRoles("user"), handleFindAvailableTutorsByWeek)
+  .get("/:tutorID", handleFindTutorByID)
+  .get("/", verifyRoles("user"), handleGetAllTutors)
+  .put("/profile/:tutorID", verifyRoles("tutor"), handleUpdateTutorProfile)
+  .put("/edit/:tutorID", verifyRoles("tutor"), handleEditTutorProfile)
+  .put(
+    "/avatar/:tutorID",
+    verifyRoles("tutor"),
+    upload.single("profile_picture"),
+    handleUpdateProfilePicture,
+  );
 
 export default router;

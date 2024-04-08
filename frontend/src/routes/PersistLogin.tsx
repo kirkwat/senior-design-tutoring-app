@@ -35,7 +35,17 @@ const PersistLogin = () => {
   useEffect(() => {}, [isLoading]);
 
   return (
-    <>{!persist ? <Outlet /> : isLoading ? <p>Loading...</p> : <Outlet />}</>
+    <>
+      {!persist ? (
+        <Outlet />
+      ) : isLoading ? (
+        <div className="mt-16 md:mt-48 text-center text-muted-foreground font-medium text-2xl">
+          Loading...
+        </div>
+      ) : (
+        <Outlet />
+      )}
+    </>
   );
 };
 

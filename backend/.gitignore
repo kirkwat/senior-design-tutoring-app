@@ -4,5 +4,6 @@ dist
 *.sqlite3
 
 logs
+uploads
 
 .env

@@ -2,8 +2,9 @@ export interface IAppointment {
   id: number;
   tutor_id: number;
   student_id?: number;
-  selected_subject?: number;
-  start_time: Date;
-  end_time: Date;
+  selected_subject?: string;
+  start_time: Date | number;
+  end_time: Date | number;
   zoom_link: string;
+  status: "available" | "booked" | "cancelled";
 }
