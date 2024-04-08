@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { z } from "zod";
 import Appointment from "../models/Appointment";
+import Zoom from "../models/Zoom";
+import axios from "axios";
 
 const newAppointmentSchema = z.object({
   startDate: z.string().datetime(),
@@ -146,13 +148,67 @@ export const handleScheduleAppointment = async (
       req.body,
     );
 
-    console.log("selectedSubject: ", selectedSubject);
-    console.log("studentID: ", studentID);
+    const existingUser = await Zoom.findZoomUserByAppointmentId(appointmentID);
+    const appointment = await Appointment.findAppointmentById(appointmentID);
+
+    if (Object.keys(existingUser).length === 0 || !appointment) {
+      res.status(400).json({ message: "User not found" });
+      return;
+    }
+
+    const { zoom_user_id, access_token, refresh_token, last_updated } =
+      existingUser;
+    let bearerToken = "";
+    let user = existingUser;
+
+    // Refresh access_token if it's 55+ minutes old (tokens are valid for 1 hour)
+    if ((Date.now() - last_updated) / (1000 * 60) > 55) {
+      const updateRequest = await Zoom.updateZoomUserToken({
+        zoom_user_id,
+        refresh_token,
+      });
+
+      if (updateRequest?.message === "Zoom token refresh successful") {
+        const updatedCurrentUser = await Zoom.getCurrentZoomUser(zoom_user_id);
+        user = updatedCurrentUser;
+        bearerToken = `Bearer ${updatedCurrentUser?.access_token}`;
+      } else {
+        res.status(500).json({ message: "Error refreshing Zoom token" });
+        return;
+      }
+    } else {
+      bearerToken = `Bearer ${access_token}`;
+    }
+
+    const body = {
+      topic: `Tutoring Session for ${selectedSubject.charAt(0).toUpperCase() + selectedSubject.slice(1)}`,
+      type: 2,
+      start_time: new Date(appointment.start_time).toISOString(),
+      duration:
+        (Number(appointment.end_time) - Number(appointment.start_time)) /
+        (1000 * 60),
+      timezone: "America/New_York",
+      settings: {
+        host_video: true,
+        participant_video: true,
+      },
+    };
+
+    const zoomMeeting = await axios.post(
+      `https://api.zoom.us/v2/users/${existingUser.zoom_user_id}/meetings`,
+      body,
+      {
+        headers: {
+          Authorization: bearerToken,
+        },
+      },
+    );
 
     await Appointment.scheduleAppointment(
       appointmentID,
       studentID,
       selectedSubject,
+      zoomMeeting.data?.join_url,
     );
 
     res.status(201).json({
