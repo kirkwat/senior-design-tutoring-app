@@ -40,11 +40,11 @@ export const handleZoomOauth = async (req: Request, res: Response) => {
           refresh_token,
           email,
         });
-        return res.json({ message: "Zoom token retrieved" });
       }
+      return res.redirect(process.env.REACT_APP_URL || "");
     } catch (error) {
       console.error(error);
-      res
+      return res
         .status(500)
         .json({ message: "Error registering new Zoom oauth user" });
     }
@@ -54,5 +54,19 @@ export const handleZoomOauth = async (req: Request, res: Response) => {
       `https://zoom.us/oauth/authorize?response_type=code&client_id=${encodeURIComponent(process.env.ZOOM_CLIENT_ID || "")}&redirect_uri=${encodeURIComponent(process.env.ZOOM_REDIRECT_URL || "")}`,
     );
   }
-  return null;
+};
+
+export const handleGetZoomConnection = async (req: Request, res: Response) => {
+  try {
+    const tutor_id = Number(req.params.tutorID);
+    const zoom = await Zoom.getZoomUserById(tutor_id);
+
+    res.json({ zoomConnected: !!zoom });
+  } catch (err) {
+    if (err instanceof Error) {
+      res.status(500).json({ message: err.message });
+    } else {
+      res.status(500).json({ message: "An unknown error occurred." });
+    }
+  }
 };
