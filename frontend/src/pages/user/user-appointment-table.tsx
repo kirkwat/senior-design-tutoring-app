@@ -25,7 +25,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "src/components/ui/alert-dialog";
-import { Button } from "src/components/ui/button";
+import { Button, buttonVariants } from "src/components/ui/button";
 import { StudentAppointment } from "src/types/appointment";
 import useAxiosPrivate from "src/hooks/useAxiosPrivate";
 import { cancelAppointment } from "src/api/appointment-api";
@@ -67,6 +67,9 @@ export default function StudentAppointmentsTable({
       {
         accessorKey: "selected_subject",
         header: "Subject",
+        cell: ({ row }) => (
+          <span className="capitalize">{row.original.selected_subject}</span>
+        ),
       },
       {
         accessorKey: "zoom_link",
@@ -76,9 +79,9 @@ export default function StudentAppointmentsTable({
             href={row.original.zoom_link}
             target="_blank"
             rel="noreferrer"
-            className="hover:underline"
+            className={buttonVariants()}
           >
-            {row.original.zoom_link}
+            Join Zoom
           </a>
         ),
       },
@@ -127,7 +130,9 @@ export default function StudentAppointmentsTable({
                         <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                         <AlertDialogDescription>
                           This action cannot be undone. Only cancel if you are
-                          sure you want to cancel this appointment.
+                          sure you want to cancel this appointment. Appointments
+                          can only be cancelled at least 24 hours before the
+                          start time.
                         </AlertDialogDescription>
                         <div className="grid grid-cols-3 my-3 border rounded-sm text-muted-foreground text-sm">
                           <div className="p-2">
@@ -155,7 +160,7 @@ export default function StudentAppointmentsTable({
                             </div>
                           )}
                           {row.original.selected_subject && (
-                            <div className="p-2">
+                            <div className="p-2 col-span-2">
                               <span className="font-medium">Subject: </span>
                               <span className="capitalize">
                                 {row.original.selected_subject}

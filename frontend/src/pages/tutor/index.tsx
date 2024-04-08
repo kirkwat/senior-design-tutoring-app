@@ -12,6 +12,7 @@ import useAuth from "src/hooks/useAuth";
 import useAxiosPrivate from "src/hooks/useAxiosPrivate";
 import { TutorAppointment } from "src/types/appointment";
 import TutorAppointmentsTable from "./tutor-appointment-table";
+import { getZoomConnection } from "src/api/tutor-api";
 
 export default function TutorPage() {
   const { auth } = useAuth();
@@ -48,9 +49,7 @@ export default function TutorPage() {
           >
             Edit Profile
           </Link>
-          <Link to="/tutor/create" className={buttonVariants()}>
-            Create Availability Block
-          </Link>
+          <AvailabilityBlockButton />
         </div>
       </div>
 
@@ -122,4 +121,38 @@ export default function TutorPage() {
       </Tabs>
     </div>
   );
+}
+
+function AvailabilityBlockButton() {
+  const { auth } = useAuth();
+  const axiosPrivate = useAxiosPrivate();
+  const [zoomConnection, setZoomConnection] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (!auth?.id) return;
+    setIsLoading(true);
+
+    getZoomConnection(axiosPrivate, auth.id)
+      .then((data) => {
+        console.log("data", data);
+        setZoomConnection(data.zoomConnected);
+        setIsLoading(false);
+      })
+      .catch(() => setIsLoading(false));
+  }, [auth?.id]);
+  return !isLoading ? (
+    zoomConnection ? (
+      <Link to="/tutor/create" className={buttonVariants()}>
+        Create Availability Block
+      </Link>
+    ) : (
+      <Link
+        to="https://zoom.us/oauth/authorize?client_id=IvpIpYQNQm6FSo70p8dyw&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fzoom"
+        className={buttonVariants()}
+      >
+        Connect Zoom
+      </Link>
+    )
+  ) : null;
 }

@@ -15,6 +15,7 @@ import registerRoute from "./routes/register";
 import appointmentRoute from "./routes/appointment";
 import tutorRoute from "./routes/tutor";
 import studentRoute from "./routes/student";
+import zoomRoute from "./routes/zoom";
 import verifyJWT from "./middleware/verifyJWT";
 import path from "path";
 
@@ -39,6 +40,7 @@ app.use("/logout", logoutRoute);
 app.use("/refresh", refreshRoute);
 app.use("/register", registerRoute);
 app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
+app.use("/zoom", zoomRoute);
 
 app.use(verifyJWT);
 app.use("/appointment", appointmentRoute);

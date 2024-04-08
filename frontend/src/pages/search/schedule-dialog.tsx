@@ -170,15 +170,21 @@ export default function ScheduleDialog({ tutor }: { tutor: Tutor }) {
                 <SelectValue placeholder="Pick..." />
               </SelectTrigger>
               <SelectContent>
-                {tutor.subjects.map((subject) => (
-                  <SelectItem
-                    key={subject}
-                    value={subject}
-                    className="capitalize"
-                  >
-                    {subject}
+                {tutor.subjects.length > 0 ? (
+                  tutor.subjects.map((subject) => (
+                    <SelectItem
+                      key={subject}
+                      value={subject}
+                      className="capitalize"
+                    >
+                      {subject}
+                    </SelectItem>
+                  ))
+                ) : (
+                  <SelectItem value="any" className="capitalize">
+                    any
                   </SelectItem>
-                ))}
+                )}
               </SelectContent>
             </Select>
           </div>
