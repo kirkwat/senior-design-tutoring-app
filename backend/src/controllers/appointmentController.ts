@@ -8,13 +8,12 @@ const newAppointmentSchema = z.object({
   startDate: z.string().datetime(),
   appointmentLength: z.number(),
   weekSpan: z.number(),
-  zoomLink: z.string(),
 });
 
 export const handleNewAppointment = async (req: Request, res: Response) => {
   try {
     const tutorID = Number(req.params.tutorID);
-    const { startDate, appointmentLength, weekSpan, zoomLink } =
+    const { startDate, appointmentLength, weekSpan } =
       newAppointmentSchema.parse(req.body);
 
     let createdCount = 0;
@@ -38,8 +37,8 @@ export const handleNewAppointment = async (req: Request, res: Response) => {
           tutor_id: tutorID,
           start_time: startDateTime,
           end_time: endDateTime,
-          zoom_link: zoomLink,
           status: "available",
+          zoom_link: "",
         });
         createdCount++;
       } else {

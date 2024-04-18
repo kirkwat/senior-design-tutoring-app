@@ -107,8 +107,9 @@ const Register = () => {
         | "tutor"
         | "user"
         | undefined;
+      const id = response?.data?.id as number | undefined;
 
-      setAuth({ user, role, accessToken });
+      setAuth({ user, role, accessToken, id });
       setUser("");
       setPwd("");
       setMatchPwd("");

@@ -66,16 +66,20 @@ export default function TutorAppointmentsTable({
       {
         accessorKey: "zoom_link",
         header: "Zoom Link",
-        cell: ({ row }) => (
-          <a
-            href={row.original.zoom_link}
-            target="_blank"
-            rel="noreferrer"
-            className={buttonVariants()}
-          >
-            Join Zoom
-          </a>
-        ),
+        cell: ({ row }) =>
+          row.original.status === "cancelled" ||
+          row.original.status === "available" ? (
+            <Button disabled>Join Zoom</Button>
+          ) : (
+            <a
+              href={row.original.zoom_link}
+              target="_blank"
+              rel="noreferrer"
+              className={buttonVariants()}
+            >
+              Join Zoom
+            </a>
+          ),
       },
       {
         accessorKey: "start_time",
