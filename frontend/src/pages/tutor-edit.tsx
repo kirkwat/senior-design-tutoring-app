@@ -83,7 +83,7 @@ export default function EditTutorProfilePage() {
       return;
     }
 
-    setIsSubmitting(false);
+    setIsSubmitting(true);
 
     const { subject1, subject2, subject3, subject4 } = values;
 

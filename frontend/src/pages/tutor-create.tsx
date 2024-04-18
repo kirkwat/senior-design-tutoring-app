@@ -36,7 +36,6 @@ const createAppointmentFormSchema = z.object({
   }),
   appointmentLength: z.string(),
   weekSpan: z.string(),
-  zoomLink: z.string().url({ message: "Please enter a valid url." }),
 });
 
 export default function CreateAppointment() {
@@ -52,7 +51,6 @@ export default function CreateAppointment() {
       startTime: "12:00",
       weekSpan: "1",
       appointmentLength: "30",
-      zoomLink: "",
     },
   });
 
@@ -74,7 +72,6 @@ export default function CreateAppointment() {
         isoDateTime,
         parseInt(values.appointmentLength, 10),
         parseInt(values.weekSpan, 10),
-        values.zoomLink,
       ),
       {
         loading: "Creating appointments...",
@@ -201,27 +198,6 @@ export default function CreateAppointment() {
                   </Select>
                   <FormDescription>
                     Select how long each appointment will be.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="zoomLink"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Zoom Link</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="url"
-                      placeholder="https://zoom.com/meeting"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    This is the link to your Zoom meeting. (API integration
-                    coming soon)
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

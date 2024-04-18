@@ -11,7 +11,6 @@ export const createAppointment = (
   startDate: string,
   appointmentLength: number,
   weekSpan: number,
-  zoomLink: string,
 ) =>
   new Promise((resolve, reject) => {
     axiosPrivate
@@ -19,7 +18,6 @@ export const createAppointment = (
         startDate,
         appointmentLength,
         weekSpan,
-        zoomLink,
       })
       .then((x) => resolve(x.data))
       .catch((error) => {
