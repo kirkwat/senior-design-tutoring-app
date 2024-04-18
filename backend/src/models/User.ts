@@ -1,7 +1,7 @@
 import knex from "../config/knex";
 import { IUser } from "../interfaces/IUser";
 
-class User {
+export default class User {
   static USER_TABLE = "user";
 
   static async findUserByEmail(email: string) {
@@ -28,5 +28,3 @@ class User {
     return knex<IUser>(this.USER_TABLE).insert(newUser);
   }
 }
-
-export default User;

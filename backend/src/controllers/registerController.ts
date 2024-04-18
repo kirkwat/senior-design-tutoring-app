@@ -2,7 +2,6 @@ import bcrypt from "bcrypt";
 import { Request, Response } from "express";
 import User from "../models/User";
 import { z } from "zod";
-import Tutor from "../models/Tutor";
 
 const newUserSchema = z.object({
   user: z.string(),

@@ -14,7 +14,6 @@ import refreshRoute from "./routes/refresh";
 import registerRoute from "./routes/register";
 import appointmentRoute from "./routes/appointment";
 import tutorRoute from "./routes/tutor";
-import studentRoute from "./routes/student";
 import zoomRoute from "./routes/zoom";
 import verifyJWT from "./middleware/verifyJWT";
 import path from "path";
@@ -45,7 +44,6 @@ app.use("/zoom", zoomRoute);
 app.use(verifyJWT);
 app.use("/appointment", appointmentRoute);
 app.use("/tutor", tutorRoute);
-app.use("/student", studentRoute);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

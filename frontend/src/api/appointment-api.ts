@@ -4,17 +4,6 @@ import {
   Appointment,
 } from "src/types/appointment";
 import { AxiosInstance } from "axios";
-import axios from "./axios";
-
-interface OldAppointment {
-  id: number;
-  tutor_id: number;
-  student_id: null;
-  selected_subject: null;
-  start_time: number;
-  end_time: number;
-  zoom_link: string;
-}
 
 export const createAppointment = (
   axiosPrivate: AxiosInstance,
@@ -105,33 +94,6 @@ export const scheduleAppointment = (
         selectedSubject,
         studentID,
       })
-      .then((x) => resolve(x.data))
-      .catch((error) => {
-        console.error("Error fetching tutors:", error);
-        reject(error);
-      });
-  });
-
-export const findAppointmentByTutor = (
-  tutorID: string,
-): Promise<OldAppointment[]> =>
-  new Promise((resolve, reject) => {
-    axios
-      .get(`/appointment?tutor_id=${tutorID}`)
-      .then((x) => resolve(x.data))
-      .catch((error) => {
-        console.error("Error fetching tutors:", error);
-        reject(error);
-      });
-  });
-
-export const checkAvailableAppointments = (
-  day: string,
-  tutorID: string,
-): Promise<Boolean> =>
-  new Promise((resolve, reject) => {
-    axios
-      .get(`/appointment/available?day=${day}&tutor_id=${tutorID}`)
       .then((x) => resolve(x.data))
       .catch((error) => {
         console.error("Error fetching tutors:", error);
