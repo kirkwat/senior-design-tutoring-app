@@ -10,11 +10,8 @@ import User from "./pages/user";
 import Tutor from "./pages/tutor";
 import Admin from "./pages/admin";
 import Missing from "./pages/missing";
-import TutorAvailabilities from "./pages/tutorAvailabilities";
-import MakeAppointment from "./pages/makeAppointment";
-import CreateAppointment from "./pages/create";
-import TutorProfile from "./pages/tutorProfile";
-import EditTutorProfilePage from "./pages/edit-tutor-profile";
+import CreateAppointment from "./pages/tutor-create";
+import EditTutorProfilePage from "./pages/tutor-edit";
 import { Toaster } from "./components/ui/sonner";
 import SearchPage from "./pages/search";
 
@@ -36,22 +33,10 @@ const App = () => {
                 <Route path="login" element={<Login />} />
                 <Route path="register" element={<Register />} />
                 <Route path="unauthorized" element={<Unauthorized />} />
-                <Route
-                  path="tutorProfile/:tutorID"
-                  element={<TutorProfile />}
-                />
 
                 <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
                   <Route path="user" element={<User />} />
                   <Route path="search" element={<SearchPage />} />
-                  <Route
-                    path="tutorAvailabilities"
-                    element={<TutorAvailabilities />}
-                  />
-                  <Route
-                    path="makeAppointment/:tutorID"
-                    element={<MakeAppointment />}
-                  />
                 </Route>
                 <Route element={<RequireAuth allowedRoles={[ROLES.Tutor]} />}>
                   <Route path="tutor" element={<Tutor />} />
