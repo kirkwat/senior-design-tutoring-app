@@ -48,3 +48,7 @@ app.use("/tutor", tutorRoute);
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+app.get("/", (req, res) => {
+  res.send("Health Check OK");
+});
