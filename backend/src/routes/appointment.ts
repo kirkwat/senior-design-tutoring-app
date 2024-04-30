@@ -15,20 +15,9 @@ router
   .post("/:tutorID", verifyRoles("tutor"), handleNewAppointment)
   .get("/tutor/:tutorID", verifyRoles("tutor"), handleGetTutorAppointments)
   .get("/student/:studentID", verifyRoles("user"), handleGetStudentAppointments)
-  .get(
-    "/available/:tutorID",
-    verifyRoles("user"),
-    handleGetAvailableTutorAppointments,
-  )
-  .put(
-    "/cancel/:appointmentID",
-    verifyRoles("user", "tutor"),
-    handleCancelAppointment,
-  )
-  .put(
-    "/schedule/:appointmentID",
-    verifyRoles("user"),
-    handleScheduleAppointment,
-  );
+  .get("/available/:tutorID",verifyRoles("user"),handleGetAvailableTutorAppointments)
+  .put("/cancel/:appointmentID",verifyRoles("user", "tutor"),handleCancelAppointment)
+  .put("/schedule/:appointmentID",verifyRoles("user"),handleScheduleAppointment);
+;
 
 export default router;

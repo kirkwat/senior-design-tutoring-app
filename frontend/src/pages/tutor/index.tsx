@@ -148,7 +148,7 @@ function AvailabilityBlockButton() {
       </Link>
     ) : (
       <Link
-        to="https://zoom.us/oauth/authorize?client_id=IvpIpYQNQm6FSo70p8dyw&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fzoom"
+        to="https://zoom.us/oauth/authorize?client_id=nAp_cGrfQRe4rJQrVTkZfA&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fzoom"
         className={buttonVariants()}
       >
         Connect Zoom

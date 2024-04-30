@@ -96,7 +96,7 @@ export const scheduleAppointment = (
       })
       .then((x) => resolve(x.data))
       .catch((error) => {
-        console.error("Error fetching tutors:", error);
+        console.error("Error fetching appointments:", error);
         reject(error);
       });
   });

@@ -99,6 +99,7 @@ export default function ScheduleDialog({ tutor }: { tutor: Tutor }) {
     }
     setIsSubmitting(true);
 
+    console.log(selectedAppointmentId, selectedSubject, auth.id);
     toast.promise(
       scheduleAppointment(
         axiosPrivate,
